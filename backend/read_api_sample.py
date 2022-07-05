@@ -39,8 +39,8 @@ for i in range(len(keys)):
 
 # response.json().keys()
 # pd.DataFrame(response.json()['data'])
-# write
 
+# write
 my_client = MongoClient('mongodb://localhost:27017')
 mydb = my_client['yosul_lamp']
 mydb['programs'].insert_many(pd.DataFrame(response.json()['data']).to_dict('records'))
@@ -49,3 +49,16 @@ mydb['programs'].insert_many(pd.DataFrame(response.json()['data']).to_dict('reco
 my_client = MongoClient('mongodb://localhost:27017')
 mydb = my_client['yosul_lamp']
 pd.DataFrame(mydb['programs'].find()).drop('_id',axis=1)
+
+# xml base - search festival example
+url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival'
+key = '?ServiceKey=S256yGjpf7ug3eDtNRoJBzPLPIED9Mzp3XfMp8aaoRB/FGnDuzloLHkpvLvTyddzf00SKndA/1naWcmH2ao5jg=='
+option = '&contentTypeId=32&areaCode=4&sigunguCode=4&MobileOS=ETC&MobileApp=AppTest'
+response = requests.get(url+key+option, params=params)
+
+from bs4 import BeautifulSoup
+xml_obj = BeautifulSoup(response.content,'lxml-xml')
+tp = xml_obj.find_all('item')
+import numpy as np
+pd.DataFrame(np.array(tp).squeeze())
+
