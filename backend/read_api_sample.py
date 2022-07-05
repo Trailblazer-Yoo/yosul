@@ -59,6 +59,10 @@ response = requests.get(url+key+option, params=params)
 from bs4 import BeautifulSoup
 xml_obj = BeautifulSoup(response.content,'lxml-xml')
 tp = xml_obj.find_all('item')
+
+columns = [tp[0].find_all()[i].name for i in range(len(tp[0]))]
+
 import numpy as np
-pd.DataFrame(np.array(tp).squeeze())
+pd.DataFrame(np.array(tp).squeeze(),columns=columns)
+
 
