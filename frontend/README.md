@@ -66,3 +66,10 @@ git add .
 git commit -m "commit_name"
 git push upstream master
 ```
+
+<img src="https://user-images.githubusercontent.com/97590480/181441612-89242bb0-e780-4c96-86fb-b4e8e80ede59.png">
+
+<img src="https://user-images.githubusercontent.com/97590480/181441618-8e56fdf3-b0fd-4948-a524-8bba6f6d6851.png">
+
+- origianl repository에 내 커밋이 잘 찍힌 것을 볼 수 있다.
+- `full request`는 brach를 merge할때 쓰이지만 굳이 브랜치를 쓰지 않을 예정이므로 굳이 하지 말자.
