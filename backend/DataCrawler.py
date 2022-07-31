@@ -15,7 +15,7 @@ class DataCrawler:
             page_url.append(url)
         return page_url
 
-    def get_data(product_url_list):
+    def get_data(self, product_url_list):
         headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'}
         all_data  = []    
         for url in product_url_list:
