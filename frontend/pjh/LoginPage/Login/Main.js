@@ -11,20 +11,14 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import Main from "./Login/Main";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./Login/LoginScreen";
-import { render } from "react-dom";
+import { LoginScreen } from "./LoginScreen";
 
-const Stack = createStackNavigator();
-
-export default function App({}) {
+function Main({navigation}) {
   const [font, setFont] = useState(false);
   useEffect(() => {
     async function setFont() {
       setFont = await Font.loadAsync({
-        Library: require("./assets/fonts/library.ttf"),
+        Library: require("../assets/fonts/library.ttf"),
       });
     }
     setFont(true);
@@ -33,17 +27,15 @@ export default function App({}) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={require("./logo3.png")}></Image>
+      <Image style={styles.logo} source={require("../logo3.png")}></Image>
       <Text style={styles.logoText}>여술램프</Text>
       <StatusBar style="auto" />
       <TouchableWithoutFeedback
         style={styles.loginBox}
-        onPress={() => {
-          LoginScreen;
-        }}
+        onPress={() => navigation.push({LoginScreen})}
       >
         <Image
-          source={require("./kakao_login_medium_narrow.png")}
+          source={require("../kakao_login_medium_narrow.png")}
           onLoadEnd={() => setIsLoading({ loading: true })}
         />
       </TouchableWithoutFeedback>
@@ -76,3 +68,5 @@ const styles = StyleSheet.create({
   //   justifyContent: "center",
   // },
 });
+
+export default Main;
