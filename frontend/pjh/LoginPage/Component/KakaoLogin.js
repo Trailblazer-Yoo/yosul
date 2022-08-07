@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { WebView } from "react-native-webview";
 
-function LoginScreen() {
+function LoginScreen({navigation, route}) {
   const REST_API_KEY = "9d08dcb567b26fea503158a467b0f216";
   const REDIRECT_URI = "http://localhost:19000";
 

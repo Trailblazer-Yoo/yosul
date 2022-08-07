@@ -11,9 +11,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { LoginScreen } from "./LoginScreen";
 
-function Main({navigation}) {
+function Home({ navigation, route }) {
   const [font, setFont] = useState(false);
   useEffect(() => {
     async function setFont() {
@@ -25,20 +24,19 @@ function Main({navigation}) {
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState([]);
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={require("../logo3.png")}></Image>
       <Text style={styles.logoText}>여술램프</Text>
+      {/* <View style={styles.loginBox}>
+        <Button
+          title="카카오 로그인"
+          color="#191919"
+          onPress={() => navigation.push("Login")}
+        ></Button>
+      </View> */}
       <StatusBar style="auto" />
-      <TouchableWithoutFeedback
-        style={styles.loginBox}
-        onPress={() => navigation.push({LoginScreen})}
-      >
-        <Image
-          source={require("../kakao_login_medium_narrow.png")}
-          onLoadEnd={() => setIsLoading({ loading: true })}
-        />
-      </TouchableWithoutFeedback>
     </View>
   );
 }
@@ -60,13 +58,24 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 200,
   },
-  // loginBox: {
-  //   flex: 0.5,
-  //   marginTop: 100,
-  //   marginBottom: 20,
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
+  loginBox: {
+    backgroundColor: "#FEE500",
+    flex: 0.8,
+    marginTop: 100,
+    marginBottom: 200,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "12px",
+    height: 90,
+    width: 270,
+    paddingBottom: 300,
+  },
+  loginText: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 100,
+    marginBottom: 200,
+  },
 });
 
-export default Main;
+export default Home;
