@@ -8,13 +8,16 @@ import {
   Image,
   TouchableOpacity,
   Pressable,
+  Alert,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
+import firebase from "../firebase";
+import { async } from "@firebase/util";
 
-function LoginForm({navigation}) {
+function LoginForm({ navigation }) {
   const LoginFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
     password: Yup.string()
@@ -22,12 +25,31 @@ function LoginForm({navigation}) {
       .min(8, "Your password has to have at least 8 characters"),
   });
 
+  const onLogin = async (email, password) => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      console.log("Firebase Login Successful", email, password);
+    } catch (error) {
+      Alert.alert(
+        "Alert",
+        error.message[
+          {
+            text: "OK",
+            onPress: () => console.log("OK"),
+            style: "cancel",
+          },
+          {text: 'Sign UP', onPress: () => navigation.push('SignupScreen')}
+        ]
+      );
+    }
+  };
+
   return (
     <View style={styles.wrapper}>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          console.log(values);
+        onSubmit={values => {
+          onLogin(values.email, values.password);
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}
@@ -51,21 +73,24 @@ function LoginForm({navigation}) {
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"
-                autoFocus={true}
+                autoFocus={false}
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 value={values.email}
               />
             </View>
 
-            <View style={[styles.inputField,
+            <View
+              style={[
+                styles.inputField,
                 {
                   borderColor:
                     1 > values.password.length || values.password.length >= 8
                       ? "#ccc"
                       : "red",
                 },
-              ]}>
+              ]}
+            >
               <TextInput
                 placeholderTextColor="#444"
                 placeholder="password"
@@ -107,7 +132,7 @@ function LoginForm({navigation}) {
 
             <View style={styles.signupContainer}>
               <Text>계정이 없으신가요? </Text>
-              <TouchableOpacity onPress={() => navigation.push('SignupScreen')}>
+              <TouchableOpacity onPress={() => navigation.push("SignupScreen")}>
                 <Text style={{ color: "#6bb0f5" }}>회원가입</Text>
               </TouchableOpacity>
             </View>

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import LoginForm from "../Component/LoginForm";
 
 
-export function LoginScreen(navigation) {
+export function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
