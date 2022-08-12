@@ -142,13 +142,16 @@ export default function App() {
 
 
         <Stack.Screen name="Details" component={DetailsScreen} initialParams={{ itemId: 42 }}/>
-        <Stack.Screen name='CreatePost' component={CreatePostScreen}/>
+
+        <Stack.Screen name='CreatePost' component={CreatePostScreen}
+          options={{headerBackTitle:'customed',
+                    headerBackTitleVisible:true}}/>
         
         <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={({ route }) => ({ title: route.params.name })}
-      />
+          name="Profile"
+          component={ProfileScreen}
+          options={({ route }) => ({ title: route.params.name })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     
