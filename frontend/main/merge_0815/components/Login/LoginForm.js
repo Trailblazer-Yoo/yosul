@@ -120,11 +120,11 @@ function LoginForm({ navigation }) {
             <Pressable
               titleSize={20}
               style={styles.kakaoButton}
-              onPress={() => navigation.push("KaKaoLogin")}
+              onPress={() => navigation.push("KakaoLogin")}
             >
               <View style={styles.kakaoContainer}>
                 <Image
-                  source={require("../assets/kakaoLogin.png")}
+                  source={require("../../assets/kakaoLogin.png")}
                   style={styles.kakaoImage}
                 />
                 <Text>카카오로 시작하기</Text>

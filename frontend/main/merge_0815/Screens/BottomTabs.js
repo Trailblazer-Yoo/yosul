@@ -10,10 +10,12 @@ import {
 
 import DictionaryScreen from "./DictionaryScreen";
 import ProfileScreen from "./ProfileScreen";
+import CommunityScreen from "./CommunityScreem";
+import HomeScreen from "./HomeScreen"
 
 const Tab = createBottomTabNavigator();
 
-function HomeScreen() {
+function Screen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>넣을 화면</Text>
@@ -56,7 +58,7 @@ const BottomTabs
 
       <Tab.Screen
         name="Community"
-        component={HomeScreen}
+        component={CommunityScreen}
         options={{
           headerShown: false,
           tabBarLabel: "커뮤니티",
@@ -74,7 +76,7 @@ const BottomTabs
 
       <Tab.Screen
         name="Map"
-        component={HomeScreen}
+        component={Screen}
         options={{
           headerShown: false,
           tabBarLabel: "지도",
