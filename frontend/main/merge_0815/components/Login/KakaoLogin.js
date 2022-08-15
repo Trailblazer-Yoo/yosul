@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { WebView } from "react-native-webview";
 
-function LoginScreen({navigation, route}) {
+function KaKaoLogin({navigation, route}) {
   const REST_API_KEY = "9d08dcb567b26fea503158a467b0f216";
   const REDIRECT_URI = "http://localhost:19000";
 
@@ -44,4 +44,4 @@ function LoginScreen({navigation, route}) {
   );
 }
 
-export default LoginScreen;
+export default KaKaoLogin;
