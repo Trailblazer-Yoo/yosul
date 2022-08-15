@@ -14,7 +14,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
-import firebase from "../firebase";
+import firebase from "../../firebase";
 import { async } from "@firebase/util";
 
 function LoginForm({ navigation }) {

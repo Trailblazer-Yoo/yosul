@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import MyPosts from "../components/Profile/MyPost";
-import UserProfile from "../components/Profile/UserProfile";
+import MyPosts from "../Components/Profile/MyPost";
+import UserProfile from "../Components/Profile/UserProfile";
 
 const Tab = createMaterialTopTabNavigator();
 

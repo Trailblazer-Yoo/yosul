@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import PreferredDrink from "../Component/login/PreferredDrink";
+import PreferredDrink from "../Components/Login/PreferredDrink";
 
 const PreferredDrinkScreen = ({ navigation }) => {
   return (

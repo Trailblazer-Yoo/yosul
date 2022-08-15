@@ -1,9 +1,9 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Constants from 'expo-constants';
 import { StatusBar, Text, View } from "react-native";
-import AlcoholTypeTab from '../components/Dictionary/AlcoholeTypeTab';
-import RegionTab from '../components/Dictionary/RigionTab';
-import AlcoholAmountTab from '../components/Dictionary/AlcoholeAmountTab';
+import AlcoholTypeTab from '../Components/Dictionary/AlcoholeTypeTab';
+import RegionTab from '../Components/Dictionary/RigionTab';
+import AlcoholAmountTab from '../Components/Dictionary/AlcoholeAmountTab';
 
 const Tab = createMaterialTopTabNavigator();
 
