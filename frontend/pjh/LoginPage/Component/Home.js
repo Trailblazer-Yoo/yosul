@@ -27,7 +27,7 @@ function Home({ navigation, route }) {
   const [isLogin, setIsLogin] = useState([]);
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={require("../logo3.png")}></Image>
+      <Image style={styles.logo} source={require("../assets/logo.png")}></Image>
       <Text style={styles.logoText}>여술램프</Text>
       {/* <View style={styles.loginBox}>
         <Button
@@ -79,3 +79,5 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
+
