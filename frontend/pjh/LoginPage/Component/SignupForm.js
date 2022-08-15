@@ -14,44 +14,44 @@ import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
-import firebase from "../../firebase";
+import { firebase } from "../firebase";
 
-function LoginForm({ navigation }) {
-  const LoginFormSchema = Yup.object().shape({
+function SignupForm({ navigation }) {
+  const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
+    username: Yup.string().required().min(2, "A username is required"),
     password: Yup.string()
       .required()
       .min(8, "Your password has to have at least 8 characters"),
   });
 
-  const onLogin = async (email, password) => {
+  const onSignup = async (email, password, username) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log("Login Successful", email, password);
+      const authUser = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password, username);
+      console.log("Firebase Login Successful", email, password, username);
+
+      // db.collection("users").add({
+      //   owner_uid: authUser.user.uid,
+      //   username: username,
+      //   email: authUser.user.email,
+      //   profile_picture: await getRandomProfilePicture(),
+      // });
     } catch (error) {
-      Alert.alert(
-        "Alert",
-        error.message[
-          ({
-            text: "OK",
-            onPress: () => console.log("OK"),
-            style: "cancel",
-          },
-          { text: "Sign UP", onPress: () => navigation.push("SignupScreen") })
-        ]
-      );
+      Alert.alert(error.message);
     }
   };
 
   return (
     <View style={styles.wrapper}>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "", username: "", password: "" }}
         onSubmit={(values) => {
-          onLogin(values.email, values.password);
-          navigation.push('SetProfileScreen')
+          onSignup(values.email, values.password, values.username);
+          navigation.goBack();
         }}
-        validationSchema={LoginFormSchema}
+        validationSchema={SignupFormSchema}
         validateOnMount={true}
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
@@ -72,11 +72,32 @@ function LoginForm({ navigation }) {
                 placeholder="email"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                textContentType="emailAddress"
                 autoFocus={false}
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 value={values.email}
+              />
+            </View>
+
+            <View
+              style={[
+                styles.inputField,
+                {
+                  borderColor:
+                    1 > values.username.length || values.username.length >= 4
+                      ? "#ccc"
+                      : "red",
+                },
+              ]}
+            >
+              <TextInput
+                placeholderTextColor="#444"
+                placeholder="Username"
+                autoCapitalize="none"
+                textContentType="username"
+                onChangeText={handleChange("username")}
+                onBlur={handleBlur("username")}
+                value={values.username}
               />
             </View>
 
@@ -103,37 +124,17 @@ function LoginForm({ navigation }) {
                 value={values.password}
               />
             </View>
-            <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
-              <Text style={{ color: "#191919" }}>
-                비밀번호를 잃어버리셨나요?
-              </Text>
-            </View>
             <Pressable
               titleSize={20}
               style={styles.button(isValid)}
               onPress={handleSubmit}
-              disabled={!isValid}
             >
-              <Text style={styles.buttonText}>로그인</Text>
+              <Text style={styles.buttonText}>계정 생성</Text>
             </Pressable>
-            <Pressable
-              titleSize={20}
-              style={styles.kakaoButton}
-              onPress={() => navigation.push("KakaoLogin")}
-            >
-              <View style={styles.kakaoContainer}>
-                <Image
-                  source={require("../../assets/kakaoLogin.png")}
-                  style={styles.kakaoImage}
-                />
-                <Text>카카오로 시작하기</Text>
-              </View>
-            </Pressable>
-
             <View style={styles.signupContainer}>
-              <Text>계정이 없으신가요? </Text>
-              <TouchableOpacity onPress={() => navigation.push("SignupScreen")}>
-                <Text style={{ color: "#6bb0f5" }}>회원가입</Text>
+              <Text>계정이 있으신가요? </Text>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Text style={{ color: "#6bb0f5" }}>로그인</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -160,6 +161,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 42,
     borderRadius: 4,
+    marginTop: 30,
+    padding: 13,
   }),
   buttonText: {
     fontWeight: "600",
@@ -197,4 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginForm;
+export default SignupForm;

@@ -4,9 +4,6 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./Screen/LoginScreen";
 import SignupScreen from "./Screen/SignupScreen";
-import KakaoLogin from "./Component/login/KakaoLogin";
-import SetProfileScreen from "./Screen/SetProfileScreen";
-import PreferredDrinkScreen from "./Screen/PreferredDrinkScreen";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +19,6 @@ export const SignedInStack = () => {
         screenOptions={screenOptions}
       >
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="KakaoLogin" component={KakaoLogin} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -39,7 +35,10 @@ export const SignedOutStack = () => (
       <Stack.Screen name="KakaoLogin" component={KakaoLogin} />
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
       <Stack.Screen name="SetProfileScreen" component={SetProfileScreen} />
-      <Stack.Screen name="PreferredDrinkScreen" component={PreferredDrinkScreen} />
+      <Stack.Screen
+        name="PreferredDrinkScreen"
+        component={PreferredDrinkScreen}
+      />
     </Stack.Navigator>
   </NavigationContainer>
 );

@@ -2,13 +2,18 @@ import { StatusBar } from "expo-status-bar";
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
 import {
-
+  StyleSheet,
+  Text,
   View,
-
+  Image,
+  Button,
+  ImageBackground,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { WebView } from "react-native-webview";
 
-function KakaoLogin() {
+function LoginScreen({navigation, route}) {
   const REST_API_KEY = "9d08dcb567b26fea503158a467b0f216";
   const REDIRECT_URI = "http://localhost:19000";
 
@@ -39,4 +44,4 @@ function KakaoLogin() {
   );
 }
 
-export default KakaoLogin;
+export default LoginScreen;
