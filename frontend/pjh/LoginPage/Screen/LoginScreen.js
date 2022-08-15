@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import LoginForm from "../Component/LoginForm";
+import LoginForm from "../Component/login/LoginForm";
 
 
 export function LoginScreen({navigation}) {

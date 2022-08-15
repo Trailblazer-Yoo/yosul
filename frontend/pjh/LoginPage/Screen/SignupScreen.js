@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import SignupForm from "../Component/SignupForm";
+import SignupForm from "../Component/login/SignupForm";
 
 export function SignupScreen({navigation}) {
   return (

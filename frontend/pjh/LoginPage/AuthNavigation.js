@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SignedInStack, { SignedOutStack } from "./navigation";
-import { firebase } from "firebase";
+import firebase from "./firebase";
 
 const AuthNavigation = () => {
   const [currnetUser, setCurrentUser] = useState(null);
@@ -8,7 +8,7 @@ const AuthNavigation = () => {
   const userHandler = (user) =>
     user ? setCurrentUser(user) : setCurrentUser(null);
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => useGestureHandlerRef(user));
+    firebase.auth().onAuthStateChanged((user) => userHandler(user));
   }, []);
   return <>{currnetUser ? <SignedInStack /> : <SignedOutStack />}</>;
 };
