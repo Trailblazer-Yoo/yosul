@@ -4,6 +4,9 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./Screen/LoginScreen";
 import SignupScreen from "./Screen/SignupScreen";
+import KakaoLogin from "./Component/KakaoLogin";
+import SetProfileScreen from "./Screen/SetProfileScreen";
+import PreferredDrinkScreen from "./Screen/PreferredDrinkScreen";
 
 const Stack = createStackNavigator();
 
