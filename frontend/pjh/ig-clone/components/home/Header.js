@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-function Header() {
+const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity>
@@ -19,7 +19,7 @@ function Header() {
         />
       </TouchableOpacity>
       <View style={styles.iconsContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.push('NewPostScreen')}>
           <Image
             style={styles.icon}
             source={{

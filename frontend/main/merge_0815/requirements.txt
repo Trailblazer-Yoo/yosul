@@ -1,0 +1,12 @@
+npm install @react-navigation/native
+expo install react-native-screens
+npm install @react-navigation/stack
+npm install react-native-gesture-handler
+expo install react-native-gesture-handler
+npm install @react-navigation/bottom-tabs
+npm install @react-navigation/material-top-tabs react-native-tab-view
+npm install react-native-webview
+npm install formik
+npm install yup
+npm install email-validator
+npm install firebase
