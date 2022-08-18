@@ -28,19 +28,22 @@ function HomeScreen({navigation}) {
         <Tab.Screen
           name='Home'
           component={Home}
+          options={{headerShown:false}}
         />
         <Tab.Screen
           name='SNS'
           component={SNS}
+          options={{headerShown:false}}
         />
         <Tab.Screen
           name="Dictionary"
           component={Dictionary}
+          options={{headerShown:false}}
         />
         <Tab.Screen
           name="Setting"
           component={Screen02}
-          options={{headerRight:((navigation)=><Button title='fix'/>)}}
+          options={{headerShown:false}}
         />
       </Tab.Navigator>
     </NavigationContainer>

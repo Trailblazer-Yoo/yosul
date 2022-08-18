@@ -3,9 +3,22 @@ import { StyleSheet, Text, View, Button, TouchableOpacity, Image, ScrollView } f
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
-function HomeScreen({ navigation}) {  
+
+function HomeScreen({ navigation}) {
+    const alpha = [['a',1],['b',2],['c',3]]
+
     return (
       <View style={{ flex: 1 }}>
+        <View style={styles.header}>
+            {/* header */}
+            <TouchableOpacity>
+                <Text style={styles.btnText}>hi?</Text>
+            </TouchableOpacity>
+            <Text>Title</Text>
+            <TouchableOpacity>
+                <Text style={styles.btnText}>hi??</Text>
+            </TouchableOpacity>
+        </View>
 
         <TouchableOpacity style={styles.container}
             onPress={() => navigation.navigate('Profile')}
@@ -13,6 +26,7 @@ function HomeScreen({ navigation}) {
             <Text style={styles.inner}>개인정보</Text>
         </TouchableOpacity>
         
+
         {/* <TouchableOpacity style={styles.container}
             onPress={() => navigation.navigate('Friend')}
         >
@@ -137,5 +151,18 @@ profile_contents_txt:{
 },
 profile_container:{
     flex:2,
+},
+header:{
+    marginTop:50,
+    paddingHorizontal:20,
+    marginBottom:10,
+    justifyContent:'space-between',
+    flex:1,
+    flexDirection:'row'
+},
+btnText:{
+    fontSize:40,
+    fontWeight:'200'
 }
+
 });
