@@ -10,9 +10,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({ navigation, route }) {

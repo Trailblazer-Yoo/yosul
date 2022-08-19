@@ -3,21 +3,13 @@ import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
-function HomeScreen({ navigation, route }) {
-    React.useEffect(() => {
-      if (route.params?.post) {
-        // Post updated, do something with `route.params.post`
-        // For example, send the post to the server
-      }
-    }, [route.params?.post]);
-  
+function HomeScreen({ navigation}) {  
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button
           title="Details"
           onPress={() => navigation.navigate('Details')}
         />
-        <Text style={{ margin: 10 }}>Post: {route.params?.post}</Text>
       </View>
     );
 }
@@ -43,7 +35,7 @@ function DetailsScreen({ route, navigation }) {
     );
   }
   
-function Screen01({navigation}){
+function Dictionary({navigation}){
     return (
         <Stack.Navigator>
             <Stack.Screen name="Home" component={HomeScreen} title='home'
@@ -51,7 +43,10 @@ function Screen01({navigation}){
                     title:'Home',
                     headerShown:false,
                     }}/>
-            <Stack.Screen name="Details" component={DetailsScreen} initialParams={{ itemId: 42 }}/>
+            <Stack.Screen name="Details" component={DetailsScreen} initialParams={{ itemId: 42 }}
+                options={{                 
+                    headerShown:false,
+                }}/>
         </Stack.Navigator>
         // <View style={styles.container}>
         //     <Text>I am screen01</Text>
@@ -64,7 +59,7 @@ function Screen01({navigation}){
 }
 
 
-export default Screen01
+export default Dictionary
   
 
 const styles = StyleSheet.create({

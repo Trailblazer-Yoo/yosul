@@ -6,32 +6,51 @@ import {
   ScrollView,
   View,
   Text,
-  StatusBar,
+  StatusBar, Button
 } from 'react-native'
-import Screen01 from './Screen/Screen01';
+import Dictionary from './Screen/Dictionary';
 import Screen02 from './Screen/Screen02';
+import Home from './Screen/Home';
+import SNS from './Screen/SNS';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Top_Tab = createMaterialTopTabNavigator();
 
-export default function App() {
+
+function HomeScreen({navigation}) {
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
-              name="Screen1"
-              component={Screen01}
-            />
+          name='Home'
+          component={Home}
+          options={{headerShown:false}}
+        />
         <Tab.Screen
-              name="Screen2"
-              component={Screen02}
-            />
+          name='SNS'
+          component={SNS}
+          options={{headerShown:false}}
+        />
+        <Tab.Screen
+          name="Dictionary"
+          component={Dictionary}
+          options={{headerShown:false}}
+        />
+        <Tab.Screen
+          name="Setting"
+          component={Screen02}
+          options={{headerShown:false}}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
+
+export default HomeScreen
 
 const styles = StyleSheet.create({
   container: {
