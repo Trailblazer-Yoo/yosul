@@ -13,6 +13,14 @@ import {
   const PreferredDrink = ({ navigation }) => {
     const [preferredContent, setPreferredContent] = useState();
     const [preferredAlchol, setPreferredAlchol] = useState(false);
+    const [isSelect, setIsSelect] = useState({
+      id1: false,
+      id2: false,
+      id3: false,
+      id4: false,
+      id5: false,
+      id6: false,
+    })
     return (
       <SafeAreaView>
         <View
@@ -78,7 +86,8 @@ import {
             onPress={() => setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
+
             ]}
           >
             <Text>소주</Text>
@@ -88,7 +97,8 @@ import {
             onPress={() => setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
+
             ]}
           >
             <Text>맥주</Text>
@@ -100,7 +110,8 @@ import {
             onPress={() => setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
+
             ]}
           >
             <Text>막걸리</Text>
@@ -110,7 +121,8 @@ import {
             onPress={() => setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
+
             ]}
           >
             <Text>증류식 소주</Text>
@@ -122,7 +134,8 @@ import {
             onPress={() => setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
+
             ]}
           >
             <Text>와인</Text>
@@ -132,7 +145,7 @@ import {
             onPress={() => !setPreferredAlchol}
             style={[
               styles.checkBoxDesign,
-              { backgroundColor: preferredAlchol  ? "#C0E8e0" : "#fafafa" },
+              {backgroundColor: isSelect[id] ? '#C0E8E0' : '#fafafa'}
             ]}
           >
             <Text>위스키</Text>
