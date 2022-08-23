@@ -32,12 +32,12 @@ function LoginForm({ navigation }) {
       Alert.alert(
         "Alert",
         error.message[
-          {
+          ({
             text: "OK",
             onPress: () => console.log("OK"),
             style: "cancel",
           },
-          {text: 'Sign UP', onPress: () => navigation.push('SignupScreen')}
+          { text: "Sign UP", onPress: () => navigation.push("SignupScreen") })
         ]
       );
     }
@@ -47,9 +47,9 @@ function LoginForm({ navigation }) {
     <View style={styles.wrapper}>
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={values => {
+        onSubmit={(values) => {
           onLogin(values.email, values.password);
-          navigation.push("SetProfileScreen")
+          navigation.push("SetProfileScreen");
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}
@@ -119,7 +119,7 @@ function LoginForm({ navigation }) {
             <Pressable
               titleSize={20}
               style={styles.kakaoButton}
-              onPress={handleSubmit}
+              onPress={() => navigation.push("KakaoLogin")}
             >
               <View style={styles.kakaoContainer}>
                 <Image
