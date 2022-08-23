@@ -15,7 +15,6 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
 import firebase from "../firebase";
-import { async } from "@firebase/util";
 
 function LoginForm({ navigation }) {
   const LoginFormSchema = Yup.object().shape({
@@ -50,6 +49,7 @@ function LoginForm({ navigation }) {
         initialValues={{ email: "", password: "" }}
         onSubmit={values => {
           onLogin(values.email, values.password);
+          navigation.push("SetProfileScreen")
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}
