@@ -4,47 +4,67 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Button,
 } from "react-native";
-import React from "react";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
+import { TextInput } from "react-native-gesture-handler";
 import {
   Avatar,
   Accessory,
   Divider,
-  CheckBox,
-  FormLabel,
-  FormInput,
 } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../firebase";
 
 // db.collectionGroup('그룹이름') => db 내의 새로운 컬렉션 생성
-
 const db = firebase.firestore();
 
-const SetProfile = ({ navigation }) => {
+function SetProfile({ navigation }) {
   const SetProfileSchema = Yup.object().shape({
     name: Yup.string().required("이름을 입력해주세요"),
-    age: Yup.string().required(),
+    age: Yup.number().required(),
     nickname: Yup.string().min(4, "닉네임은 4글자 이상이어야 합니다"),
   });
+  // 한글이 아닌 영어를 사용해야 접근 가능
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
+
+  const getUserEmail = () => {
+    const user = firebase.auth().currentUser;
+    console.log();
+    const unsubscribe = db
+      .collection("users")
+      .where("onwer_uid", "==", user.uid)
+      .limit(1)
+      .onSnapshot((snapshot) =>
+        snapshot.docs.map((doc) => {
+          setCurrentLoggedInUser({
+            email: doc.data().email,
+          });
+        })
+      );
+    return unsubscribe;
+  };
+
+  useEffect(() => {
+    getUserEmail();
+    console.log(currentLoggedInUser);
+  }, []);
 
   const uploadUserProfile = (name, age, nickname) => {
     try {
-      console.log();
-      const userProfile = db
-        .collection(users)
+      const unsubscribe = db
+        .collection("users")
         .doc(firebase.auth().currentUser.email)
-        .collection("profile")
-        .add({
+        .set({
+          owner_uid: firebase.auth().currentUser.uid,
+          email: firebase.auth().currentUser.email,
           name: name,
           age: age,
           nickname: nickname,
         })
         .then(() => navigation.push("PreferredDrinkScreen"));
-      return userProfile;
+      console.log(uploadUserProfile);
+      return unsubscribe;
     } catch (error) {
       console.log(error.message);
     }
@@ -54,13 +74,21 @@ const SetProfile = ({ navigation }) => {
       <Formik
         initialValues={{ name: "", age: "", nickname: "" }}
         onSubmit={(values) => {
+          console.log(values);
           uploadUserProfile(values.name, values.age, values.nickname);
           console.log("들어갔다", values);
         }}
         validationSchema={SetProfileSchema}
         validateOnMount={true}
       >
-        {({ values, handleChange, handleBlur, handleSubmit, isValid }) => (
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+        }) => (
           <>
             <View style={{ alignItems: "center", marginBottom: 20 }}>
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
@@ -114,7 +142,7 @@ const SetProfile = ({ navigation }) => {
                   placeholderTextColor="#444"
                   placeholder="이름을 입력해주세요."
                   autoCapitalize="none"
-                  onChange={handleChange("name")}
+                  onChangeText={handleChange("name")}
                   onBlur={handleBlur("name")}
                   value={values.name}
                 />
@@ -134,7 +162,7 @@ const SetProfile = ({ navigation }) => {
                   placeholderTextColor="#444"
                   placeholder="나이를 입력해주세요."
                   autoCapitalize="none"
-                  onChange={handleChange("age")}
+                  onChangeText={handleChange("age")}
                   onBlur={handleBlur("age")}
                   value={values.age}
                 />
@@ -155,7 +183,7 @@ const SetProfile = ({ navigation }) => {
                   placeholder="닉네임을 입력해주세요."
                   autoCapitalize="none"
                   clearButtonMode="always"
-                  onChange={handleChange("nickname")}
+                  onChangeText={handleChange("nickname")}
                   onBlur={handleBlur("nickname")}
                   value={values.nickname}
                 />
@@ -178,7 +206,7 @@ const SetProfile = ({ navigation }) => {
       </Formik>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   header: {
@@ -212,8 +240,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 50,
-    height: "100%",
-    // justifyContent: "center",
+    width: "100%",
+    alignItems: "center",
     backgroundColor: "#C0E8E0",
   },
 });
