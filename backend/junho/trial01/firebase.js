@@ -3,15 +3,28 @@ import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import 'firebase/compat/storage'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCmTBTSH6KBxqOAPiI5RVsjl_phfIY35Hs",
-  authDomain: "first-proj-d1f37.firebaseapp.com",
-  projectId: "first-proj-d1f37",
-  storageBucket: "first-proj-d1f37.appspot.com",
-  messagingSenderId: "117964911606",
-  appId: "1:117964911606:web:1700c0b42fc57e7b5ecdd7",
-  measurementId: "G-709HQQDGSX"
-};
-!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDzPzyP2mZLEPjoLkYWEiuNUBSiLbwaMZc",
+//   authDomain: "ios-tester000.firebaseapp.com",
+//   projectId: "ios-tester000",
+//   storageBucket: "ios-tester000.appspot.com",
+//   messagingSenderId: "395090717958",
+//   appId: "1:395090717958:web:cc874a7b8d3edb03f24287"
+// };
 
-export default firebase;
+const firebaseConfig = {
+  apiKey: "AIzaSyA4i8mfNp2O_AXOfEzH3IqziXVJqD3stYs",
+  authDomain: "ios-teter.firebaseapp.com",
+  projectId: "ios-teter",
+  storageBucket: "ios-teter.appspot.com",
+  messagingSenderId: "1086202831260",
+  appId: "1:1086202831260:web:89b3a4bc6a97dfc030e859"
+};
+
+// !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
+
+// console.log('database length')
+// console.log(firebase.apps.length)
+
+const firestoreApp = firebase.initializeApp(firebaseConfig)
+export default firestoreApp.firestore();
