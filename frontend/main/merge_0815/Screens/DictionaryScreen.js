@@ -30,7 +30,8 @@ const DictionaryScreen = () => {
     },
     
     })}
-      style={{paddingTop: Platform.OS === 'ios' ? Constants.statusBarHeight : StatusBar.currentHeight}}>
+      // style={{paddingTop: Platform.OS === 'ios' ? Constants.statusBarHeight : StatusBar.currentHeight}}
+      >
       <Tab.Screen
       name="우리술"
       component={AlcoholTypeTab}

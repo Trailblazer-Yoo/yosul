@@ -5,9 +5,6 @@ import {
   Text,
   View,
   StyleSheet,
-  Pressable,
-  TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import MyPosts from "../Components/Profile/MyPost";
 import UserProfile from "../Components/Profile/UserProfile";
@@ -57,10 +54,10 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   containertop: {
-    paddingTop:
-      Platform.OS === "ios"
-        ? Constants.statusBarHeight
-        : StatusBar.currentHeight,
+    // paddingTop:
+      // Platform.OS === "ios"
+      //   ? Constants.statusBarHeight
+      //   : StatusBar.currentHeight,
       flex:1
   },
   container: {

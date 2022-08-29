@@ -3,6 +3,7 @@ import { USERS } from "./users";
 export const POSTS = [
     {
         imageUrl: 'https://vmspace.com/ActiveFile/spacem.org/board_img/94821280661808cd6500e4.jpg',
+        id: "1",
         user: USERS[0].user,
         likes: 7870,
         caption: 'Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. Train Ride to Hogwarts. ',
@@ -22,6 +23,7 @@ export const POSTS = [
     },
     {
         imageUrl: 'https://vmspace.com/ActiveFile/spacem.org/board_img/94821280661808cd6500e4.jpg',
+        id: "2",
         user: USERS[1].user,
         likes: 3500,
         caption: 'Train Ride to Hogwarts. ',

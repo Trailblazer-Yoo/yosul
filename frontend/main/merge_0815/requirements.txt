@@ -10,3 +10,4 @@ npm install formik
 npm install yup
 npm install email-validator
 npm install firebase
+npm i @baronha/react-native-multiple-image-picker

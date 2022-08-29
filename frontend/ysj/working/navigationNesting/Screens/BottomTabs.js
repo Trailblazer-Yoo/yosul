@@ -10,7 +10,8 @@ import {
 
 import DictionaryScreen from "./DictionaryScreen";
 import CollapsibleTabViewTestScreen from './CollapsibleTabViewTestScreen'
-import ProfileScreen from "./ProfileScreen";
+// import ProfileScreen from "./ProfileScreen";
+import profileScreen from './profileScreen_copy'
 
 const Tab = createBottomTabNavigator();
 
@@ -111,7 +112,7 @@ const BottomTabs
 
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={profileScreen}
         options={{
           headerShown: false,
           tabBarLabel: "프로필",

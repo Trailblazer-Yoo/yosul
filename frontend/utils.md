@@ -12,6 +12,7 @@ export default function App() {
 (reference)[https://code-masterjung.tistory.com/126]
 (다양한 설정)[https://eunbin00.tistory.com/41]
 (상세 설정)[https://jeffgukang.github.io/react-native-tutorial/docs/router-tutorial/02-react-navigation-tab/react-navigation-tab-kr.html]
+(네비게이션 데이터 전달)[https://www.youtube.com/watch?v=BSMX3NwA_JA]
 
 ```
 npm install @react-navigation/native @react-navigation/stack @react-navigation/drawer @react-navigation/bottom-tabs @react-navigation/material-top-tabs react-native-tab-view
