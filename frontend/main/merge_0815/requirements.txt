@@ -11,3 +11,4 @@ npm install yup
 npm install email-validator
 npm install firebase
 npm i @baronha/react-native-multiple-image-picker
+npm install react-native-status-bar-height
