@@ -14,42 +14,44 @@ import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
-import { firebase } from "../../firebase";
+import firebase from "../firebase";
+
+const db = firebase.firestore();
 
 function SignupForm({ navigation }) {
   const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
-    username: Yup.string().required().min(2, "A username is required"),
     password: Yup.string()
       .required()
       .min(8, "Your password has to have at least 8 characters"),
   });
 
-  const onSignup = async (email, password, username) => {
+  const onSignup = async (email, password) => {
     try {
       const authUser = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password, username);
-      console.log("Firebase Login Successful", email, password, username);
+        .createUserWithEmailAndPassword(email, password);
+      console.log("Firebase SignUP Successful", email, password);
 
-      // db.collection("users").add({
-      //   owner_uid: authUser.user.uid,
-      //   username: username,
-      //   email: authUser.user.email,
-      //   profile_picture: await getRandomProfilePicture(),
-      // });
+      db.collection("users")
+        .doc(authUser.user.email)
+        .set({
+          owner_uid: authUser.user.uid,
+          email: authUser.user.email,
+        })
+        .then(() => navigation.goBack());
     } catch (error) {
       Alert.alert(error.message);
+      console.log(error.message);
     }
   };
 
   return (
     <View style={styles.wrapper}>
       <Formik
-        initialValues={{ email: "", username: "", password: "" }}
+        initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          onSignup(values.email, values.password, values.username);
-          navigation.goBack();
+          onSignup(values.email, values.password);
         }}
         validationSchema={SignupFormSchema}
         validateOnMount={true}
@@ -76,28 +78,6 @@ function SignupForm({ navigation }) {
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 value={values.email}
-              />
-            </View>
-
-            <View
-              style={[
-                styles.inputField,
-                {
-                  borderColor:
-                    1 > values.username.length || values.username.length >= 4
-                      ? "#ccc"
-                      : "red",
-                },
-              ]}
-            >
-              <TextInput
-                placeholderTextColor="#444"
-                placeholder="Username"
-                autoCapitalize="none"
-                textContentType="username"
-                onChangeText={handleChange("username")}
-                onBlur={handleBlur("username")}
-                value={values.username}
               />
             </View>
 
