@@ -13,7 +13,9 @@ import {
 } from "@expo/vector-icons";
 
 import UploadPostScreen from "./UploadPostScreen";
-import DictionaryScreen from "./DictionaryScreen";
+// import DictionaryScreen from "./DictionaryScreen";
+import DictionaryScreen_ny from "./DictionaryScreen_ny";
+import DictionaryDetailScreen from "./DictionaryDetailScreen";
 import ProfileScreen from "./ProfileScreen";
 import CommunityScreen from "./CommunityScreen";
 import HomeScreen from "./HomeScreen";
@@ -73,7 +75,9 @@ const UploadPostScreenStack = () => {
 const DictionaryScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="DictionaryScreen" component={DictionaryScreen} />
+      {/* <Stack.Screen name="DictionaryScreen" component={DictionaryScreen} /> */}
+      <Stack.Screen name="DictionaryScreen" component={DictionaryScreen_ny} />
+      <Stack.Screen name="DictionaryDetailScreen" component={DictionaryDetailScreen} />
     </Stack.Navigator>
   );
 };
