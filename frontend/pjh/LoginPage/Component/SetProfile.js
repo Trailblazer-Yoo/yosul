@@ -7,11 +7,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { TextInput } from "react-native-gesture-handler";
-import {
-  Avatar,
-  Accessory,
-  Divider,
-} from "react-native-elements";
+import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../firebase";
@@ -26,19 +22,21 @@ function SetProfile({ navigation }) {
     nickname: Yup.string().min(4, "닉네임은 4글자 이상이어야 합니다"),
   });
   // 한글이 아닌 영어를 사용해야 접근 가능
-  const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
 
+  const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
   const getUserEmail = () => {
     const user = firebase.auth().currentUser;
-    console.log();
+    console.log(user);
     const unsubscribe = db
       .collection("users")
-      .where("onwer_uid", "==", user.uid)
+      .doc(firebase.auth().currentUser.email)
+      .where("owner_uid", "==", user.uid)
       .limit(1)
       .onSnapshot((snapshot) =>
         snapshot.docs.map((doc) => {
           setCurrentLoggedInUser({
             email: doc.data().email,
+            owner_uid: doc.data().uid,
           });
         })
       );
@@ -50,9 +48,9 @@ function SetProfile({ navigation }) {
     console.log(currentLoggedInUser);
   }, []);
 
-  const uploadUserProfile = (name, age, nickname) => {
+  const uploadUserProfile = async (name, age, nickname) => {
     try {
-      const unsubscribe = db
+      const unsubscribe = await db
         .collection("users")
         .doc(firebase.auth().currentUser.email)
         .set({
