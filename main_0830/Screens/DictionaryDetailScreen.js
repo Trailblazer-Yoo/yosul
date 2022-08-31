@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, Image, Linking } from 'react-native';
 import React from 'react';
 
@@ -6,14 +5,12 @@ export default function DictionaryDetailScreen({route}) {
     const item = route.params.item
     return (
         <View style={styles.container}>
-            <StatusBar style="auto" />
             <Image style={styles.img} source={{uri: item.img}} />
             <Text style={styles.header}>{item.name}</Text>
             <Text>분류: {item.category}</Text>
             <Text>주재료: {item.meterial}</Text>
             <Text>도수: {item.alc}</Text>
             <Text>용량: {item.size}</Text>
-            <Text>도수: {item.alc}</Text>
             <Text>수상 내역: {item.awards}</Text>
             <Text>어울리는 음식: {item.pairing}</Text>
             <Text>양조장: {item.craft}</Text>
