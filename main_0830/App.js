@@ -4,7 +4,6 @@ import { SignedInStack, SignedOutStack } from "./navigation";
 
 export default function App() {
   return (
-      // <AuthNavigation />
       <SignedInStack />
   );
 }

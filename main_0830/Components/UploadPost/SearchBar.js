@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import firebase from "../../firebase";
 
@@ -16,6 +17,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 
 const SearchBar = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const [filterdData, setfilterdData] = useState([]);
   const [masterData, setmasterData] = useState([]);
   const [TagList, setTagList] = useState([]);
@@ -33,6 +35,7 @@ const SearchBar = ({ navigation }) => {
         setfilterdData(snapshot.docs.map((doc) => doc.data()));
         setmasterData(snapshot.docs.map((doc) => doc.data()));
       });
+    setLoading(true);
   };
 
   const ItemView = ({ item }) => {
@@ -133,92 +136,102 @@ const SearchBar = ({ navigation }) => {
     console.log(arr);
     navigation.navigate("UploadPost", { tags: arr });
   };
-  
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <FlatList
-            style={{ padding: 5 }}
-            data={TagList}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={TagView}
-            horizontal={true}
+      {loading === false ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            color="grey"
+            style={{ marginTop: 10 }}
+            size="large"
           />
-          {TagList.length > 0 ? (
-            <TouchableOpacity style={{ marginRight: 7 }} onPress={changePass}>
-              <Text style={{ fontSize: 15 }}>완료</Text>
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )}
         </View>
-        <View style={styles.textInputStyle}>
-          <TextInput
-            autoComplete={false}
-            autoCapitalize="none"
-            autoCorrect={false}
-            value={search}
-            placeholder="태그를 검색해주세요"
-            underlineColorAndroid="transparent"
-            onChangeText={(text) => {
-              if (text.includes(" ")) {
-                searchFilter(text.trim());
-              } else {
-                searchFilter(text);
-              }
+      ) : (
+        <View style={styles.container}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
-            onSubmitEditing={() => submit(search)}
-          />
-          {TagList.length === 3 ? (
-            // 만약 태그가 3개 꽉 찼다면
-            <></>
-          ) : (
-            // <View style={{ justifyContent: "center" }}>
-            //   <Text style={{ fontSize: 15, color: "gray" }}></Text>
-            // </View>
-            // 아직 안찼다면
-            <TouchableOpacity
-              style={{ justifyContent: "center" }}
-              onPress={() => {
-                if (search === "") {
-                  Alert.alert("오류", "태그를 입력해주세요");
-                  return;
-                } else if (TagList.length === 3) {
-                  Alert.alert(
-                    "오류",
-                    "태그는 최대 3개까지 가능합니다. 완료 버튼을 눌러주세요."
-                  );
-                  return;
-                } else if (
-                  !!TagList.find((element) => element.tag === search)
-                ) {
-                  Alert.alert("중복오류", "해당 태그가 이미 존재합니다.");
-                  return;
+          >
+            <FlatList
+              style={{ padding: 5 }}
+              data={TagList}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={TagView}
+              horizontal={true}
+            />
+            {TagList.length > 0 ? (
+              <TouchableOpacity style={{ marginRight: 7 }} onPress={changePass}>
+                <Text style={{ fontSize: 15 }}>완료</Text>
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
+          </View>
+          <View style={styles.textInputStyle}>
+            <TextInput
+              autoComplete={false}
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={search}
+              placeholder="태그를 검색해주세요"
+              underlineColorAndroid="transparent"
+              onChangeText={(text) => {
+                if (text.includes(" ")) {
+                  searchFilter(text.trim());
                 } else {
-                  // searchFilter(item.tag); // 리스트 중에 하나를 누르면 input에 텍스트를 넣어줌
-                  setTagList(TagList.concat({ tag: search }));
-                  setsearch("");
+                  searchFilter(text);
                 }
               }}
-            >
-              <Text style={styles.addbutton}>추가</Text>
-            </TouchableOpacity>
-          )}
+              onSubmitEditing={() => submit(search)}
+            />
+            {TagList.length === 3 ? (
+              // 만약 태그가 3개 꽉 찼다면
+              <></>
+            ) : (
+              // <View style={{ justifyContent: "center" }}>
+              //   <Text style={{ fontSize: 15, color: "gray" }}></Text>
+              // </View>
+              // 아직 안찼다면
+              <TouchableOpacity
+                style={{ justifyContent: "center" }}
+                onPress={() => {
+                  if (search === "") {
+                    Alert.alert("오류", "태그를 입력해주세요");
+                    return;
+                  } else if (TagList.length === 3) {
+                    Alert.alert(
+                      "오류",
+                      "태그는 최대 3개까지 가능합니다. 완료 버튼을 눌러주세요."
+                    );
+                    return;
+                  } else if (
+                    !!TagList.find((element) => element.tag === search)
+                  ) {
+                    Alert.alert("중복오류", "해당 태그가 이미 존재합니다.");
+                    return;
+                  } else {
+                    // searchFilter(item.tag); // 리스트 중에 하나를 누르면 input에 텍스트를 넣어줌
+                    setTagList(TagList.concat({ tag: search }));
+                    setsearch("");
+                  }
+                }}
+              >
+                <Text style={styles.addbutton}>추가</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <FlatList
+            data={filterdData}
+            keyExtractor={(item, index) => index.toString()}
+            ItemSeparatorComponent={ItemSeparatorView}
+            renderItem={ItemView}
+          />
         </View>
-        <FlatList
-          data={filterdData}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
-          renderItem={ItemView}
-        />
-      </View>
+      )}
     </SafeAreaView>
   );
 };
