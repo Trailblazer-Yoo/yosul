@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react'
 import { Divider } from 'react-native-elements';
 import { AntDesign, Feather, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
 //import firebase from '../../firebase';
-import post from '../../data/post'
+import post, { POSTS } from '../../data/post'
 // const db = firebase.firestore()
 import ImageView from "react-native-image-viewing";
+import ImageModal from 'react-native-image-modal';
 
 const Post = ({ post }) => {
     const handleLike = post => {
@@ -34,7 +35,7 @@ const Post = ({ post }) => {
             })
     }
     return (
-        <View style={{ marginBottom: 30 }}>
+        <View style={{ flex: 1/2, marginBottom: 30 }}>
             <Divider width={2} orientation='vertical' />
             <PostImage post={post} />
             <PostHeader post={post} />
@@ -49,13 +50,18 @@ const Post = ({ post }) => {
     )
 }
 
-
 const PostImage = ({ post }) => (
-    <View style={{ width: "100%", height: 300 }}>
-        <Image
-                source={{ uri: post.imageUrl }}
-                style={{ height: "100%", resizeMode: "cover", borderRadius: 13, marginTop: 5 }}
-            />
+    <View style={{flex:1, width: "99%", height: 300, marginTop: 3 }}>
+        <TouchableOpacity>
+            <Image
+                style={{
+                width: "100%",
+                height: 300,
+                borderRadius: 10,
+                }}
+                source={{
+                uri: post.imageUrl}}/>
+        </TouchableOpacity>
     </View>
 );
 
@@ -64,7 +70,7 @@ const PostHeader = ({ post }) => (
     <View style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 5,
         alignItems: 'center',
         width: "100%",
     }}>
@@ -109,7 +115,7 @@ const Caption = ({ post }) => (
 const CommentsSection = ({ post }) => (
     <View style={{ flex:1 , width:"100%" }}>
         <View style={{ alignItems: 'flex-end', justifyContent: 'center', }}>
-            <Text style ={{fontSize: 12}}>{post.date}</Text>
+            <Text style ={{marginTop: 5,fontSize: 10}}>{post.date}</Text>
         </View>
         {!!post.comments.length && (
             <Text style={{ color: 'gray' }}>
@@ -133,14 +139,13 @@ const Comment = ({ post }) => (
     </>
 )
 
-
 const PostFooter = ({ post }) => (
-    <View style={{ flexDirection: 'row',justifyContent: 'space-between', width: "100%", marginTop: 9 }}>
+    <View style={{ flexDirection: 'row',justifyContent: 'space-between', width: "120%", marginTop: 9 }}>
         <View style={styles.lefeFooterIconsContainer}>
             {/* 하트 */}
             <TouchableOpacity>
                 <View style ={styles.box}>
-                    <AntDesign name="hearto" size={20} color="black" />
+                    <AntDesign name={"hearto"} size={20}/>
                     <Text style={{ color: "black", fontWeight: '350', marginLeft: 5 }}>
                         {post.likes.toLocaleString("en")}
                     </Text>
@@ -176,12 +181,13 @@ const styles = StyleSheet.create({
     },
     lefeFooterIconsContainer: {
         flexDirection: 'row',
-        width: "32%",
+        width: "33%",
         justifyContent: 'space-between'
     },
     box: {
         flexDirection: 'row',
-        flex: 1}
+        flex: 1,
+        marginRight: 5}
 })
 
 export default Post

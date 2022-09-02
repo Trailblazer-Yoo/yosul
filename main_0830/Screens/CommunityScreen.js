@@ -1,12 +1,16 @@
 import { StyleSheet, TouchableOpacity, Image, Text, View, SafeAreaView, ScrollView, FlatList, Pressable } from 'react-native';
 import Post from '../Components/Community/Post'
 import { useEffect, useState } from 'react';
-import { POSTS } from '../data/post';
+import { POSTS } from '../data/post'; 
 import firebase from '../firebase'
 
 const db = firebase.firestore()
 
 const CommunityScreen = ({navigation}) => {
+  const renderPosts = (itemData) => {
+    return <Post post ={itemData.item} />;
+  };
+
   const [posts, setPosts] = useState([])
   useEffect(() => {
     db.collectionGroup('posts')
@@ -16,27 +20,23 @@ const CommunityScreen = ({navigation}) => {
     })
   }, [])
   return (
-    <SafeAreaView style={styles.safecontainer}>
-      <ScrollView>
-        {POSTS.map((post, index) => (
-            <Post post={post} key={index}/>
-          ))}
-      </ScrollView> 
+    <SafeAreaView style={{flex: 1}}>
+      <FlatList
+          data={POSTS}
+          renderItem={renderPosts}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          style={{ margin: 3 }}
+            />
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  safecontainer: {
-    flex :1
-  },
-  container: {
-    backgroundColor:"white",
-    flex: 1,
-    flexDirection: "row",
-    widht: '100%',
-    heigh:'85%',
-    flexWrap:'wrap'
+  screen: {
+    flex :1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
   },
   box: {
     width: '50%',
@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     padding: 5
   },
   inner: {
-    flex: 1
-  }
+    flex: 1/2
+  },
 })
 
 export default CommunityScreen
