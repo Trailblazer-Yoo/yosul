@@ -15,21 +15,25 @@ import firebase from "../firebase";
 
 export default function DictionaryScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
-  const [sulList, setSulList] = useState({});
-  const sulCollection = firebase.firestore().collection("sool_test");
+  const [sulList, setSulList] = useState([]);
+  const sulCollection = firebase.firestore().collection("global");
+  // const sulCollection = firebase.firestore().collection("soo_test");
   const getFsvDocs = async () => {
-    const dataSnapShot = (await sulCollection.doc("init").get()).data();
-    const dataCols = Object.keys(dataSnapShot);
-    const sulName = dataSnapShot["name"];
+    const dataSnapShot = (await sulCollection.doc("drinks").get()).data();
+    // const dataSnapShot = (await sulCollection.doc("init").get()).data();
+    // const dataCols = Object.keys(dataSnapShot);
+    // const sulName = dataSnapShot["name"];
+    // const data = [];
+    // for (let i = 0; i < sulName.length; i++) {
+    //   let temp = {};
+    //   dataCols.map((x) => (temp[x] = dataSnapShot[x][i]));
+    //   data.push(temp);
+    // }
     const data = [];
-    for (let i = 0; i < sulName.length; i++) {
-      let temp = {};
-      dataCols.map((x) => (temp[x] = dataSnapShot[x][i]));
-      data.push(temp);
-    }
-    setSulList(data);
+    data.push(Object.values(dataSnapShot));
+    setSulList(data[0]);
     setLoading(true);
-    // console.log(dataSnapShot);
+    console.log(data);
   };
 
   useEffect(() => {
@@ -49,14 +53,17 @@ export default function DictionaryScreen({ navigation }) {
           <View style={styles.textcontainer}>
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.text}>
-              지역 :{" "}
+              {/* 지역 :{" "}
               {item.address.substr(
                 0,
                 item.address.indexOf(" ", item.address.indexOf(" ") + 1)
-              )}
+              )} */}
             </Text>
-            <Text style={styles.text}>도수 :{item.alc}</Text>
-            <Text style={styles.text}>분류 : {item.category}</Text>
+            <Text style={styles.text}>도수 :{item.alcohol}</Text>
+            <Text style={styles.text}>용량 : {item.capacity}</Text>
+            <Text style={styles.text}>주재료 : {item.materials}</Text>
+            <Text style={styles.text}>제조 : {item.craft}</Text>
+            {/* <Text style={styles.text}>분류 : {item.category}</Text> */}
           </View>
         </Pressable>
         <View style={styles.iconcontainer}>
@@ -113,7 +120,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     width: Dimensions.get("window").width - 20,
-    height: (Dimensions.get("window").width - 20) / 4,
+    height: (Dimensions.get("window").width) / 2.5,
+    // height: (Dimensions.get("window").width) - 20 / 4,
     padding: 8,
   },
   item: {

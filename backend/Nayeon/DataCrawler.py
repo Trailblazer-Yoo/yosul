@@ -9,7 +9,7 @@ from firebase_admin import firestore
 class Firebase_updater:
     def __init__(self):
         db_url = ''
-        cred = credentials.Certificate()
+        cred = credentials.Certificate('')
         firebase_admin.initialize_app(cred, {'databaseURL':db_url})
         self.db = firestore.client()
 
@@ -74,3 +74,6 @@ class Firebase_updater:
         
         for key, value in dictionary.items():
             doc_ref.set({dictionary[key]['name']: value}, merge=True)
+
+fu = Firebase_updater()
+fu.get_sul_api()
