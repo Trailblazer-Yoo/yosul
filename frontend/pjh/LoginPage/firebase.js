@@ -8,15 +8,15 @@ import 'firebase/compat/storage'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA4i8mfNp2O_AXOfEzH3IqziXVJqD3stYs",
-  authDomain: "ios-teter.firebaseapp.com",
-  projectId: "ios-teter",
-  storageBucket: "ios-teter.appspot.com",
-  messagingSenderId: "1086202831260",
-  appId: "1:1086202831260:web:89b3a4bc6a97dfc030e859"
+  apiKey: "AIzaSyCCdFg4S9H1RN-fbNrUk_X0snJX-gg4Duc",
+  authDomain: "yosul-f2107.firebaseapp.com",
+  projectId: "yosul-f2107",
+  storageBucket: "yosul-f2107.appspot.com",
+  messagingSenderId: "1033895981364",
+  appId: "1:1033895981364:web:e19637699b552888fef561"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()
 
 export default firebase

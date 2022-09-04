@@ -38,6 +38,13 @@ function SignupForm({ navigation }) {
         .set({
           owner_uid: authUser.user.uid,
           email: authUser.user.email,
+          name: '',
+          age: '',
+          nickname: '',
+          amount: '',
+          drink: '',
+          minContent: '',
+          maxContent: '',
         })
         .then(() => navigation.goBack());
     } catch (error) {

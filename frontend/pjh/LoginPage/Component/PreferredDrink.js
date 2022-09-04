@@ -14,7 +14,7 @@ import { Formik, useField } from "formik";
 import * as Yup from "yup";
 import firebase from "../firebase";
 
-const db = firebase.firestore().collection("users");
+const db = firebase.firestore();
 const window = Dimensions.get("window");
 
 // 문제 1 : firebase -> undefined 값이 들어간다고 나옴 (uploadUserDrink 부분 확인 중)
@@ -28,8 +28,8 @@ const window = Dimensions.get("window");
 const PreferredDrink = ({ navigation }) => {
   const SetDrinkSchema = Yup.object().shape({
     amount: Yup.number().required(),
-    minimum: Yup.number().required(),
-    maximum: Yup.number().required(),
+    minContent: Yup.number().required(),
+    maxContent: Yup.number().required(),
   });
 
   const alcohols = ["소주", "맥주", "막걸리", "증류식 소주", "와인", "위스키"];
@@ -42,25 +42,28 @@ const PreferredDrink = ({ navigation }) => {
   const [isColor5, setColor5] = useState("grey");
 
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
-  const getUserEmail = () => {
+  const getUserEmail = async () => {
     const user = firebase.auth().currentUser;
-    console.log(user);
-    const unsubscribe = db
-      .collection("users")
-      .doc(firebase.auth().currentUser.email)
-      .where("owner_uid", "==", user.uid)
-      .limit(1)
-      .onSnapshot((snapshot) =>
-        snapshot.docs.map((doc) => {
-          setCurrentLoggedInUser({
-            email: doc.data().email,
-            owner_uid: doc.data().owner_uid,
-            name: doc.data().name,
-            age: doc.data().age,
-            nickname: doc.data().nickname,
-          });
-        })
-      );
+    console.log(user.uid)
+    if (user) {
+      console.log();
+    }
+    const unsubscribe = async () =>
+      db
+        .collection("users")
+        .where("owner_uid", "==", user.uid)
+        .limit(1)
+        .onSnapshot((snapshot) =>
+          snapshot.docs.map((doc) => {
+            setCurrentLoggedInUser({
+              email: doc.data().email,
+              owner_uid: doc.data().owner_uid,
+              username: doc.data().username,
+              age: doc.data().age,
+              nickname: doc.data().nickname,
+            });
+          })
+        );
     return unsubscribe;
   };
 
@@ -69,20 +72,27 @@ const PreferredDrink = ({ navigation }) => {
     console.log(currentLoggedInUser);
   }, []);
 
-  const uploadUserDrink = (amount, drink, minimum, maximum) => {
-    const sendToFirebase = db.doc(firebase.auth().currentUser.email).set({
-      owner_uid: firebase.auth().currentUser.uid,
-      email: firebase.auth().currentUser.email,
-      name: firebase.auth().currentUser.name,
-      age: firebase.auth().currentUser.age,
-      nickname: firebase.auth().currentUser.nickname,
-      amount: amount,
-      drink: drink,
-      minimum: minimum,
-      maximum: maximum,
-    });
-    console.log(sendToFirebase);
-    return sendToFirebase;
+  const uploadUserDrink = async (amount, drink, minContent, maxContent) => {
+    try {
+      const sendToFirebase = await db
+        .collection("users")
+        .doc(firebase.auth().currentUser.email)
+        .set({
+          owner_uid: firebase.auth().currentUser.uid,
+          email: currentLoggedInUser.email,
+          username: currentLoggedInUser.username,
+          age: currentLoggedInUser.age,
+          nickname: currentLoggedInUser.nickname,
+          amount: amount,
+          drink: drink,
+          minContent: minContent,
+          maxContent: maxContent,
+        })
+        .then(console.log(sendToFirebase));
+      return sendToFirebase;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -91,16 +101,16 @@ const PreferredDrink = ({ navigation }) => {
         initialValues={{
           amount: "",
           drink: [],
-          minimum: "",
-          maximum: "",
+          minContent: "",
+          maxContent: "",
         }}
         onSubmit={(values) => {
           console.log(values);
           uploadUserDrink(
             values.amount,
             values.drink,
-            values.minimum,
-            values.maximum
+            values.minContent,
+            values.maxContent
           );
         }}
         validationSchema={SetDrinkSchema}
@@ -295,9 +305,9 @@ const PreferredDrink = ({ navigation }) => {
                 placeholder="최소"
                 textAlign="center"
                 autoCapitalize="none"
-                onChangeText={handleChange("minimum")}
-                onBlur={handleBlur("minimum")}
-                value={values.minimum}
+                onChangeText={handleChange("minContent")}
+                onBlur={handleBlur("minContent")}
+                value={values.minContent}
               />
               <TextInput
                 style={styles.inputContent}
@@ -305,9 +315,9 @@ const PreferredDrink = ({ navigation }) => {
                 placeholder="최대"
                 textAlign="center"
                 autoCapitalize="none"
-                onChangeText={handleChange("maximum")}
-                onBlur={handleBlur("maximum")}
-                value={values.maximum}
+                onChangeText={handleChange("maxContent")}
+                onBlur={handleBlur("maxContent")}
+                value={values.maxContent}
               />
             </View>
             <View

@@ -10,7 +10,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import firebase from "../firebase";
+import firebase, { getAuth } from "../firebase";
 
 // db.collectionGroup('그룹이름') => db 내의 새로운 컬렉션 생성
 const db = firebase.firestore();
@@ -24,22 +24,21 @@ function SetProfile({ navigation }) {
   // 한글이 아닌 영어를 사용해야 접근 가능
 
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
-  const getUserEmail = () => {
+  const getUserEmail = async () => {
     const user = firebase.auth().currentUser;
-    console.log(user);
-    const unsubscribe = db
-      .collection("users")
-      .doc(firebase.auth().currentUser.email)
-      .where("owner_uid", "==", user.uid)
-      .limit(1)
-      .onSnapshot((snapshot) =>
-        snapshot.docs.map((doc) => {
+    console.log(user.uid);
+    const unsubscribe = async () =>
+      db
+        .collection("users")
+        .where("owner_uid", "==", user.uid)
+        .limit(1)
+        .onSnapshot((snapshot) => snapshot.docs.map((doc) => {
           setCurrentLoggedInUser({
             email: doc.data().email,
             owner_uid: doc.data().uid,
           });
         })
-      );
+        );
     return unsubscribe;
   };
 
@@ -56,7 +55,7 @@ function SetProfile({ navigation }) {
         .set({
           owner_uid: firebase.auth().currentUser.uid,
           email: firebase.auth().currentUser.email,
-          name: name,
+          username: name,
           age: age,
           nickname: nickname,
         })
