@@ -53,7 +53,7 @@ const DictionaryScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions2}>
       <Stack.Screen name="DictionaryScreen" component={DictionaryScreen} options={{headerTitle: '전통주 사전'}}/>
-      <Stack.Screen name="DictionaryDetailScreen" component={DictionaryDetailScreen} options={{headerTitle: '상세'}}/>
+      <Stack.Screen name="DictionaryDetailScreen" component={DictionaryDetailScreen} options={{headerTitle: '상세정보'}}/>
     </Stack.Navigator>
   );
 };
