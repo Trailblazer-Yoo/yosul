@@ -33,7 +33,10 @@
     "react-native-image-slider-box": "^2.0.5",
     "react-native-image-viewing": "^0.2.2",
     "react-native-pager-view": "^5.4.24",
+<<<<<<< HEAD
     "react-native-safe-area-context": "4.3.1",
+=======
+>>>>>>> 5320bc645d482e9faadb0a47e9008c32a819cef4
     "react-native-size-matters": "^0.4.0",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-super-grid": "^4.5.0",

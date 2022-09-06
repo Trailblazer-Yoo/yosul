@@ -1,5 +1,3 @@
-import { StatusBar } from "expo-status-bar";
-import * as Font from "expo-font";
 import React from "react";
 import {
   StyleSheet,
@@ -26,7 +24,13 @@ function LoginForm({ navigation }) {
 
   const onLogin = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            navigation.push("SetProfileScreen");
+          }
+        })
+      });
       console.log("Firebase Login Successful", email, password);
     } catch (error) {
       Alert.alert(
@@ -42,6 +46,13 @@ function LoginForm({ navigation }) {
       );
     }
   };
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      window.location = 'SetProfile.js'
+    } else {
+      console.log('no user signed in')
+    }
+  })
 
   return (
     <View style={styles.wrapper}>
@@ -49,7 +60,6 @@ function LoginForm({ navigation }) {
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
           onLogin(values.email, values.password);
-          navigation.push("SetProfileScreen");
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}

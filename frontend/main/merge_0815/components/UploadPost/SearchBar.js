@@ -173,7 +173,7 @@ const SearchBar = ({ navigation }) => {
           </View>
           <View style={styles.textInputStyle}>
             <TextInput
-              autoComplete={false}
+              // autoComplete={false}
               autoCapitalize="none"
               autoCorrect={false}
               value={search}
