@@ -27,7 +27,10 @@ function LoginForm({ navigation }) {
 
   const onLogin = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => navigation.push("SetProfileScreen"));
       console.log("Firebase Login Successful", email, password);
     } catch (error) {
       Alert.alert(
@@ -50,7 +53,6 @@ function LoginForm({ navigation }) {
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
           onLogin(values.email, values.password);
-          onPress = () => navigation.push("SetProfileScreen");
         }}
         validationSchema={LoginFormSchema}
         validateOnMount={true}

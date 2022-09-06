@@ -25,10 +25,10 @@ function HomeScreen() {
 //   </View>
 //   <LoginForm navigation={navigation}/>
 // </View>
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
   return (
       <View style={styles.containertop}>
-        <UserProfile />
+        <UserProfile navigation={navigation} />
         <Tab.Navigator
           screenOptions={() => ({
             tabBarActiveTintColor: "#C0E8E0",
