@@ -14,4 +14,5 @@ npm install formik
 npm install yup
 npm install email-validator
 npm install firebase
+npm install react-native-image-modal
 # npm install react-native-image-picker

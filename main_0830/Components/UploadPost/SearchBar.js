@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import firebase from "../../firebase";
 
@@ -27,16 +27,30 @@ const SearchBar = ({ navigation }) => {
     getfirebase();
   }, []);
 
-  const getfirebase = () => {
-    db.collection("global")
-      .doc("tags")
-      .collection("taglist")
-      .onSnapshot((snapshot) => {
-        setfilterdData(snapshot.docs.map((doc) => doc.data()));
-        setmasterData(snapshot.docs.map((doc) => doc.data()));
-      });
+  const getfirebase = async () => {
+    const dataSnapShot = (
+      await db.collection("global").doc("tags").get()
+    ).data();
+
+    const items = Object.keys(dataSnapShot);
+    const data = [];
+    items.map((item) => data.push({tag : item}));
+    setfilterdData(data);
+    setmasterData(data);
+    
     setLoading(true);
   };
+
+  // const getfirebase = () => {
+  //   db.collection("global")
+  //     .doc("tags")
+  //     .collection("taglist")
+  //     .onSnapshot((snapshot) => {
+  //       setfilterdData(snapshot.docs.map((doc) => doc.data()));
+  //       setmasterData(snapshot.docs.map((doc) => doc.data()));
+  //     });
+  //   setLoading(true);
+  // };
 
   const ItemView = ({ item }) => {
     return (
@@ -173,7 +187,7 @@ const SearchBar = ({ navigation }) => {
           </View>
           <View style={styles.textInputStyle}>
             <TextInput
-              autoComplete={false}
+              // autoComplete={false}
               autoCapitalize="none"
               autoCorrect={false}
               value={search}
@@ -189,12 +203,9 @@ const SearchBar = ({ navigation }) => {
               onSubmitEditing={() => submit(search)}
             />
             {TagList.length === 3 ? (
-              // 만약 태그가 3개 꽉 찼다면
+              // 만약 태그가 3개 꽉 찼다면 '추가'버튼 삭제
               <></>
             ) : (
-              // <View style={{ justifyContent: "center" }}>
-              //   <Text style={{ fontSize: 15, color: "gray" }}></Text>
-              // </View>
               // 아직 안찼다면
               <TouchableOpacity
                 style={{ justifyContent: "center" }}

@@ -213,6 +213,7 @@ const screenOptions3 = {
   headerTitleStyle: { fontsize: 10},
   swipeEnabled: false,
   adaptive: true,
+  tabBarHideOnKeyboard:true,
   headerTintColor: '#000000',
   tabBarLabelStyle: {
     fontSize: 12,
