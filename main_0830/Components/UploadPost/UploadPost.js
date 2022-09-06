@@ -35,13 +35,12 @@ const uploadPostSchema = Yup.object().shape({
 
 const UploadPost = ({ navigation, route }) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(PLACEHOLDER_IMG); // 이미지
-  const [imageArray, setImageArray] = useState([{ image: PLACEHOLDER_IMG }]); // 이미지
+  const [imageArray, setImageArray] = useState([PLACEHOLDER_IMG]); // 이미지
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null); // 현재 유저 아이디
   const [TagList, setTagList] = useState([]); // 태그 리스트 받아오기
 
   // 이미지 업로드
   const uploadThumbnailImage = async () => {
-    console.log("이미지 선택");
     let ImageData = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -56,7 +55,6 @@ const UploadPost = ({ navigation, route }) => {
 
   // 이미지 하나하나 넣기
   const fixImageArray = async (index) => {
-    console.log("이미지 선택");
     let ImageData = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -67,11 +65,9 @@ const UploadPost = ({ navigation, route }) => {
       return null;
     }
     if (index === (imageArray.length - 1).toString()) {
-      setImageArray([{ image: ImageData.uri }, ...imageArray]);
+      setImageArray([ImageData.uri, ...imageArray]);
     } else {
-      const newArray = imageArray.splice(index, index, {
-        image: ImageData.uri,
-      });
+      const newArray = imageArray.splice(index, index, ImageData.uri);
       setImageArray(newArray[0]);
     }
     console.log(imageArray);
@@ -127,7 +123,7 @@ const UploadPost = ({ navigation, route }) => {
       .doc(firebase.auth().currentUser.email)
       .collection("posts")
       .add({
-        imageArray: [{ imageurl: imageUrl }, ...imagearray],
+        imageArray: [imageUrl, ...imagearray],
         user: currentLoggedInUser.username,
         profile_picture: currentLoggedInUser.profilePicture,
         owner_uid: firebase.auth().currentUser.uid,
@@ -148,7 +144,7 @@ const UploadPost = ({ navigation, route }) => {
 
   // 태그 출력 형태
   const TagView = ({ item }) => {
-    return <Text style={styles.tagview}>#{item.tag} </Text>;
+    return <Text style={styles.tagview}>#{item} </Text>;
   };
 
   const ImageView = ({ item, index }) => {
@@ -157,7 +153,7 @@ const UploadPost = ({ navigation, route }) => {
         onPress={() => fixImageArray(index.toString())}
         onChange={imageArray}
       >
-        <Image source={{ uri: item.image }} style={styles.imagearraywrapper} />
+        <Image source={{ uri: item }} style={styles.imagearraywrapper} />
       </TouchableOpacity>
     );
   };
@@ -168,7 +164,7 @@ const UploadPost = ({ navigation, route }) => {
       // 태그를 설정했다면
       const arr = [];
       for (let i = 0; i < route.params.tags.length; i++) {
-        arr.push({ tag: route.params.tags[i] });
+        arr.push(route.params.tags[i]);
       }
       setTagList(arr);
     } else {
@@ -176,7 +172,6 @@ const UploadPost = ({ navigation, route }) => {
       return;
     }
   }, [route.params]);
-  console.log(TagList);
 
   return (
     <Formik
@@ -187,9 +182,13 @@ const UploadPost = ({ navigation, route }) => {
         tags: [],
       }}
       onSubmit={(values) => {
-        console.log(values);
         uploadTagsToFirebase(TagList);
-        uploadPostToFirebase(thumbnailUrl, imageArray.slice(undefined,imageArray.length-1), values.caption, TagList);
+        uploadPostToFirebase(
+          thumbnailUrl,
+          imageArray.slice(undefined, imageArray.length - 1),
+          values.caption,
+          TagList
+        );
         console.log("잘 들어갔씀둥");
       }}
       validationSchema={uploadPostSchema}
@@ -203,83 +202,88 @@ const UploadPost = ({ navigation, route }) => {
         errors,
         isValid,
       }) => (
-        <ScrollView>
-          <View style={styles.container}>
-            <TouchableOpacity // 이미지
-              onPress={uploadThumbnailImage}
-              onChange={thumbnailUrl}
-            >
-              <Image
-                source={{
-                  uri: validUrl.isUri(thumbnailUrl)
-                    ? thumbnailUrl
-                    : PLACEHOLDER_IMG,
-                }}
-                style={styles.uploadphotowrapper}
-              />
-            </TouchableOpacity>
-            <FlatList
-              style={{ padding: 5 }}
-              data={imageArray}
-              extraData={imageArray}
-              renderItem={ImageView}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            />
-            {!!!route.params ? (
-              <></>
-            ) : (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "baseline",
-                  marginTop: 10,
-                }}
+        <SafeAreaView>
+          <ScrollView>
+            <View style={styles.container}>
+              <TouchableOpacity // 이미지
+                onPress={uploadThumbnailImage}
+                onChange={thumbnailUrl}
               >
-                <FlatList
-                  style={{ padding: 5 }}
-                  data={TagList}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={TagView}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
+                <Image
+                  source={{
+                    uri: validUrl.isUri(thumbnailUrl)
+                      ? thumbnailUrl
+                      : PLACEHOLDER_IMG,
+                  }}
+                  style={styles.uploadphotowrapper}
                 />
-              </View>
-            )}
-            <Pressable
-              style={styles.textInputStyle}
-              onPress={() => navigation.navigate("SearchBar")}
-            >
+              </TouchableOpacity>
+              <FlatList
+                style={{ padding: 5 }}
+                data={imageArray}
+                extraData={imageArray}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={ImageView}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
               {!!!route.params ? (
-                <Text style={{ color: "gray", marginLeft: 10 }}>
-                  태그를 입력해주세요
-                </Text>
+                <></>
               ) : (
-                <Text style={{ color: "gray", marginLeft: 10 }}>
-                  태그를 수정해주세요
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                    marginTop: 10,
+                  }}
+                >
+                  <FlatList
+                    style={{ padding: 5 }}
+                    data={TagList}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={TagView}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
+              )}
+              <Pressable
+                style={styles.textInputStyle}
+                onPress={() => navigation.navigate("SearchBar")}
+              >
+                {!!!route.params ? (
+                  <Text style={{ color: "gray", marginLeft: 10 }}>
+                    태그를 입력해주세요
+                  </Text>
+                ) : (
+                  <Text style={{ color: "gray", marginLeft: 10 }}>
+                    태그를 수정해주세요
+                  </Text>
+                )}
+              </Pressable>
+              {errors.tags && (
+                <Text style={{ fontSize: 10, color: "red" }}>
+                  {errors.tags}
                 </Text>
               )}
-            </Pressable>
-            {errors.tags && (
-              <Text style={{ fontSize: 10, color: "red" }}>{errors.tags}</Text>
-            )}
-            <View>
-              <Text style={styles.onelinetitle}>본문 작성</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                style={styles.onelinetext}
-                placeholder="본문을 입력해주세요"
-                placeholderTextColor="gray"
-                multiline={true}
-                onChangeText={handleChange("caption")}
-                onBlur={handleBlur("caption")}
-                value={values.caption}
-              />
+              <View>
+                <Text style={styles.onelinetitle}>본문 작성</Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={styles.onelinetext}
+                  placeholder="본문을 입력해주세요"
+                  placeholderTextColor="gray"
+                  multiline={true}
+                  onChangeText={handleChange("caption")}
+                  onBlur={handleBlur("caption")}
+                  value={values.caption}
+                />
+              </View>
+              <Button onPress={handleSubmit} title="작성" disabled={!isValid} />
             </View>
-            <Button onPress={handleSubmit} title="작성" disabled={!isValid} />
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </SafeAreaView>
       )}
     </Formik>
   );

@@ -14,10 +14,10 @@ const CommunityScreen = ({navigation}) => {
   const [posts, setPosts] = useState([])
   useEffect(() => {
     db.collectionGroup('posts')
-    .onSnapshot(snapshot => {
-      setPosts(snapshot.docs.map(post => (
-        {id: post.id, ...post.data()})))
-    })
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
+    });
   }, [])
   return (
     <SafeAreaView style={{flex: 1}}>
