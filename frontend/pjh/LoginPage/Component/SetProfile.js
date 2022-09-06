@@ -10,7 +10,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import firebase, { getAuth } from "../firebase";
+import firebase from "../firebase";
 
 // db.collectionGroup('그룹이름') => db 내의 새로운 컬렉션 생성
 const db = firebase.firestore();
@@ -24,22 +24,37 @@ function SetProfile({ navigation }) {
   // 한글이 아닌 영어를 사용해야 접근 가능
 
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
-  const getUserEmail = async () => {
-    const user = firebase.auth().currentUser;
-    console.log(user.uid);
-    const unsubscribe = async () =>
-      db
-        .collection("users")
-        .where("owner_uid", "==", user.uid)
-        .limit(1)
-        .onSnapshot((snapshot) => snapshot.docs.map((doc) => {
-          setCurrentLoggedInUser({
-            email: doc.data().email,
-            owner_uid: doc.data().uid,
-          });
-        })
-        );
-    return unsubscribe;
+
+  const getUserEmail = () => {
+    try {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        console.log("ready");
+        console.log(user.uid);
+        const unsubscribe = () =>
+          db
+            .collection("users")
+            .where("owner_uid", "==", user.uid)
+            .limit(1)
+            .onSnapshot(
+              (snapshot) =>
+                snapshot.docs.map((doc) => {
+                  setCurrentLoggedInUser({
+                    email: doc.data().email,
+                    owner_uid: doc.data().uid,
+                  });
+                }),
+              (error) => {
+                console.log(error.message);
+              }
+            );
+        return unsubscribe;
+      } else {
+        console.log("no user is signed in");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   useEffect(() => {
@@ -78,14 +93,7 @@ function SetProfile({ navigation }) {
         validationSchema={SetProfileSchema}
         validateOnMount={true}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          isValid,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
           <>
             <View style={{ alignItems: "center", marginBottom: 20 }}>
               <Text style={{ fontSize: 20, fontWeight: "600" }}>

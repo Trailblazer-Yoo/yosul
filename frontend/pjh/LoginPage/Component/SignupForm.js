@@ -31,7 +31,7 @@ function SignupForm({ navigation }) {
       const authUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
-      console.log("Firebase SignUP Successful", email, password);
+      console.log("Firebase SignUp Successful", email, password);
 
       db.collection("users")
         .doc(authUser.user.email)
@@ -46,7 +46,11 @@ function SignupForm({ navigation }) {
           minContent: '',
           maxContent: '',
         })
-        .then(() => navigation.goBack());
+        .then(() => firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            navigation.goBack()
+          }
+        }));
     } catch (error) {
       Alert.alert(error.message);
       console.log(error.message);

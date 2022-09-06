@@ -23,6 +23,12 @@ export const SignedInStack = () => {
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
+        <Stack.Screen name="SignupScreen" component={SignupScreen} />
+        <Stack.Screen name="SetProfileScreen" component={SetProfileScreen} />
+        <Stack.Screen
+          name="PreferredDrinkScreen"
+          component={PreferredDrinkScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

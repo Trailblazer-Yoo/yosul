@@ -53,10 +53,10 @@ const PreferredDrink = ({ navigation }) => {
         .collection("users")
         .where("owner_uid", "==", user.uid)
         .limit(1)
-        .onSnapshot((snapshot) =>
+        .onSnapshot(snapshot =>
           snapshot.docs.map((doc) => {
-            setCurrentLoggedInUser({
-              email: doc.data().email,
+             setCurrentLoggedInUser({
+              email:  doc.data().email,
               owner_uid: doc.data().owner_uid,
               username: doc.data().username,
               age: doc.data().age,
@@ -79,7 +79,7 @@ const PreferredDrink = ({ navigation }) => {
         .doc(firebase.auth().currentUser.email)
         .set({
           owner_uid: firebase.auth().currentUser.uid,
-          email: currentLoggedInUser.email,
+          email: firebase.auth().currentUseremail,
           username: currentLoggedInUser.username,
           age: currentLoggedInUser.age,
           nickname: currentLoggedInUser.nickname,
