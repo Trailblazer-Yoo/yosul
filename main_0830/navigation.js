@@ -7,6 +7,12 @@ import BottomTabs from "./Screens/BottomTabs";
 import KakaoLogin from "./Components/Login/KakaoLogin";
 import SetProfileScreen from "./Screens/SetProfileScreen";
 import PreferredDrinkScreen from "./Screens/PreferredDrinkScreen";
+import ProfileScreenEdit from "./Screens/ProfileScreenEdit";
+import PostDetailScreen  from "./Components/Community/PostDetailScreen";
+import CommunityScreen from "./Screens/CommunityScreen";
+import CommunityDetailScreen from "./Screens/CommunityDetailScreen";
+import ProfileScreen from "./Screens/ProfileScreen";
+
 
 const Stack = createStackNavigator();
 

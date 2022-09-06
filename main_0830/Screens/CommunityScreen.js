@@ -3,10 +3,11 @@ import Post from '../Components/Community/Post'
 import { useEffect, useState } from 'react';
 import { POSTS } from '../data/post'; 
 import firebase from '../firebase'
+import { PostDetailScreen } from '../Components/Community/PostDetailScreen';
 
 const db = firebase.firestore()
 
-const CommunityScreen = ({navigation}) => {
+const CommunityScreen = ({ navigate }) => {
   const renderPosts = (itemData) => {
     return <Post post ={itemData.item} />;
   };
@@ -21,13 +22,12 @@ const CommunityScreen = ({navigation}) => {
   }, [])
   return (
     <SafeAreaView style={{flex: 1}}>
-      <FlatList
+        <FlatList   
           data={POSTS}
           renderItem={renderPosts}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          style={{ margin: 3 }}
-            />
+          style={{ margin: 3 }}/>
     </SafeAreaView>
   )
 }

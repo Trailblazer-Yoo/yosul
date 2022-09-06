@@ -31,7 +31,7 @@ const ProfileScreen = () => {
         <UserProfile />
         <Tab.Navigator
           screenOptions={() => ({
-            tabBarActiveTintColor: "#C0E8E0",
+            tabBarActiveTintColor: "#acd0c9",
             tabBarInactiveTintColor: "grey",
             swipeEnabled: true,
             adaptive: true,

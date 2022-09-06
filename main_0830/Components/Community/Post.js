@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Pressable } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Pressable, ImageBackground } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Divider } from 'react-native-elements';
 import { AntDesign, Feather, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
@@ -6,9 +6,12 @@ import { AntDesign, Feather, FontAwesome, SimpleLineIcons } from '@expo/vector-i
 import post, { POSTS } from '../../data/post'
 // const db = firebase.firestore()
 import ImageView from "react-native-image-viewing";
+import { useNavigation } from '@react-navigation/native';
 import ImageModal from 'react-native-image-modal';
+import {PostDetailScreen} from './PostDetailScreen';
 
-const Post = ({ post }) => {
+  
+const Post = ({ post, navigation }) => {
     const handleLike = post => {
         const currentLikeStatus = !post.likes_py_users.includes(
             firebase.auth().currentUser.email
@@ -23,6 +26,7 @@ const Post = ({ post }) => {
                     ? firebase.firestore.FieldValue.arrayUnion(
                         firebase.auth().currentUser.email
                     )
+                    
                     : firebase.firestore.FieldValue.arrayRemove(
                         firebase.auth().currentUser.email
                     ),
@@ -33,17 +37,16 @@ const Post = ({ post }) => {
             .catch(error => {
                 console.log('Error updating document', error)
             })
+
     }
     return (
         <View style={{ flex: 1/2, marginBottom: 30 }}>
             <Divider width={2} orientation='vertical' />
             <PostImage post={post} />
             <PostHeader post={post} />
-                <View style={{ marginHorizontal: 15, marginTop: 10 }}>
-                    {/* <Tag post={post} /> */}
+                <View style={{ marginHorizontal: 9, marginTop: 10 }}>
                     <Caption post={post} />
-                    <CommentsSection post={post} />
-                    <Comment post={post} />
+                    {/* <Tag post={post} /> */}
                     <PostFooter post={post} />
                 </View>
         </View>
@@ -52,15 +55,20 @@ const Post = ({ post }) => {
 
 const PostImage = ({ post }) => (
     <View style={{flex:1, width: "99%", height: 300, marginTop: 3 }}>
-        <TouchableOpacity>
-            <Image
-                style={{
-                width: "100%",
-                height: 300,
-                borderRadius: 10,
-                }}
-                source={{
-                uri: post.imageUrl}}/>
+        <TouchableOpacity onPress={() => navigation.navigate("PostDetailScreen")}>
+            <View>
+                <Image
+                    style={{
+                    width: "100%",
+                    height: 300,
+                    borderRadius: 10,
+                    }}
+                    source={{
+                    uri: post.imageUrl.toLocaleString()}}/>
+            <View style={{position:'absolute', top: 10, right: 5, borderRadius: 20, backgroundColor:'#5d5e5d', opacity:0.6, width: 35, justifyContent: 'center', alignItems:'center'}}>
+                    <Text style={{color: 'white', alignItems: 'center', justifyContent: 'center'}}>1/{post.imageUrl.length}</Text> 
+                </View>
+            </View>
         </TouchableOpacity>
     </View>
 );
@@ -70,9 +78,11 @@ const PostHeader = ({ post }) => (
     <View style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 5,
+        marginTop: 3,
         alignItems: 'center',
         width: "100%",
+        height: 25,
+        marginBottom: 3
     }}>
         <TouchableOpacity>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -101,68 +111,45 @@ const PostHeader = ({ post }) => (
 //     </View >
 // )
 
-// 내용 어느정도 이상 넘어가면 펼치기로 하기!
 const Caption = ({ post }) => (
-    <View style={{  width:"100%" }}>
+    <View style={{ position: 'absolute', bottom: 25, left: 1, flexDirection: 'row'}}>
         <Text style={{ color: 'black' }}>
-            <Text style={{ fontWeight: '600' }}></Text>
-            <Text> {post.caption}</Text>
+            <Text style={{fontSize: 12}}>{post.caption.slice(0,24)} </Text>
+            <Text style={{fontSize:12, color: 'grey'}}> ... 더 보기 </Text>
         </Text>
     </View>
 )
 
-
-const CommentsSection = ({ post }) => (
-    <View style={{ flex:1 , width:"100%" }}>
-        <View style={{ alignItems: 'flex-end', justifyContent: 'center', }}>
-            <Text style ={{marginTop: 5,fontSize: 10}}>{post.date}</Text>
-        </View>
-        {!!post.comments.length && (
-            <Text style={{ color: 'gray' }}>
-                View{post.comments.length > 1 ? ' all' : ''} {post.comments.length}{' '}
-                {post.comments.length > 1 ? 'comments' : 'comment'}
-            </Text>
-        )}
-    </View>
-)
-
-const Comment = ({ post }) => (
-    <>
-        {post.comments.map((comment, index) => (
-            <View key={index} style={{ flexDirection: 'row', width:"100%" }}>
-                <Text style={{ color: 'black' }}>
-                    <Text style={{ fontWeight: '600' }}>{comment.user}</Text>{' '}
-                    {comment.comment}
-                </Text>
-            </View>
-        ))}
-    </>
-)
-
-const PostFooter = ({ post }) => (
-    <View style={{ flexDirection: 'row',justifyContent: 'space-between', width: "120%", marginTop: 9 }}>
+const PostFooter = ({ post }) => (   
+    <View style={{ flexDirection: 'row', marginTop: 5 }}>
         <View style={styles.lefeFooterIconsContainer}>
-            {/* 하트 */}
-            <TouchableOpacity>
-                <View style ={styles.box}>
-                    <AntDesign name={"hearto"} size={20}/>
+            <View style ={styles.box}>
+                <TouchableOpacity>
+                    <AntDesign 
+                        name={"heart"} 
+                        size={20}
+                        color={"#FF3E3E"}
+                     />
+                </TouchableOpacity>
                     <Text style={{ color: "black", fontWeight: '350', marginLeft: 5 }}>
                         {post.likes.toLocaleString("en")}
                     </Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <View style ={styles.box}>
+            </View>
+            <View style = {styles.box}>
+                <TouchableOpacity>
                     <SimpleLineIcons name="bubble" size={20} color="black" />
+                </TouchableOpacity>
                     <Text style={{ color: "black", fontWeight: '350', marginLeft: 5}}>{post.comments.length}</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <FontAwesome name="bookmark-o" size={20} color="black" />
-            </TouchableOpacity>
+            </View>
+            <View style = {styles.box}>
+                <TouchableOpacity style={{position:'absolute', left: -22}}>
+                    <FontAwesome name="bookmark-o" size={20} color="black" />
+                </TouchableOpacity>
+                    <Text style={{ color: "black", fontWeight: '350'}}>3</Text>
+            </View>
         </View>
     </View>
-)
+);
 
 const styles = StyleSheet.create({
     story: {
@@ -175,19 +162,18 @@ const styles = StyleSheet.create({
         width: 33,
         height: 33,
     },
-    shareIcon: {
-        transform: [{ rotate: '320deg' }],
-        marginTop: -3,
-    },
     lefeFooterIconsContainer: {
         flexDirection: 'row',
-        width: "33%",
-        justifyContent: 'space-between'
+        marginTop: 3,
+        width: "100%",
     },
     box: {
-        flexDirection: 'row',
         flex: 1,
-        marginRight: 5}
+        flexDirection: "row",
+    },
+    picturenum: {
+        position: 'absolute'
+    }
 })
 
 export default Post

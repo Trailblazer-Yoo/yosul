@@ -18,7 +18,6 @@ import {
 import { CustomPicker } from 'react-native-custom-picker';
 import { Header } from 'react-native-elements';
 import Feather from 'react-native-vector-icons/Feather';
-import BottomSheet from 'reanimated-bottom-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import firebase from '../firebase';
 
