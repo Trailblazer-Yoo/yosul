@@ -15,24 +15,24 @@ export default function DictionaryDetailScreen({ route }) {
   return (
     <View style={styles.container}>
       <View style={styles.uppercontainer}>
-        <Image style={styles.img} source={{ uri: item.img }} />
+        <Image style={styles.img} source={{ uri: item.soolUrl }} />
         <View>
-          <Text>{item.name}</Text>
-          <Text>분류: {item.category}</Text>
-          <Text>주재료: {item.meterial}</Text>
-          <Text>도수: {item.alc}</Text>
-          <Text>용량: {item.size}</Text>
+          <Text>{item.soolName}</Text>
+          <Text>분류: {item.soolType}</Text>
+          <Text>주재료: {item.soolMaterial}</Text>
+          <Text>도수: {item.soolAlcolhol}</Text>
+          <Text>용량: {item.soolCapacity}</Text>
         </View>
       </View>
       <View>
-        <Text>수상 내역: {item.awards}</Text>
-        <Text>어울리는 음식: {item.pairing}</Text>
-        <Text>양조장: {item.craft}</Text>
-        <Text>주소: {item.address}</Text>
-        <Text>전화번호: {item.tel}</Text>
-        <Text onPress={() => Linking.openURL(item.homepage)}>홈페이지</Text>
-        <Text>상세: {item.details}</Text>
-        <Text>기타: {item.etc}</Text>
+        <Text>수상 내역: {item.soolPrize}</Text>
+        <Text>어울리는 음식: {item.soolMatchFood}</Text>
+        <Text>양조장: {item.breweryName}</Text>
+        <Text>주소: {item.breweryAddress}</Text>
+        <Text>전화번호: {item.breweryPhone}</Text>
+        <Text onPress={() => Linking.openURL(item.breweryHomepage)}>홈페이지로 이동</Text>
+        <Text>상세: {item.soolDetailInfo}</Text>
+        <Text>기타: {item.soolEtc}</Text>
       </View>
     </View>
   );

@@ -17,18 +17,8 @@ export default function DictionaryScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [sulList, setSulList] = useState([]);
   const sulCollection = firebase.firestore().collection("global");
-  // const sulCollection = firebase.firestore().collection("soo_test");
-  const getFsvDocs = async () => {
+  const getSoolDocs = async () => {
     const dataSnapShot = (await sulCollection.doc("drinks").get()).data();
-    // const dataSnapShot = (await sulCollection.doc("init").get()).data();
-    // const dataCols = Object.keys(dataSnapShot);
-    // const sulName = dataSnapShot["name"];
-    // const data = [];
-    // for (let i = 0; i < sulName.length; i++) {
-    //   let temp = {};
-    //   dataCols.map((x) => (temp[x] = dataSnapShot[x][i]));
-    //   data.push(temp);
-    // }
     const data = [];
     data.push(Object.values(dataSnapShot));
     setSulList(data[0]);
@@ -37,7 +27,7 @@ export default function DictionaryScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getFsvDocs();
+    getSoolDocs();
   }, []);
 
   const renderListItem = ({ item, index }) => {
@@ -51,19 +41,19 @@ export default function DictionaryScreen({ navigation }) {
         >
           <Image style={styles.img} source={{ uri: item.img }} />
           <View style={styles.textcontainer}>
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>{item.soolName}</Text>
             <Text style={styles.text}>
-              {/* 지역 :{" "}
-              {item.address.substr(
+              지역 :{" "}
+              {item.breweryAddress.substr(
                 0,
-                item.address.indexOf(" ", item.address.indexOf(" ") + 1)
-              )} */}
+                item.breweryAddress.indexOf(" ", item.breweryAddress.indexOf(" ") + 1)
+              )}
             </Text>
-            <Text style={styles.text}>도수 :{item.alcohol}</Text>
-            <Text style={styles.text}>용량 : {item.capacity}</Text>
-            <Text style={styles.text}>주재료 : {item.materials}</Text>
-            <Text style={styles.text}>제조 : {item.craft}</Text>
-            {/* <Text style={styles.text}>분류 : {item.category}</Text> */}
+            <Text style={styles.text}>도수 :{item.soolAlcohol}</Text>
+            <Text style={styles.text}>용량 : {item.soolCapacity}</Text>
+            <Text style={styles.text}>주재료 : {item.soolMaterials}</Text>
+            <Text style={styles.text}>제조 : {item.BreweryName}</Text>
+            <Text style={styles.text}>분류 : {item.soolType}</Text>
           </View>
         </Pressable>
         <View style={styles.iconcontainer}>
