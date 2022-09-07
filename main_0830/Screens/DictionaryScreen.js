@@ -52,13 +52,13 @@ export default function DictionaryScreen({ navigation }) {
           <Image style={styles.img} source={{ uri: item.img }} />
           <View style={styles.textcontainer}>
             <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.text}>
-              {/* 지역 :{" "}
+            {/* <Text style={styles.text}>
+              지역 :{" "}
               {item.address.substr(
                 0,
                 item.address.indexOf(" ", item.address.indexOf(" ") + 1)
-              )} */}
-            </Text>
+              )}
+            </Text> */}
             <Text style={styles.text}>도수 :{item.alcohol}</Text>
             <Text style={styles.text}>용량 : {item.capacity}</Text>
             <Text style={styles.text}>주재료 : {item.materials}</Text>

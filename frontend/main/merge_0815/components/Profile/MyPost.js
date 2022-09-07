@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         flex:0,
         width: window.width / 3 - 3,
         height: window.width / 3 - 3,
-        borderRadius: 15,
+        borderRadius: 5,
         resizeMode:'cover',
         marginHorizontal: 1,
         marginVertical:1,

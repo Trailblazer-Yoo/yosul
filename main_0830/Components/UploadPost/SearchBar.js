@@ -182,7 +182,7 @@ const SearchBar = ({ navigation }) => {
               autoCapitalize="none"
               autoCorrect={false}
               value={search}
-              placeholder="태그를 검색해주세요"
+              placeholder="태그를 입력해주세요"
               underlineColorAndroid="transparent"
               onChangeText={(text) => {
                 if (text.includes(" ")) {

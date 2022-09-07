@@ -14,6 +14,7 @@ import {
 
 import UploadPostScreen from "./UploadPostScreen";
 import DictionaryScreen from "./DictionaryScreen";
+import EditProfileScreen from "./ProfileScreenEdit";
 import ProfileScreen from "./ProfileScreen";
 import CommunityScreen from "./CommunityScreen";
 import HomeScreen from "./HomeScreen";
@@ -81,6 +82,7 @@ const ProfileScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
     </Stack.Navigator>
   );
 };

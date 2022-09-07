@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import firebase from "../../firebase";
 
@@ -27,14 +27,19 @@ const SearchBar = ({ navigation }) => {
     getfirebase();
   }, []);
 
-  const getfirebase = () => {
-    db.collection("global")
-      .doc("tags")
-      .collection("taglist")
-      .onSnapshot((snapshot) => {
-        setfilterdData(snapshot.docs.map((doc) => doc.data()));
-        setmasterData(snapshot.docs.map((doc) => doc.data()));
-      });
+  const getfirebase = async () => {
+    const dataSnapShot = (
+      await db.collection("global").doc("tags").get()
+    ).data();
+
+    // count가 많은 순으로 정렬
+    const data = Object.keys(dataSnapShot).sort(function (a, b) {
+      return dataSnapShot[b].count - dataSnapShot[a].count;
+    });
+
+    setfilterdData(data);
+    setmasterData(data);
+
     setLoading(true);
   };
 
@@ -48,17 +53,17 @@ const SearchBar = ({ navigation }) => {
               "태그는 최대 3개까지 가능합니다. 완료 버튼을 눌러주세요."
             );
             return;
-          } else if (!!TagList.find((element) => element.tag === item.tag)) {
+          } else if (!!TagList.find((element) => element === item)) {
             Alert.alert("중복오류", "해당 태그가 이미 존재합니다.");
             return;
           } else {
             // searchFilter(item.tag); // 리스트 중에 하나를 누르면 input에 텍스트를 넣어줌
-            setTagList(TagList.concat({ tag: item.tag }));
+            setTagList(TagList.concat(item));
             setsearch("");
           }
         }}
       >
-        <Text style={styles.itemStyle}>{item.tag}</Text>
+        <Text style={styles.itemStyle}>{item}</Text>
       </TouchableOpacity>
     );
   };
@@ -82,7 +87,7 @@ const SearchBar = ({ navigation }) => {
           ])
         }
       >
-        <Text style={styles.tagview}>#{item.tag} X</Text>
+        <Text style={styles.tagview}>#{item} X</Text>
       </TouchableOpacity>
     );
   };
@@ -98,7 +103,7 @@ const SearchBar = ({ navigation }) => {
   const searchFilter = (text) => {
     if (text) {
       const newData = masterData.filter((item) => {
-        const itemData = item.tag ? item.tag : "".toUpperCase();
+        const itemData = item ? item : "".toUpperCase();
         return itemData.indexOf(text) > -1;
       });
       setfilterdData(newData);
@@ -119,11 +124,11 @@ const SearchBar = ({ navigation }) => {
         "태그는 최대 3개까지 가능합니다. 완료 버튼을 눌러주세요."
       );
       return;
-    } else if (!!TagList.find((element) => element.tag === text)) {
+    } else if (!!TagList.find((element) => element === text)) {
       Alert.alert("중복오류", "해당 태그가 이미 존재합니다.");
       return;
     } else {
-      setTagList(TagList.concat({ tag: text }));
+      setTagList(TagList.concat(text));
       setsearch("");
     }
   };
@@ -131,7 +136,7 @@ const SearchBar = ({ navigation }) => {
   const changePass = () => {
     const arr = [];
     for (let i = 0; i < TagList.length; i++) {
-      arr.push(TagList[i].tag);
+      arr.push(TagList[i]);
     }
     console.log(arr);
     navigation.navigate("UploadPost", { tags: arr });
@@ -208,14 +213,12 @@ const SearchBar = ({ navigation }) => {
                       "태그는 최대 3개까지 가능합니다. 완료 버튼을 눌러주세요."
                     );
                     return;
-                  } else if (
-                    !!TagList.find((element) => element.tag === search)
-                  ) {
+                  } else if (!!TagList.find((element) => element === search)) {
                     Alert.alert("중복오류", "해당 태그가 이미 존재합니다.");
                     return;
                   } else {
                     // searchFilter(item.tag); // 리스트 중에 하나를 누르면 input에 텍스트를 넣어줌
-                    setTagList(TagList.concat({ tag: search }));
+                    setTagList(TagList.concat(search));
                     setsearch("");
                   }
                 }}

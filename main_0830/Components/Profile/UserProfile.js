@@ -12,9 +12,6 @@ import {
 import ImageModal from 'react-native-image-modal';
 import { Divider } from 'react-native-elements';
 import { AntDesign, Feather, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
-import { ProfileScreenEdit } from '../../Screens/ProfileScreenEdit';
-import { useNavigation } from '@react-navigation/native';
-import { ProfileStack } from '../../navigation';
 
 const window = Dimensions.get("window");
 
@@ -37,7 +34,7 @@ function UserProfile ({ navigation }) {
               <Text style={styles.headerText}>닉네임 귀염뽀짝 루우피</Text>
                 <TouchableOpacity style={{marginLeft : 5}}>
                   <SimpleLineIcons name="pencil" size={17} color="grey"
-                    onPress={() => navigation.navigate("ProfileScreenEdit")}/>
+                    onPress={() => navigation.push("EditProfileScreen")}/>
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection: "row", justifyContent:'center', marginTop: 13}}>
