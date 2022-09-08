@@ -3,6 +3,7 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { StatusBar, Text, View, StyleSheet } from "react-native";
 import MyPosts from "../Components/Profile/MyPost";
 import UserProfile from "../Components/Profile/UserProfile";
+import MyDrinks from "../Components/Profile/MyDrinks";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,7 +36,7 @@ const ProfileScreen = ({ navigation }) => {
       >
         <Tab.Screen name="내가 쓴 글" component={MyPosts} />
         <Tab.Screen name="게시물 다시보기" component={HomeScreen} />
-        <Tab.Screen name="찜한 전통주" component={HomeScreen} />
+        <Tab.Screen name="찜한 전통주" component={MyDrinks} />
       </Tab.Navigator>
     </View>
   );

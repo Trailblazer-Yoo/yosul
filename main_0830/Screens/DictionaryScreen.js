@@ -14,52 +14,25 @@ import firebase from "../firebase";
 import BookmarkIcon from "../Components/Dictionary/BookmarkIcon";
 import HeartIcon from "../Components/Dictionary/HeartIcon";
 
-const db = firebase.firestore()
+const db = firebase.firestore();
 
 export default function DictionaryScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
-  // const [sulList, setSulList] = useState([]);
-  // const sulCollection = firebase.firestore().collection("global");
-  // const getFsvDocs = async () => {
-  //   const dataSnapShot = (await sulCollection.doc("drinks").get()).data();
-  //   const data = [];
-  //   data.push(Object.values(dataSnapShot));
-  //   setSulList(data[0]);
-  //   setLoading(true);
-  //   console.log(data);
-  // };
+  const [sulList, setSulList] = useState([]);
+  const sulCollection = firebase.firestore().collection("global");
+  const currentUserEmail = firebase.auth().currentUser.email;
 
-  const [sulList, setSulList] = useState({});
-
-  const sulCollection = firebase.firestore().collection("sool_test");
-
-  const getFsvDocs = async () => {
-    const dataSnapShot = (await sulCollection.doc("init").get()).data();
-    const dataCols = Object.keys(dataSnapShot);
-    const sulName = dataSnapShot["name"];
+  const getSoolDocs = async () => {
+    const dataSnapShot = (await sulCollection.doc("drinks").get()).data();
     const data = [];
-    for (let i = 0; i < sulName.length; i++) {
-      let temp = {};
-      dataCols.map((x) => (temp[x] = dataSnapShot[x][i]));
-      data.push(temp);
-    }
-    setSulList(data);
-    setLoading(true);
-    // console.log(dataSnapShot);
+    data.push(Object.values(dataSnapShot));
+    setSulList(data[0]);
+    setLoading(true)
   };
 
   useEffect(() => {
-    getFsvDocs();
+    getSoolDocs();
   }, []);
-
-  // const handlelike = async () => {
-  //   const currentUserEmail = firebase.auth().currentUser.email;
-
-  //   const a = (await db.collection('users').doc(currentUserEmail).collection('likse_alcohol').get()).data()
-  //   const currentLikesStatus = !post.likes_by_users.includes();
-
-    
-  // };
 
   const renderListItem = ({ item, index }) => {
     return (
@@ -72,21 +45,21 @@ export default function DictionaryScreen({ navigation }) {
         >
           <Image style={styles.img} source={{ uri: item.img }} />
           <View style={styles.textcontainer}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.text}>
+            <Text style={styles.name}>{item.soolName}</Text>
+            {/* <Text style={styles.text}>
               지역 :{" "}
-              {item.address.substr(
+              {item.breweryAddress.substr(
                 0,
-                item.address.indexOf(" ", item.address.indexOf(" ") + 1)
+                item.breweryAddress.indexOf(" ", item.breweryAddress.indexOf(" ") + 1)
               )}
-            </Text>
-            <Text style={styles.text}>도수 :{item.alc}</Text>
-            <Text style={styles.text}>분류 : {item.category}</Text>
+            </Text> */}
+            <Text style={styles.text}>도수 :{item.soolAlcohol}</Text>
+            <Text style={styles.text}>분류 : {item.soolType}</Text>
           </View>
         </Pressable>
         <View style={styles.iconcontainer}>
-          <HeartIcon />
-          <BookmarkIcon />
+          <HeartIcon item={item} currentUserEmail={currentUserEmail}/>
+          <BookmarkIcon item={item} currentUserEmail={currentUserEmail}/>
         </View>
       </View>
     );
@@ -105,8 +78,8 @@ export default function DictionaryScreen({ navigation }) {
       {loading === false ? (
         <View style={styles.loading}>
           <ActivityIndicator
-            color="grey"
-            style={{ marginTop: 10 }}
+            color="#C0E8E0"
+            style={{ marginTop: 10, opacity:0.5 }}
             size="large"
           />
         </View>

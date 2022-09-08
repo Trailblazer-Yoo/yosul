@@ -1,7 +1,13 @@
 import {
   StyleSheet,
   Text,
+  View,
+  FlatList,
   TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Octicons } from "@expo/vector-icons";
@@ -36,6 +42,23 @@ const BookmarkIcon = ({ item, currentUserEmail }) => {
     db.collection('users').doc(currentUserEmail).update(update_mine)
     setcurrentBookmarkStatus(!currentBookmarkStatus);
     db.collection("global").doc("drinks").update(update_dict);
+    // await db
+    //   .collection("users")
+    //   .doc(firebase.auth().currentUser.email)
+    //   .collection("bookmark_drinks")
+    //   .add({
+    //     imageArray: remoteImageArray,
+    //     user: currentLoggedInUser.username,
+    //     profile_picture: currentLoggedInUser.profilePicture,
+    //     owner_uid: firebase.auth().currentUser.uid,
+    //     owner_email: firebase.auth().currentUser.email,
+    //     caption: caption,
+    //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    //     likes_by_users: [],
+    //     bookmarks_by_users: [],
+    //     tags: taglist,
+    //     comments: [],
+    //   });
   };
 
   return (
