@@ -1,26 +1,45 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
 import PostDetailScreen from "../Components/Community/PostDetailScreen";
+import firebase from '../firebase';
+import { StyleSheet, TouchableOpacity, Image, Text, View, SafeAreaView, ScrollView, FlatList, Pressable } from 'react-native';
+import { useEffect, useState } from 'react';
+import { POSTS } from '../data/post'; 
 
-export function CommunityDetailScreen({navigation}) {
+const db = firebase.firestore()
+
+const CommunityDetailScreen = ({ navigate }) => {
+  const [posts, setPosts] = useState([])
+  useEffect(() => {
+    db.collectionGroup('posts')
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
+    });
+  }, [])
   return (
-    <View style={styles.container}>
-      <PostDetailScreen navigation={navigation}/>
-    </View>
-  );
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView>
+        <View style={styles.inner}>
+            {POSTS.map((post) => (
+                <PostDetailScreen 
+                post={post}/>
+              ))}
+      </View>
+      </ScrollView>
+
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    paddingTop: 2,
-    paddingHorizontal: 5,
+  screen: {
+    flex : 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
   },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 60,
+  inner: {
+    flex: 1
   },
-});
+})
 
-export default CommunityDetailScreen;
+export default CommunityDetailScreen
