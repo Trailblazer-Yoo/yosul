@@ -102,7 +102,7 @@ export default function HomeScreen({navigation}) {
       </View>
       <ScrollView>
           <View>
-            <Text style={styles.today_brewery}>오늘의 양조장 🍶</Text>
+            <Text style={styles.today_brewery}>오늘의 양조장 🏘</Text>
             <FlatList
               horizontal={true}
               data={filteredBreweryInfo}
