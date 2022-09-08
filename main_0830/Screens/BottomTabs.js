@@ -20,6 +20,7 @@ import ProfileScreen from "./ProfileScreen";
 import CommunityScreen from "./CommunityScreen";
 import CommunityDetailScreen from "./CommunityDetailScreen";
 import HomeScreen from "./HomeScreen";
+import BreweryDetailScreen from "./BreweryDetailSreen";
 import UploadPost from "../Components/UploadPost/UploadPost";
 import SearchBar from "../Components/UploadPost/SearchBar";
 
@@ -30,6 +31,7 @@ const HomeScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="BreweryDetailScreen" component={BreweryDetailScreen} options={{headerTitle: '상세정보'}} />
     </Stack.Navigator>
   );
 };
