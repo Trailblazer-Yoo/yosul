@@ -20,7 +20,7 @@ export default function DictionaryDetailScreen({ route }) {
           <Text>{item.soolName}</Text>
           <Text>분류: {item.soolType}</Text>
           <Text>주재료: {item.soolMaterial}</Text>
-          <Text>도수: {item.soolAlcolhol}</Text>
+          <Text>도수: {item.soolAlcohol}</Text>
           <Text>용량: {item.soolCapacity}</Text>
         </View>
       </View>
