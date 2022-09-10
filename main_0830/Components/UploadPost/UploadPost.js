@@ -13,13 +13,13 @@ import {
   FlatList,
   Pressable,
   ScrollView,
-  ActivityIndicator,
 } from "react-native";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import { Formik } from "formik";
 import validUrl from "valid-url";
 import firebase from "../../firebase";
+import { CommonActions } from "@react-navigation/native";
 
 const db = firebase.firestore();
 const window = Dimensions.get("window");
@@ -35,12 +35,43 @@ const uploadPostSchema = Yup.object().shape({
 
 const UploadPost = ({ navigation, route }) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(PLACEHOLDER_IMG); // 이미지
-  const [imageArray, setImageArray] = useState([]); // 이미지
+  const [imageArray, setImageArray] = useState([PLACEHOLDER_IMG]); // 이미지
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null); // 현재 유저 아이디
-  const [tagList, setTagList] = useState([]); // 태그 리스트 받아오기
-  const [items, setItems] = useState([]) // 태그 목록들 firebase에서 가져오기
-  const [dataSnapShot, setDataSnapShot] = useState([]) // 태그 하위 목록 firebase에서 가져오기
-  const [loading, setLoading] = useState(false);
+  const [TagList, setTagList] = useState([]); // 태그 리스트 받아오기
+
+  // 이미지 업로드
+  const uploadThumbnailImage = async () => {
+    let ImageData = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [2, 2],
+      quality: 1,
+    });
+    if (ImageData.cancelled) {
+      return null;
+    }
+    setThumbnailUrl(ImageData.uri);
+  };
+
+  // 이미지 하나하나 넣기
+  const fixImageArray = async (index) => {
+    let ImageData = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [2, 2],
+      quality: 1,
+    });
+    if (ImageData.cancelled) {
+      return null;
+    }
+    if (index === (imageArray.length - 1).toString()) {
+      setImageArray([ImageData.uri, ...imageArray]);
+    } else {
+      const newArray = imageArray.splice(index, index, ImageData.uri);
+      setImageArray(newArray[0]);
+    }
+    console.log(imageArray);
+  };
 
   // 유저 아이디
   const getUsername = () => {
@@ -60,55 +91,71 @@ const UploadPost = ({ navigation, route }) => {
     return unsubscribe;
   };
 
-  // 태그 전체 목록
-  const TagSnapshot = async() => {
-    const snapshot = (await db.collection("global").doc("tags").get()).data();
-    const newitems = await Object.keys(snapshot);
-    await setDataSnapShot(snapshot)
-    await setItems(newitems)
-  };
-
   // 유저 아이디 useEffect
   useEffect(() => {
     getUsername();
-    TagSnapshot()
   }, []);
 
-  // 이미지 업로드
-  const uploadThumbnailImage = async () => {
-    let ImageData = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [2, 2],
-      quality: 1,
-    });
-    if (ImageData.cancelled) {
-      return null;
-    }
-    setThumbnailUrl(ImageData.uri);
-    if (!!!imageArray.length) {
-      await setImageArray([PLACEHOLDER_IMG]);
+  // firebase에 적재시키기
+  const uploadTagsToFirebase = async (taglist) => {
+    const dataSnapShot = (
+      await db.collection("global").doc("tags").get()
+    ).data();
+
+    const items = Object.keys(dataSnapShot);
+
+    for (let i = 0; i < taglist.length; i++) {
+      let tag = taglist[i].tag;
+      const update = {};
+      if (items.includes(tag)) {
+        update[`${tag}.count`] = dataSnapShot[tag].count + 1;
+        db.collection("global").doc("tags").update(update);
+      } else {
+        update[`${tag}`] = { count: 1 };
+        db.collection("global").doc("tags").update(update);
+      }
     }
   };
 
-  // 이미지 하나하나 넣기
-  const editImageArray = async (index) => {
-    let ImageData = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [2, 2],
-      quality: 1,
-    });
-    if (ImageData.cancelled) {
-      return null;
-    }
-    if (index === (imageArray.length - 1).toString()) {
-      setImageArray([ImageData.uri, ...imageArray]);
-    } else {
-      await imageArray.splice(index, 1, ImageData.uri);
-      await setImageArray([...imageArray]);
-    }
-    console.log(imageArray);
+  const uploadPostToFirebase = (imageUrl, imagearray, caption, tags) => {
+    const unsubscribe = db
+      .collection("users")
+      .doc(firebase.auth().currentUser.email)
+      .collection("posts")
+      .add({
+        imageArray: [imageUrl, ...imagearray],
+        user: currentLoggedInUser.username,
+        profile_picture: currentLoggedInUser.profilePicture,
+        owner_uid: firebase.auth().currentUser.uid,
+        owner_email: firebase.auth().currentUser.email,
+        caption: caption,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        likes_by_users: [],
+        bookmarks_by_users: [],
+        tags: tags,
+        comments: [],
+      })
+      .then(() =>
+        navigation.dispatch(CommonActions.navigate("CommunityStack"))
+      );
+
+    return unsubscribe;
+  };
+
+  // 태그 출력 형태
+  const TagView = ({ item }) => {
+    return <Text style={styles.tagview}>#{item} </Text>;
+  };
+
+  const ImageView = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => fixImageArray(index.toString())}
+        onChange={imageArray}
+      >
+        <Image source={{ uri: item }} style={styles.imagearraywrapper} />
+      </TouchableOpacity>
+    );
   };
 
   // 태그
@@ -126,95 +173,22 @@ const UploadPost = ({ navigation, route }) => {
     }
   }, [route.params]);
 
-  // firebase에 적재시키기
-  const uploadPost2Firebase = async (imagearray, caption, taglist) => {
-    try {
-      setLoading(true);
-      for (let i = 0; i < taglist.length; i++) {
-        const tag = await taglist[i];
-        console.log(tag);
-        const update = {};
-        if (items.includes(tag)) {
-          update[`${tag}.count`] = dataSnapShot[tag].count + 1;
-          await db.collection("global").doc("tags").update(update);
-        } else {
-          update[`${tag}`] = { count: 1 };
-          await db.collection("global").doc("tags").update(update);
-        }
-      }
-
-      const remoteImageArray = [];
-      const path = await `photos/${
-        firebase.auth().currentUser.email
-      }/${Date.now()}`;
-      for (let i = 0; i < imagearray.length; i++) {
-        const response = await fetch(imagearray[i]);
-        const blob = await response.blob();
-        const filename = await `${path}${imagearray[i].substring(
-          imagearray[i].lastIndexOf("/") + 1
-        )}`;
-        let ref = firebase.storage().ref(filename);
-        await ref.put(blob);
-        const remoteurl = await ref.getDownloadURL();
-        await remoteImageArray.push(remoteurl);
-      }
-      const unsubscribe = await db
-        .collection("users")
-        .doc(firebase.auth().currentUser.email)
-        .collection("posts")
-        .add({
-          imageArray: remoteImageArray,
-          user: currentLoggedInUser.username,
-          profile_picture: currentLoggedInUser.profilePicture,
-          owner_uid: firebase.auth().currentUser.uid,
-          owner_email: firebase.auth().currentUser.email,
-          caption: caption,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          likes_by_users: [],
-          bookmarks_by_users: [],
-          tags: taglist,
-          comments: [],
-        })
-        .then(async () => {
-          await setThumbnailUrl(PLACEHOLDER_IMG);
-          await setImageArray([]);
-          await setTagList([]);
-          await setLoading(false);
-        })
-        .then(() => navigation.navigate("CommunityStack"));
-      return unsubscribe;
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  // 출력 형태
-  const TagView = ({ item }) => {
-    return <Text style={styles.tagview}>#{item} </Text>;
-  };
-
-  const ImageView = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => editImageArray(index.toString())}
-        onChange={imageArray}
-      >
-        <Image source={{ uri: item }} style={styles.imagearraywrapper} />
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <Formik
       initialValues={{
+        imageUrl: "",
+        imageArray: [],
         caption: "",
+        tags: [],
       }}
-      onSubmit={async (values) => {
-        const tmpArray = await [
+      onSubmit={(values) => {
+        uploadTagsToFirebase(TagList);
+        uploadPostToFirebase(
           thumbnailUrl,
-          ...imageArray.slice(undefined, imageArray.length - 1),
-        ];
-        uploadPost2Firebase(tmpArray, values.caption, tagList);
+          imageArray.slice(undefined, imageArray.length - 1),
+          values.caption,
+          TagList
+        );
         console.log("잘 들어갔씀둥");
       }}
       validationSchema={uploadPostSchema}
@@ -228,7 +202,7 @@ const UploadPost = ({ navigation, route }) => {
         errors,
         isValid,
       }) => (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <SafeAreaView>
           <ScrollView>
             <View style={styles.container}>
               <TouchableOpacity // 이미지
@@ -265,7 +239,7 @@ const UploadPost = ({ navigation, route }) => {
                 >
                   <FlatList
                     style={{ padding: 5 }}
-                    data={tagList}
+                    data={TagList}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={TagView}
                     horizontal={true}
@@ -309,17 +283,6 @@ const UploadPost = ({ navigation, route }) => {
               <Button onPress={handleSubmit} title="작성" disabled={!isValid} />
             </View>
           </ScrollView>
-          {loading === true ? (
-            <View style={styles.loading}>
-              <ActivityIndicator
-                color="#C0E8E0"
-                size="large"
-                style={{ opacity: 1.5 }}
-              />
-            </View>
-          ) : (
-            <></>
-          )}
         </SafeAreaView>
       )}
     </Formik>
@@ -367,17 +330,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   tags: {},
-  loading: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    opacity: 0.3,
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  categories: {},
   textInputStyle: {
     height: 40,
     marginTop: 10,

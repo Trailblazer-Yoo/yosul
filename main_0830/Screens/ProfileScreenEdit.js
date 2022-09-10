@@ -21,7 +21,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import * as ImagePicker from 'expo-image-picker';
 import firebase from '../firebase';
 
-const EditProfileScreen = ({navigation}) => {
+const profileScreen = () => {
 
   const options = ['탁주', '약주•청주', '과실주', '증류주', '리큐르/기타주류']
   const [image, setImage] = useState(null);
@@ -117,7 +117,7 @@ const EditProfileScreen = ({navigation}) => {
             placeholder="선호 도수를 입력해주세요"
           />
           </TouchableOpacity>
-            <TouchableOpacity style={styles.commandButton} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
               <Text style={styles.panelButtonTitle}>프로필 작성 완료</Text>
             </TouchableOpacity>
           </View>
@@ -127,7 +127,7 @@ const EditProfileScreen = ({navigation}) => {
   );    
 };
 
-export default EditProfileScreen;
+export default profileScreen;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",

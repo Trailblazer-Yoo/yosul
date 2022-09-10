@@ -12,11 +12,38 @@ import {PostDetailScreen} from './PostDetailScreen';
 
   
 const Post = ({ post, navigation }) => {
+    const handleLike = post => {
+        const currentLikeStatus = !post.likes_py_users.includes(
+            firebase.auth().currentUser.email
+        )
+
+        db.collection('users')
+            .doc(post.owner_email)
+            .collection('posts')
+            .doc(post.id)
+            .update({
+                likes_py_users: currentLikeStatus
+                    ? firebase.firestore.FieldValue.arrayUnion(
+                        firebase.auth().currentUser.email
+                    )
+                    
+                    : firebase.firestore.FieldValue.arrayRemove(
+                        firebase.auth().currentUser.email
+                    ),
+            })
+            .then(() => {
+                console.log('Document successfully updated!')
+            })
+            .catch(error => {
+                console.log('Error updating document', error)
+            })
+
+    }
     return (
         <View style={{ flex: 1/2, marginBottom: 30 }}>
             <Divider width={2} orientation='vertical' />
-            <PostImage post={post} navigation = {navigation}/>
-            <PostHeader post={post}/>
+            <PostImage post={post} />
+            <PostHeader post={post} />
                 <View style={{ marginHorizontal: 9, marginTop: 10 }}>
                     <Caption post={post} />
                     {/* <Tag post={post} /> */}
@@ -26,9 +53,9 @@ const Post = ({ post, navigation }) => {
     )
 }
 
-const PostImage = ({ post, navigation }) => (
+const PostImage = ({ post }) => (
     <View style={{flex:1, width: "99%", height: 300, marginTop: 3 }}>
-        <TouchableOpacity onPress={() => navigation.push("CommunityDetailScreen")}>
+        <TouchableOpacity onPress={() => navigation.navigate("PostDetailScreen")}>
             <View>
                 <Image
                     style={{

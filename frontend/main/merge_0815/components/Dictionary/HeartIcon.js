@@ -27,14 +27,14 @@ const HeartIcon = ({ item, currentUserEmail }) => {
     if (currentLikesStatus) {
       update_dict[`${item.name}.likesByUsers`] =
         firebase.firestore.FieldValue.arrayUnion(currentUserEmail);
-      update_mine["myDrinks"] = firebase.firestore.FieldValue.arrayUnion(
+      update_mine["myLikesDrinks"] = firebase.firestore.FieldValue.arrayUnion(
         item.name
       );
       setCurrentLength(currentLength + 1);
     } else {
       update_dict[`${item.name}.likesByUsers`] =
         firebase.firestore.FieldValue.arrayRemove(currentUserEmail);
-      update_mine["myDrinks"] = firebase.firestore.FieldValue.arrayRemove(
+      update_mine["myLikesDrinks"] = firebase.firestore.FieldValue.arrayRemove(
         item.name
       );
       setCurrentLength(currentLength - 1);

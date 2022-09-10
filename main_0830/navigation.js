@@ -11,7 +11,7 @@ import ProfileScreenEdit from "./Screens/ProfileScreenEdit";
 import PostDetailScreen  from "./Components/Community/PostDetailScreen";
 import CommunityScreen from "./Screens/CommunityScreen";
 import CommunityDetailScreen from "./Screens/CommunityDetailScreen";
-import ProfileScreen from "./Screens/ProfileScreenEdit";
+import ProfileScreen from "./Screens/ProfileScreen";
 
 
 const Stack = createStackNavigator();

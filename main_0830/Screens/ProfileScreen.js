@@ -19,6 +19,12 @@ function HomeScreen() {
   );
 }
 
+//   <View style={styles.container}>
+//   <View style={styles.logoContainer}>
+//       <Image source={{uri:INSTAGRAM_LOGO, height:100, width:100}} />
+//   </View>
+//   <LoginForm navigation={navigation}/>
+// </View>
 const ProfileScreen = ({navigation}) => {
   return (
       <View style={styles.containertop}>

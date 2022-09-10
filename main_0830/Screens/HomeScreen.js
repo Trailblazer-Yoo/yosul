@@ -85,7 +85,7 @@ export default function HomeScreen({navigation}) {
             horizontal={true}
             >
               {filteredBreweryInfo.map((item, index) =>
-                <View style={styles.width}>
+                <View key={index} style={styles.width}>
                   <Pressable
                     onPress={() =>
                     navigation.push("BreweryDetailScreen", { id: index, item: item })

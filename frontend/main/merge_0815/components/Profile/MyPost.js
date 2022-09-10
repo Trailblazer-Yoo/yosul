@@ -13,18 +13,8 @@ import firebase from '../../firebase'
 const window = Dimensions.get("window");
 const db = firebase.firestore()
 
-const MyPosts = () => {
-  const [posts, setPosts] = useState([])
-  
-  useEffect(() => {
-    db.collection('users')
-    .doc(firebase.auth().currentUser.email)
-    .collection('posts')
-    // .orderBy("createdAt", "desc")
-    .onSnapshot((snapshot) => {
-      setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
-    });
-  }, [])
+const MyPosts = ({posts}) => {
+
 
   const renderView = ({ item }) => {
     return (

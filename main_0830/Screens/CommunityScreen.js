@@ -7,9 +7,9 @@ import { PostDetailScreen } from '../Components/Community/PostDetailScreen';
 
 const db = firebase.firestore()
 
-const CommunityScreen = ({ navigation }) => {
+const CommunityScreen = ({ navigate }) => {
   const renderPosts = (itemData) => {
-    return <Post post ={itemData.item} navigation={navigation}/>;
+    return <Post post ={itemData.item} />;
   };
 
   const [posts, setPosts] = useState([])

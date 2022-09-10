@@ -9,16 +9,14 @@ import {
   FontAwesome5,
   Octicons,
   MaterialIcons,
-  Entypo,
+  Entypo
 } from "@expo/vector-icons";
 
 import UploadPostScreen from "./UploadPostScreen";
 import DictionaryScreen from "./DictionaryScreen";
 import DictionaryDetailScreen from "./DictionaryDetailScreen";
-import EditProfileScreen from "./ProfileScreenEdit";
 import ProfileScreen from "./ProfileScreen";
 import CommunityScreen from "./CommunityScreen";
-import CommunityDetailScreen from "./CommunityDetailScreen";
 import HomeScreen from "./HomeScreen";
 import BreweryDetailScreen from "./BreweryDetailSreen";
 import UploadPost from "../Components/UploadPost/UploadPost";
@@ -37,73 +35,43 @@ const HomeScreenStack = () => {
 };
 const CommunityScreenStack = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="CommunityScreen"
-      screenOptions={screenOptions1}
-    >
+    <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
-      <Stack.Screen
-        name="CommunityDetailScreen"
-        component={CommunityDetailScreen}
-      />
     </Stack.Navigator>
   );
 };
 const UploadPostScreenStack = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="UploadPost"
-      screenOptions={screenOptions2}
-    >
-      <Stack.Screen
-        name="UploadPostScreen"
-        component={UploadPostScreen}
-        options={{ headerTitle: "글 작성" }}
-      />
-      <Stack.Screen
-        name="UploadPost"
-        component={UploadPost}
-        options={{ headerTitle: "글 작성" }}
-      />
-      <Stack.Screen
-        name="SearchBar"
-        component={SearchBar}
-        options={{ headerTitle: "태그 설정" }}
-      />
+    <Stack.Navigator 
+    initialRouteName="UploadPost"
+    screenOptions={screenOptions2}>
+      <Stack.Screen name="UploadPostScreen" component={UploadPostScreen} options={{headerTitle: '글 작성'}}/>
+      <Stack.Screen name="UploadPost" component={UploadPost} options={{headerTitle: '글 작성'}}/>
+      <Stack.Screen name="SearchBar" component={SearchBar} options={{headerTitle: '태그 설정'}}/>
     </Stack.Navigator>
   );
 };
 const DictionaryScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions2}>
-      <Stack.Screen
-        name="DictionaryScreen"
-        component={DictionaryScreen}
-        options={{ headerTitle: "전통주 사전" }}
-      />
-      <Stack.Screen
-        name="DictionaryDetailScreen"
-        component={DictionaryDetailScreen}
-        options={{ headerTitle: "상세정보" }}
-      />
+      <Stack.Screen name="DictionaryScreen" component={DictionaryScreen} options={{headerTitle: '전통주 사전'}}/>
+      <Stack.Screen name="DictionaryDetailScreen" component={DictionaryDetailScreen} options={{headerTitle: '상세정보'}}/>
     </Stack.Navigator>
   );
 };
 const ProfileScreenStack = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="ProfileScreen"
-      screenOptions={screenOptions1}
-    >
+    <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
     </Stack.Navigator>
   );
 };
 
 const BottomTabs = () => {
   return (
-    <Tab.Navigator screenOptions={screenOptions3}>
+    <Tab.Navigator
+      screenOptions={screenOptions3}
+    >
       <Tab.Screen
         name="HomeStack"
         component={HomeScreenStack}
@@ -128,7 +96,7 @@ const BottomTabs = () => {
         options={{
           headerShown: true,
           tabBarLabel: "커뮤니티",
-          headerTitle: "커뮤니티",
+          headerTitle: '커뮤니티',
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
               name="users"
@@ -160,7 +128,7 @@ const BottomTabs = () => {
         options={{
           headerShown: false,
           tabBarLabel: "글 작성",
-          headerTitle: "글 작성",
+          headerTitle: '글 작성',
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
               name="camera-alt"
@@ -179,7 +147,7 @@ const BottomTabs = () => {
         options={{
           headerShown: false,
           tabBarLabel: "사전",
-          headerTitle: "전통주 사전",
+          headerTitle: '전통주 사전',
           tabBarIcon: ({ focused }) => (
             <Foundation
               name="book-bookmark"
@@ -217,38 +185,42 @@ const screenOptions1 = {
   headerShown: false,
 };
 const screenOptions2 = {
-  headerTitleAlign: "center",
+  headerTitleAlign: 'center',
   headerBackTitleVisible: true,
-  headerBackTitle: "뒤로",
-  headerTitleStyle: { color: "black", fontsize: 10 },
-  headerTintColor: "gray",
-  headerBackImage: () => {
-    // 뒤로가기 버튼 만들기
+  headerBackTitle: '뒤로',
+  headerTitleStyle: {color: 'black',fontsize: 10},
+  headerTintColor: 'gray',
+  headerBackImage: () => { // 뒤로가기 버튼 만들기
     const style = {
-      marginLeft: Platform.OS === "ios" ? 0 : 0,
+        marginLeft: Platform.OS === 'ios' ? 0 : 0,
     };
     return (
-      <Entypo name="chevron-small-left" size={30} color="gray" style={style} />
+        <Entypo
+            name = 'chevron-small-left'
+            size = {30}
+            color = 'gray'
+            style = {style}
+        />             
     );
-  },
-};
+  }
+}
 
 const screenOptions3 = {
   tabBarActiveTintColor: "#C0E8E0", // 아래 탭 클릭시 색깔 변경
   tabBarShowLabel: true, // 탭 아래 글씨 나오게 할지 선택
   tabBarInactiveTintColor: "grey", // 아래 탭 클릭 안할 시에 색깔 변경
   headerBackTitleVisible: true, // 뒤로가기 버튼 출력
-  headerBackTitle: "뒤로", // 뒤로가기 텍스트 변경
-  headerTitleAlign: "center", // 헤더 가운데 정렬
-  headerTitleStyle: { fontsize: 10 },
+  headerBackTitle: '뒤로', // 뒤로가기 텍스트 변경
+  headerTitleAlign: 'center', // 헤더 가운데 정렬
+  headerTitleStyle: { fontsize: 10},
   swipeEnabled: false,
   adaptive: true,
-  tabBarHideOnKeyboard: true,
-  headerTintColor: "#000000",
+  tabBarHideOnKeyboard:true,
+  headerTintColor: '#000000',
   tabBarLabelStyle: {
     fontSize: 12,
   },
-};
+}
 
 const styles = StyleSheet.create({
   maincolor: "#C0E8E0",
