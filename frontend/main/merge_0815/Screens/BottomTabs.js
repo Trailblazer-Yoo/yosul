@@ -20,6 +20,8 @@ import CommunityScreen from "./CommunityScreen";
 import HomeScreen from "./HomeScreen";
 import UploadPost from "../Components/UploadPost/UploadPost";
 import SearchBar from "../Components/UploadPost/SearchBar";
+import NotificationScreen from "./NotificationScreen";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // creates object for Stack Navigator
@@ -35,6 +37,7 @@ const CommunityScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen}/>
     </Stack.Navigator>
   );
 };
@@ -102,7 +105,7 @@ const BottomTabs = () => {
       <Tab.Screen
         name="CommunityStack"
         component={CommunityScreenStack}
-        options={{
+        options={({navigation}) => ({
           headerShown: true,
           tabBarLabel: "커뮤니티",
           headerTitle: "커뮤니티",
@@ -120,6 +123,7 @@ const BottomTabs = () => {
               <TouchableOpacity
                 style={{ paddingRight: 30 }}
                 // onPress={() => navigation.push('NewPostScreen')}
+                onPress={() => navigation.navigate("NotificationScreen")}
               >
                 <View style={styles.unreadBadge}>
                   <Text style={styles.unreadBadgeText}>11</Text>
@@ -128,7 +132,7 @@ const BottomTabs = () => {
               </TouchableOpacity>
             );
           },
-        }}
+        })}
       />
 
       <Tab.Screen
