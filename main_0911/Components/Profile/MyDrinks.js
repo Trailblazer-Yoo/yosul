@@ -19,20 +19,18 @@ const db = firebase.firestore();
 
 const MyDrinks = ({ mydrinks, soolList, currentUserEmail, navigation }) => {
   const [drinks, setDrinks] = useState([]);
-  const isFocused = useIsFocused();
+  const isFocused = navigation.isFocused();
 
   useEffect(() => {
-    if (isFocused) {
     const data = [];
     if (mydrinks !== undefined) {
       for (let i = 0; i < mydrinks.length; i++) {
         data.push(soolList[mydrinks[i]]);
       }
-      setDrinks(data);
-    }} else {
-      setDrinks([])
+      console.log("매번 바뀌는 중");
     }
-  }, []);
+    setDrinks(data);
+  }, [isFocused]);
 
   const renderListItem = ({ item, index }) => {
     return (
@@ -48,12 +46,18 @@ const MyDrinks = ({ mydrinks, soolList, currentUserEmail, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={drinks}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal={false} // numColumn을 설정하기 위해서 horizontal=false설정
-        renderItem={renderListItem}
-      />
+      {drinks === [] ? (
+        <View>
+          <Text>Hello</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={drinks}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal={false} // numColumn을 설정하기 위해서 horizontal=false설정
+          renderItem={renderListItem}
+        />
+      )}
     </View>
   );
 };

@@ -7,10 +7,13 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  FlatList,
+  SafeAreaView,
 } from "react-native";
 import MyDrinks from "../Components/Profile/MyDrinks";
 import MyPosts from "../Components/Profile/MyPost";
 import UserProfile from "../Components/Profile/UserProfile";
+import MyBookmarkPosts from "../Components/Profile/MyBookmarkPosts";
 import firebase from "../firebase";
 
 const Tab = createMaterialTopTabNavigator();
@@ -19,11 +22,13 @@ const db = firebase.firestore();
 const ProfileScreen = ({ navigation }) => {
   const [loading2, setLoading2] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
-  const [soolList, setSoolList] = useState([]);
+  const [bookmarkposts, setBookmkarPosts] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [soolList, setSoolList] = useState([]);
 
   // UserProfile 및 기본 정보 데이터 (param : userInfo)
-  const getUserInfo = () => {
+  useEffect(() => {
+    setLoading2(false);
     const unsubscribe = db
       .collection("users")
       .where("owner_uid", "==", firebase.auth().currentUser.uid)
@@ -34,10 +39,10 @@ const ProfileScreen = ({ navigation }) => {
         })
       );
     return unsubscribe;
-  };
+  }, []);
 
   // 내가 쓴 글에 들어갈 데이터 (params : posts)
-  const getPosts = () => {
+  useEffect(() => {
     db.collection("users")
       .doc(firebase.auth().currentUser.email)
       .collection("posts")
@@ -47,9 +52,9 @@ const ProfileScreen = ({ navigation }) => {
           snapshot.docs.map((post) => ({ id: post.id, ...post.data() }))
         );
       });
-  };
+  }, []);
 
-  // 찜한 전통주에 들어갈 데이터 (params : soolList)
+  // 찜한 전통주에 들어갈 데이터 (params : sulList)
   const getSoolDocs = async () => {
     const dataSnapShot = (
       await db.collection("global").doc("drinks").get()
@@ -58,19 +63,42 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    setLoading2(true);
-    getUserInfo();
-    getPosts();
     getSoolDocs();
-    setLoading2(false);
   }, []);
+
+  // setLoading2(false);
+  // console.log(posts);
 
   // 내가 쓴 글에 들어갈 컴포넌트
   const MyPostsStack = () => {
-    return <MyPosts posts={posts} />;
+    const renderPosts = (itemData) => {
+      return (
+        <MyPosts
+          posts={itemData.item}
+          index={itemData.id}
+          navigation={navigation}
+        />
+      );
+    };
+
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <FlatList
+          data={posts}
+          renderItem={renderPosts}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          style={{ margin: 3 }}
+        />
+      </SafeAreaView>
+    );
   };
 
   // 게시물 다시보기에 들어갈 컴포넌트
+  const BookmarkPostsStack = () => {
+    return <MyBookmarkPosts posts={bookmarkposts} navigation={navigation} />;
+  };
+
   const HomeScreen = () => {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -81,6 +109,7 @@ const ProfileScreen = ({ navigation }) => {
 
   // 찜한 전통주에 들어갈 컴포넌트
   const MyDrinksStack = () => {
+
     return (
       <MyDrinks
         mydrinks={userInfo.myBookmarkDrinks}
@@ -91,7 +120,7 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
-  console.log(userInfo);
+  // console.log(userInfo);
 
   return (
     <View style={styles.containertop}>
@@ -109,10 +138,21 @@ const ProfileScreen = ({ navigation }) => {
         />
         <Tab.Screen
           name="찜한 전통주"
-          component={MyDrinksStack}
+          component={HomeScreen}
           navigation={navigation}
         />
       </Tab.Navigator>
+      {loading2 === true ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            color="#C0E8E0"
+            size="large"
+            style={{ opacity: 1.5 }}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };
@@ -139,6 +179,17 @@ const styles = StyleSheet.create({
         : StatusBar.currentHeight,
     flex: 1,
     backgroundColor: "white",
+  },
+  loading: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.3,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

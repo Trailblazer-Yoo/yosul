@@ -1,41 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
-  Text,
-  FlatList,
   StyleSheet,
   Image,
   Dimensions,
   Pressable,
 } from "react-native";
-import firebase from '../../firebase'
+import firebase from "../../firebase";
 
 const window = Dimensions.get("window");
-const db = firebase.firestore()
+const db = firebase.firestore();
 
-const MyPosts = ({posts}) => {
-
-  const renderView = ({ item }) => {
-    return (
-      <Pressable>
-        <Image style={styles.imgstyle} source={{uri:item.imageArray[0]}} />
-      </Pressable>
-    );
-  };
-
+const MyPosts = ({ posts, index, navigation }) => {
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={posts}
-        style={styles.wrapper}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={2}
-        horizontal={false} // numColumn을 설정하기 위해서 horizontal=false설정
-        renderItem={renderView}
-      />
+    <View style={{ flex: 1 / 2, marginBottom: 30 }}>
+      <Pressable
+        style={{ flex: 1, width: "99%", height: 300, marginTop: 3 }}
+        onPress={() =>
+          navigation.push("PostDetail", { id: index, item: posts })
+        }
+      >
+        <PostImage posts={posts} />
+      </Pressable>
     </View>
   );
 };
+
+const PostImage = ({ posts }) => (
+  <Image
+    style={{
+      width: "100%",
+      height: 300,
+      borderRadius: 10,
+    }}
+    source={{
+      uri: posts.imageArray[0],
+    }}
+  />
+);
 
 const styles = StyleSheet.create({
   container: {

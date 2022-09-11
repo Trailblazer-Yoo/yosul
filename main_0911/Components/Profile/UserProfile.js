@@ -66,7 +66,7 @@ function UserProfile({ userInfo, navigation }) {
               <TouchableOpacity
                 style={{ marginTop: 5, flexDirection:'row'}}
                 onPress={() =>
-                  navigation.navigate("EditProfileScreen", {
+                  navigation.navigate("EditProfile", {
                     userInfo: userInfo,
                   })
                 }

@@ -7,10 +7,6 @@ import firebase from '../firebase'
 const db = firebase.firestore()
 
 const CommunityScreen = ({navigation}) => {
-  const renderPosts = (itemData) => {
-    return <Post post ={itemData.item} index={itemData.id} navigation={navigation}/>;
-  };
-
   const [posts, setPosts] = useState([])
   useEffect(() => {
     db.collectionGroup('posts')
@@ -19,6 +15,11 @@ const CommunityScreen = ({navigation}) => {
       setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
     });
   }, [])
+
+  const renderPosts = (itemData) => {
+    return <Post posts ={itemData.item} navigation={navigation}/>;
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <FlatList

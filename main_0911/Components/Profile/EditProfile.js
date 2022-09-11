@@ -23,22 +23,31 @@ import * as ImagePicker from 'expo-image-picker';
 const EditProfile = ({route}) => {
   const userInfo = route.params.userInfo
   const options = ['탁주', '약주•청주', '과실주', '증류주', '리큐르/기타주류']
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(userInfo.profile_picture);
   console.log(userInfo)
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+    setLoading(true);
+    let ImageData = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [2, 2],
       quality: 1,
     });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (ImageData.cancelled) {
+      return null;
     }
+    const image = ImageData.uri;
+    const getEmail = await AsyncStorage.getItem("userEmail");
+    const path = `photos/${getEmail}/${Date.now()}`;
+    const response = await fetch(image);
+    const blob = await response.blob();
+    const filename = `${path}${image.substring(image.lastIndexOf("/") + 1)}`;
+    let ref = firebase.storage().ref(filename);
+    await ref.put(blob);
+    const remoteurl = await ref.getDownloadURL();
+    await setImage(remoteurl);
+    setLoading(false);
   };
 
   return (

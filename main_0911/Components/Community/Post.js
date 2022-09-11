@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Dimensions,
   Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -17,90 +18,151 @@ import {
 } from "@expo/vector-icons";
 import ImageView from "react-native-image-viewing";
 import ImageModal from "react-native-image-modal";
+import firebase from "../../firebase";
 
-const Post = ({ post, index, navigation }) => {
-  const handleLike = (post) => {
-    const currentLikeStatus = !post.likes_by_users.includes(
-      firebase.auth().currentUser.email
-    );
+const db = firebase.firestore();
+const window = Dimensions.get("window");
+
+const Post = ({ posts, navigation }) => {
+  const likesHandleLike = async (posts) => {
+    const currentUserEmail = firebase.auth().currentUser.email;
+    const myLikePost = {};
+    myLikePost[posts.owner_email] = posts.id;
+    const currentLikeStatus = !posts.likes_by_users.includes(currentUserEmail);
 
     db.collection("users")
-      .doc(post.owner_email)
+      .doc(posts.owner_email)
       .collection("posts")
-      .doc(post.id)
+      .doc(posts.id)
       .update({
-        likes_py_users: currentLikeStatus
-          ? firebase.firestore.FieldValue.arrayUnion(
-              firebase.auth().currentUser.email
-            )
-          : firebase.firestore.FieldValue.arrayRemove(
-              firebase.auth().currentUser.email
-            ),
-      })
-      .then(() => {
-        console.log("Document successfully updated!");
+        likes_by_users: currentLikeStatus
+          ? firebase.firestore.FieldValue.arrayUnion(currentUserEmail)
+          : firebase.firestore.FieldValue.arrayRemove(currentUserEmail),
       })
       .catch((error) => {
         console.log("Error updating document", error);
       });
+
+    await db
+      .collection("users")
+      .doc(currentUserEmail)
+      .update({
+        myLikesPosts: currentLikeStatus
+          ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
+          : firebase.firestore.FieldValue.arrayRemove(myLikePost),
+      });
   };
+
+  const bookmarkHandleLike = async (posts) => {
+    const currentUserEmail = firebase.auth().currentUser.email;
+    const myBookmarkPost = {};
+    myBookmarkPost[posts.owner_email] = posts.id;
+    const currentBookmarksStatus =
+      !posts.bookmarks_by_users.includes(currentUserEmail);
+
+    db.collection("users")
+      .doc(posts.owner_email)
+      .collection("posts")
+      .doc(posts.id)
+      .update({
+        likes_by_users: currentBookmarksStatus
+          ? firebase.firestore.FieldValue.arrayUnion(currentUserEmail)
+          : firebase.firestore.FieldValue.arrayRemove(currentUserEmail),
+      })
+      .catch((error) => {
+        console.log("Error updating document", error);
+      });
+
+    await db
+      .collection("users")
+      .doc(currentUserEmail)
+      .update({
+        myBookmarksPosts: currentBookmarksStatus
+          ? firebase.firestore.FieldValue.arrayUnion(myBookmarkPost)
+          : firebase.firestore.FieldValue.arrayRemove(myBookmarkPost),
+      });
+  };
+
   return (
     <View style={{ flex: 1 / 2, marginBottom: 30 }}>
       <Divider width={2} orientation="vertical" />
-      <TouchableOpacity
-        onPress={() => navigation.push("PostDetail", { id: index, item: post })}
+      <Pressable
+        onPress={() =>
+          navigation.push("PostDetail", { id: posts.id, item: posts })
+        }
       >
-        <PostImage post={post} />
-        <PostHeader post={post} />
-      </TouchableOpacity>
+        <PostImage posts={posts} />
+        <PostHeader posts={posts} />
+      </Pressable>
       <View style={{ marginHorizontal: 15, marginTop: 10 }}>
-        <Tag post={post} />
-        {/* <Caption post={post} />
-                    <CommentsSection post={post} />
-                    <Comment post={post} /> */}
-        <PostFooter post={post} />
+        <Tag posts={posts} />
+        {/* <Caption posts={posts} />
+                    <CommentsSection posts={posts} />
+                    <Comment posts={posts} /> */}
+        <View style={styles.FooterIconWrapper}>
+          <View style={styles.lefeFooterIconsContainer}>
+            <Pressable onPress={() => likesHandleLike(posts)}>
+              <HeartIcon posts={posts} />
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.push("PostDetail", {
+                  id: posts.id,
+                  item: posts,
+                })
+              }
+            >
+              <CommentIcon posts={posts} />
+            </Pressable>
+            <Pressable
+            // onPress={bookmarkHandleLike(posts)}
+            >
+              <BookmarkIcon posts={posts} />
+            </Pressable>
+          </View>
+        </View>
       </View>
     </View>
   );
 };
 
-const PostImage = ({ post, navigation }) => (
+const PostImage = ({ posts }) => (
   <View style={{ flex: 1, width: "99%", height: 300, marginTop: 3 }}>
     <Image
       style={{
-        width: "100%",
-        height: 300,
+        width: window.width * 0.49,
+        height: window.width * 0.69,
         borderRadius: 10,
       }}
       source={{
-        uri: post.imageArray[0],
+        uri: posts.imageArray[0],
       }}
     />
   </View>
 );
 
-const PostHeader = ({ post }) => (
+const PostHeader = ({ posts }) => (
   <View
     style={{
       flexDirection: "row",
       justifyContent: "space-between",
       marginTop: 5,
       alignItems: "center",
-      width: "100%",
+      width: window.width,
     }}
   >
     <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <Image source={{ uri: post.profile_picture }} style={styles.story} />
+      <Image source={{ uri: posts.profile_picture }} style={styles.story} />
       <Text style={{ color: "black", marginLeft: 5, fontWeight: "700" }}>
-        {post.user}
+        {posts.user}
       </Text>
     </View>
   </View>
 );
 
-const Tag = ({ post }) => (
+const Tag = ({ posts }) => (
   <View style={{ flexDirection: "row", marginTop: 15 }}>
-    {post.tags.map((tag, index) => (
+    {posts.tags.map((tag, index) => (
       <View key={index}>
         <Text style={{ color: "black" }}>
           <Text
@@ -119,32 +181,32 @@ const Tag = ({ post }) => (
 );
 
 // 내용 어느정도 이상 넘어가면 펼치기로 하기!
-// const Caption = ({ post }) => (
+// const Caption = ({ posts }) => (
 //     <View style={{  width:"100%" }}>
 //         <Text style={{ color: 'black' }}>
 //             <Text style={{ fontWeight: '600' }}></Text>
-//             <Text> {post.caption}</Text>
+//             <Text> {posts.caption}</Text>
 //         </Text>
 //     </View>
 // )
 
-// const CommentsSection = ({ post }) => (
+// const CommentsSection = ({ posts }) => (
 //     <View style={{ flex:1 , width:"100%" }}>
 //         <View style={{ alignItems: 'flex-end', justifyContent: 'center', }}>
-//             <Text style ={{marginTop: 5,fontSize: 10}}>{post.date}</Text>
+//             <Text style ={{marginTop: 5,fontSize: 10}}>{posts.date}</Text>
 //         </View>
-//         {!!post.comments.length && (
+//         {!!posts.comments.length && (
 //             <Text style={{ color: 'gray' }}>
-//                 View{post.comments.length > 1 ? ' all' : ''} {post.comments.length}{' '}
-//                 {post.comments.length > 1 ? 'comments' : 'comment'}
+//                 View{posts.comments.length > 1 ? ' all' : ''} {posts.comments.length}{' '}
+//                 {posts.comments.length > 1 ? 'comments' : 'comment'}
 //             </Text>
 //         )}
 //     </View>
 // )
 
-// const Comment = ({ post }) => (
+// const Comment = ({ posts }) => (
 //     <>
-//         {post.comments.map((comment, index) => (
+//         {posts.comments.map((comment, index) => (
 //             <View key={index} style={{ flexDirection: 'row', width:"100%" }}>
 //                 <Text style={{ color: 'black' }}>
 //                     <Text style={{ fontWeight: '600' }}>{comment.user}</Text>{' '}
@@ -155,37 +217,41 @@ const Tag = ({ post }) => (
 //     </>
 // )
 
-const PostFooter = ({ post }) => (
-  <View
-    style={{
-      flexDirection: "row",
-      justifyContent: "space-between",
-      width: "120%",
-      marginTop: 9,
-    }}
-  >
-    <View style={styles.lefeFooterIconsContainer}>
-      {/* 하트 */}
-      <TouchableOpacity>
-        <View style={styles.box}>
-          <AntDesign name={"hearto"} size={20} />
-          <Text style={{ color: "black", fontWeight: "350", marginLeft: 5 }}>
-            {post.likes_by_users.toLocaleString("en")}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <View style={styles.box}>
-          <SimpleLineIcons name="bubble" size={20} color="black" />
-          <Text style={{ color: "black", fontWeight: "350", marginLeft: 5 }}>
-            {post.comments.length}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <FontAwesome name="bookmark-o" size={20} color="black" />
-      </TouchableOpacity>
-    </View>
+const HeartIcon = ({ posts }) => (
+  <View style={styles.box}>
+    {!posts.likes_by_users.includes(firebase.auth().currentUser.email) ? (
+      <AntDesign name={"hearto"} size={20} />
+    ) : (
+      <AntDesign name={"heart"} size={20} color="red" />
+    )}
+
+    <Text
+      style={{ color: "black", fontWeight: "350", marginLeft: 5, bottom: -2 }}
+    >
+      {posts.likes_by_users.length.toLocaleString("en")}
+    </Text>
+  </View>
+);
+
+const CommentIcon = ({ posts }) => (
+  <View style={styles.box}>
+    <SimpleLineIcons name="bubble" size={20} color="black" />
+    <Text
+      style={{ color: "black", fontWeight: "350", marginLeft: 5, bottom: -2 }}
+    >
+      {posts.comments.length.toLocaleString("en")}
+    </Text>
+  </View>
+);
+
+const BookmarkIcon = ({ posts }) => (
+  <View style={styles.box}>
+    <FontAwesome name="bookmark-o" size={20} color="black" />
+    <Text
+      style={{ color: "black", fontWeight: "350", marginLeft: 5, bottom: -2 }}
+    >
+      {posts.bookmarks_by_users.length.toLocaleString("en")}
+    </Text>
   </View>
 );
 
@@ -204,15 +270,21 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "320deg" }],
     marginTop: -3,
   },
+  FooterIconWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "120%",
+    marginTop: 9,
+  },
   lefeFooterIconsContainer: {
     flexDirection: "row",
-    width: "33%",
+    width: window.width * 0.4,
     justifyContent: "space-between",
   },
   box: {
     flexDirection: "row",
     flex: 1,
-    marginRight: 5,
+    marginRight: 10,
   },
 });
 
