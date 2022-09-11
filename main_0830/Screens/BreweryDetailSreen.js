@@ -8,10 +8,14 @@ import {
   Linking,
   Dimensions,
   ActivityIndicator,
+  TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import React from "react";
+import { ScrollView } from "react-native-gesture-handler";
+import { Divider } from "react-native-elements";
 
-export default function BreweryDetailScreen({ route }) {
+export default function BreweryDetailScreen({ navigation, route }) {
   let today = new Date();
   let year = today.getFullYear();
   let month = today.getMonth();
@@ -48,11 +52,11 @@ export default function BreweryDetailScreen({ route }) {
 
   const renderListItemForAttraction = ({ item, index }) => {
     return (
-      <View>
+      <View style={{ flexDirection: "row" }}>
         <Image style={styles.img} source={{ uri: item.firstimage }} />
         <View style={styles.info}>
           <Text style={styles.name}>{item.title}</Text>
-          <Text style={styles.text}>주소: {item.addr1}</Text>
+          <Text style={styles.attractionText}>{item.addr1}</Text>
         </View>
       </View>
     );
@@ -80,80 +84,167 @@ export default function BreweryDetailScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.breweryDetail}>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 10,
-          }}
-        >
-          <Text style={{ fontSize: 27 }}>{item.name}</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={{}}>
+          <ImageBackground
+            source={require("../assets/brewery1.png")}
+            style={{
+              width: Dimensions.get("window").width,
+              height: Dimensions.get("window").width * 0.85,
+              position: "relative",
+              zIndex: 0,
+            }}
+          >
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={require("../assets/arrow.png")}
+                style={{
+                  marginTop: 50,
+                  marginLeft: 20,
+                  position: "relative",
+                }}
+              />
+            </TouchableOpacity>
+          </ImageBackground>
         </View>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 3,
-          }}
-        >
-          <Text style={{ fontSize: 16, color: '#fafafa' }}>{item.activity_name}</Text>
+
+        <View style={styles.breweryDetail}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 30,
+            }}
+          >
+            <Text style={{ fontSize: 16, color: "#393E59", marginBottom: 15 }}>
+              {item.activity_name}
+            </Text>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 10,
+              marginBottom: 20,
+            }}
+          >
+            <Text
+              style={{ fontSize: 27, fontWeight: "bold", marginBottom: 15 }}
+            >
+              {item.name}
+            </Text>
+            <Divider style={{ borderColor: "black" }} />
+          </View>
+
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 15,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                marginBottom: 20,
+                marginHorizontal: 15,
+              }}
+            >
+              {item.activity}
+            </Text>
+          </View>
+          <View style={styles.detailText}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/location.png")}
+            />
+            <Text style={styles.infomationText}>{item.address}</Text>
+          </View>
+          <View style={styles.detailText}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/barrel.png")}
+            />
+            <Text style={styles.infomationText}>{item.sul_type}</Text>
+          </View>
+          <View style={styles.detailText}>
+            <Image style={styles.icon} source={require("../assets/time.png")} />
+            <Text style={styles.infomationText}>소요시간: {item.time}</Text>
+          </View>
+          <View style={styles.detailText}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/charge.png")}
+            />
+            <Text style={styles.infomationText}>{item.cost}</Text>
+          </View>
+          <View style={styles.detailText}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/reservation1.png")}
+            />
+            <Text style={styles.infomationText}>
+              상시방문가능여부 : {item.regular_visit}
+            </Text>
+            <Divider />
+          </View>
+          <Text
+            style={[
+              styles.infomationText,
+              { marginLeft: 37.5, marginBottom: 7 },
+            ]}
+          >
+            예약가능여부: {item.reservation}
+          </Text>
+          <View style={styles.detailText}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/phone.png")}
+            />
+            <Text style={styles.infomationText}>{item.telephone}</Text>
+          </View>
+          {typeof item.homepage === "undefined" ? null : (
+            <Text onPress={() => Linking.openURL(item.homepage)}>홈페이지</Text>
+          )}
         </View>
-        <Text>체험 소개: {item.activity}</Text>
-        <View style={styles.detailText}>
-          <Image
-            style={styles.icon}
-            source={require("../assets/location.png")}
-          />
-          <Text>주소: {item.address}</Text>
-        </View>
-        <View style={styles.detailText}>
-          <Image style={styles.icon} source={require("../assets/barrel.png")} />
-          <Text>주종: {item.sul_type}</Text>
-        </View>
-        <Text>소요시간: {item.time}</Text>
-        <View style={styles.detailText}>
-          <Image style={styles.icon} source={require("../assets/charge.png")} />
-          <Text>가격: {item.cost}</Text>
-        </View>
-        <Text>상시방문가능여부: {item.regular_visit}</Text>
-        <Text>예약가능여부: {item.reservation}</Text>
-        <View style={styles.detailText}>
-          <Image style={styles.icon} source={require("../assets/phone.png")} />
-          <Text>전화번호: {item.telephone}</Text>
-        </View>
-        {typeof item.homepage === "undefined" ? null : (
-          <Text onPress={() => Linking.openURL(item.homepage)}>홈페이지</Text>
+        {attraction.length === 0 ? null : (
+          <View style={styles.attraction}>
+            <Text
+              style={{
+                fontSize: 23,
+                fontWeight: "bold",
+                marginBottom: 20,
+                marginLeft: 15,
+              }}
+            >
+              같이 방문하면 좋은 관광지
+            </Text>
+            <FlatList
+              // horizontal={true}
+              data={attraction.slice(0, 5)}
+              renderItem={renderListItemForAttraction}
+            />
+          </View>
+        )}
+        {event.length === 0 ? null : (
+          <View style={styles.tourEvent}>
+            <Text>
+              {item.address.substr(
+                0,
+                item.address.indexOf(" ", item.address.indexOf(" ") + 1)
+              )}{" "}
+              행사
+            </Text>
+            <FlatList
+              horizontal={true}
+              data={event.slice(0, 5)}
+              renderItem={renderListItemForEvent}
+            />
+          </View>
         )}
       </View>
-      {attraction.length === 0 ? null : (
-        <View style={styles.attraction}>
-          <Text>같이 방문하면 좋은 관광지</Text>
-          <FlatList
-            horizontal={true}
-            data={attraction.slice(0, 5)}
-            renderItem={renderListItemForAttraction}
-          />
-        </View>
-      )}
-      {event.length === 0 ? null : (
-        <View style={styles.tourEvent}>
-          <Text>
-            {item.address.substr(
-              0,
-              item.address.indexOf(" ", item.address.indexOf(" ") + 1)
-            )}{" "}
-            행사
-          </Text>
-          <FlatList
-            horizontal={true}
-            data={event.slice(0, 5)}
-            renderItem={renderListItemForEvent}
-          />
-        </View>
-      )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -161,7 +252,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 30,
+    // padding: 30,
   },
   loading: {
     alignItems: "center",
@@ -169,7 +260,7 @@ const styles = StyleSheet.create({
   },
   breweryDetail: {
     flex: 2,
-    backgroundColor: "red",
+    // backgroundColor: "red",
     marginBottom: 20,
   },
   header: {
@@ -178,7 +269,7 @@ const styles = StyleSheet.create({
   },
   attraction: {
     flex: 1,
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
     marginBottom: 20,
   },
   tourEvent: {
@@ -194,13 +285,31 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 20,
     borderWidth: 1,
+    marginBottom: 10,
+    marginLeft: 15,
+    backgroundColor: "#393E59",
   },
   icon: {
     width: Dimensions.get("window").width / 20,
     height: Dimensions.get("window").width / 20,
+    marginRight: 5,
+    marginLeft: 10,
   },
   detailText: {
-    backgroundColor: "green",
+    // backgroundColor: "green",
     flexDirection: "row",
+    marginBottom: 7,
+  },
+  infomationText: {
+    fontSize: 17.5,
+  },
+  name: {
+    fontSize: 19,
+    fontWeight: "600",
+    marginTop: 17,
+    marginBottom: 13,
+  },
+  attractionText: {
+    fontSize: 15,
   },
 });
