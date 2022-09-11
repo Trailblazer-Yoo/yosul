@@ -20,6 +20,9 @@ import CommunityScreen from "./CommunityScreen";
 import HomeScreen from "./HomeScreen";
 import UploadPost from "../Components/UploadPost/UploadPost";
 import SearchBar from "../Components/UploadPost/SearchBar";
+import Post from "../Components/Community/Post";
+import PostDetail from "../Components/Community/PostDetail";
+import EditProfile from "../Components/Profile/EditProfile";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // creates object for Stack Navigator
@@ -33,8 +36,10 @@ const HomeScreenStack = () => {
 };
 const CommunityScreenStack = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptions1}>
-      <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
+    <Stack.Navigator screenOptions={screenOptions2}>
+      <Stack.Screen name="CommunityScreen" component={CommunityScreen} options={{headerTitle: '커뮤니티'}}/>
+      <Stack.Screen name="Post" component={Post} options={{headerTitle: '커뮤니티'}}/>
+      <Stack.Screen name="PostDetail" component={PostDetail} options={{headerTitle: '게시물'}}/>
     </Stack.Navigator>
   );
 };
@@ -61,6 +66,8 @@ const ProfileScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="DictionaryDetailScreen" component={DictionaryDetailScreen} />
     </Stack.Navigator>
   );
 };
@@ -92,7 +99,7 @@ const BottomTabs = () => {
         name="CommunityStack"
         component={CommunityScreenStack}
         options={{
-          headerShown: true,
+          headerShown: false,
           tabBarLabel: "커뮤니티",
           headerTitle: '커뮤니티',
           tabBarIcon: ({ focused }) => (

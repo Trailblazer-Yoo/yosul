@@ -6,10 +6,18 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  ImageBackground,
+  Pressable,
 } from "react-native";
 import ImageModal from "react-native-image-modal";
 import { Divider } from "react-native-elements";
 import firebase from "../../firebase";
+import {
+  AntDesign,
+  Feather,
+  FontAwesome,
+  SimpleLineIcons,
+} from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
 const handleSignOut = async () => {
@@ -21,7 +29,8 @@ const handleSignOut = async () => {
     });
 };
 
-function UserProfile({ props, navigation }) {
+function UserProfile({ userInfo, navigation }) {
+  console.log(userInfo)
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
@@ -38,6 +47,7 @@ function UserProfile({ props, navigation }) {
             <Image source={require("../../assets/logout.png")} />
           </TouchableOpacity>
         </View>
+        <View style={styles.backgroundimg} />
         <View
           style={{
             backgroundColor: "white",
@@ -52,11 +62,21 @@ function UserProfile({ props, navigation }) {
             onRequestClose={() => setModalVisible(false)}
           ></ImageModal>
           <View style={styles.textbox}>
-            <View style={{}}>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <TouchableOpacity
-                style={{ flexDirection: "row", justifyContent: "center" }}
+                style={{ marginTop: 5, flexDirection:'row'}}
+                onPress={() =>
+                  navigation.navigate("EditProfileScreen", {
+                    userInfo: userInfo,
+                  })
+                }
               >
-                <Text style={styles.headerText}>닉네임 귀염뽀짝 루우피</Text>
+                <Text style={styles.headerText}>닉네임 {userInfo.nickname}</Text>
+                <SimpleLineIcons
+                  name="pencil"
+                  size={17}
+                  color="grey"
+                />
               </TouchableOpacity>
             </View>
             <View
@@ -65,38 +85,22 @@ function UserProfile({ props, navigation }) {
                 justifyContent: "center",
                 marginTop: 13,
               }}
-            >
-              <TouchableOpacity>
-                <View style={styles.profiletag}>
-                  <Text style={{ fontSize: 12 }}> 주량: 2병 </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <View style={styles.profiletag}>
-                  <Text style={{ fontSize: 12 }}> 선호 주종: 과실주 </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <View style={styles.profiletag}>
-                  <Text style={{ fontSize: 12 }}> 선호 도수: 15%~20% </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            ></View>
             <Divider style={{ marginTop: 20 }} />
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <View
                 style={{
-                  marginTop: 25,
+                  marginTop: 20,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  팔로워{" "}
+                  내가 쓴 글
                 </Text>
-                <Text style={{ fontSize: 13 }}>1.0M</Text>
+                <Text style={{ fontSize: 13 }}>12</Text>
               </View>
               <View
                 style={{
@@ -106,7 +110,7 @@ function UserProfile({ props, navigation }) {
                 }}
               >
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  팔로잉{" "}
+                  저장한 글
                 </Text>
                 <Text style={{ fontSize: 13 }}>25</Text>
               </View>
@@ -118,7 +122,7 @@ function UserProfile({ props, navigation }) {
                 }}
               >
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  저장수{" "}
+                  저장한 전통주
                 </Text>
                 <Text style={{ fontSize: 13 }}>3</Text>
               </View>
@@ -132,24 +136,24 @@ function UserProfile({ props, navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   rootContainer: {
     width: window.width,
-    height: window.height / 2,
-    alignItems: "center",
+    height: window.width / 1.5,
     justifyContent: "center",
-    backgroundColor: "rgba(250,250,250,0.8)",
+    backgroundColor: "white",
   },
   backgroundimg: {
     width: window.width,
-    height: window.height,
     flex: 1,
+    backgroundColor: "rgba(250,250,250,0.8)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 15,
     color: "rgba(0,0,0,0.8)",
-    marginLeft: 0,
+    marginLeft: 5,
     fontWeight: "bold",
   },
   profileimg: {
@@ -161,6 +165,7 @@ const styles = StyleSheet.create({
     borderColor: "#C0E8E0",
     marginLeft: 150,
     marginTop: 10,
+    marginBottom: 5,
   },
   textbox: {
     width: window.width - 170,

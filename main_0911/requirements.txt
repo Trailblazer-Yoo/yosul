@@ -17,4 +17,6 @@ npm install firebase
 npm install react-native-image-modal
 npm install react-native-image-viewing
 npm install react-native-fast-image
+npm i @react-native-async-storage/async-storage
+npm i react-native-custom-picker
 # npm install react-native-image-picker

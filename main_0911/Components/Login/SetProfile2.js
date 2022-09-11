@@ -6,6 +6,8 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  Image,
+  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
@@ -13,11 +15,15 @@ import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import * as ImagePicker from "expo-image-picker";
 import firebase from "../../firebase";
 
 // db.collectionGroup('그룹이름') => db 내의 새로운 컬렉션 생성
 const db = firebase.firestore();
 const window = Dimensions.get("screen");
+
+const PLACEHOLDER_IMG =
+  "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
 
 function SetProfile2({ navigation }) {
   const SetProfileSchema = Yup.object().shape({
@@ -45,6 +51,32 @@ function SetProfile2({ navigation }) {
   const [isColor3, setColor3] = useState("grey");
   const [isColor4, setColor4] = useState("grey");
   const [isColor5, setColor5] = useState("grey");
+  const [profile, setProfile] = useState(PLACEHOLDER_IMG);
+  const [loading, setLoading] = useState(false);
+
+  const uploadProfileImage = async () => {
+    setLoading(true);
+    let ImageData = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [2, 2],
+      quality: 1,
+    });
+    if (ImageData.cancelled) {
+      return null;
+    }
+    const image = ImageData.uri;
+    const getEmail = await AsyncStorage.getItem("userEmail");
+    const path = `photos/${getEmail}/${Date.now()}`;
+    const response = await fetch(image);
+    const blob = await response.blob();
+    const filename = `${path}${image.substring(image.lastIndexOf("/") + 1)}`;
+    let ref = firebase.storage().ref(filename);
+    await ref.put(blob);
+    const remoteurl = await ref.getDownloadURL();
+    await setProfile(remoteurl);
+    setLoading(false);
+  };
 
   const uploadUserProfile = async (
     name,
@@ -63,10 +95,12 @@ function SetProfile2({ navigation }) {
         .createUserWithEmailAndPassword(getEmail, getEmail);
 
       console.log("Firebase SignUp Successful", getEmail, getPassword);
+      setLoading(true)
 
       db.collection("users").doc(authUser.user.email).set({
         owner_uid: authUser.user.uid,
         email: authUser.user.email,
+        profile_picture: profile,
         username: name,
         age: age,
         nickname: nickname,
@@ -74,8 +108,15 @@ function SetProfile2({ navigation }) {
         drink: drink,
         minContent: minContent,
         maxContent: maxContent,
+        myLikesDrinks: [],
+        myBookmarkDrinks: [],
+        myLikesPosts: [],
+        myBookmarkPosts: [],
+        follwing: [],
+        follower: [],
       });
       console.log(uploadUserProfile);
+      setLoading(false)
     } catch (error) {
       console.log(error.message);
     }
@@ -127,15 +168,34 @@ function SetProfile2({ navigation }) {
             <View>
               <View>
                 <ScrollView style={{ height: window.height * 0.9 }}>
-                  <View style={styles.profileContainer}>
-                    <Avatar
-                      size="xlarge"
-                      rounded // 둥글게 설정하기
-                      overlayContainerStyle={{ backgroundColor: "#C0E8E0" }}
-                      icon={{ name: "user", type: "font-awesome" }}
-                    >
-                      <Accessory size={26} />
-                    </Avatar>
+                  <TouchableOpacity
+                    style={styles.profileContainer}
+                    onPress={uploadProfileImage}
+                  >
+                    {profile === PLACEHOLDER_IMG ? (
+                      <Avatar
+                        size="xlarge"
+                        rounded // 둥글게 설정하기
+                        overlayContainerStyle={{ backgroundColor: "#C0E8E0" }}
+                        icon={{ name: "user", type: "font-awesome" }}
+                      >
+                        <Accessory size={26} />
+                      </Avatar>
+                    ) : (
+                      <View>
+                        <Image
+                          style={{
+                            width: window.width * 0.4,
+                            height: window.width * 0.4,
+                            borderRadius: 100,
+                            resizeMode: "cover",
+                            borderColor: "black",
+                          }}
+                          source={{ uri: profile }}
+                        />
+                        <Accessory size={26} />
+                      </View>
+                    )}
                     <View
                       style={{
                         alignItems: "center",
@@ -155,7 +215,7 @@ function SetProfile2({ navigation }) {
                         프로필 사진
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                   <View style={{ flex: 1 }}>
                     <View style={styles.texts}>
                       <Text
@@ -489,6 +549,17 @@ function SetProfile2({ navigation }) {
           </>
         )}
       </Formik>
+      {loading === true ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            color="#C0E8E0"
+            size="large"
+            style={{ opacity: 1.5 }}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 }
@@ -517,6 +588,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     height: window.width * 0.6,
     flex: 1,
+  },
+  loading: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.3,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonDesign: {
     alignItems: "center",
