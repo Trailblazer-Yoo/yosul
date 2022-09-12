@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
@@ -15,6 +16,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import Validator from "email-validator";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "../../firebase";
 
@@ -45,12 +47,12 @@ function SetProfile2({ navigation }) {
     "기타주류",
   ];
 
-  const [isColor, setColor] = useState("grey");
-  const [isColor1, setColor1] = useState("grey");
-  const [isColor2, setColor2] = useState("grey");
-  const [isColor3, setColor3] = useState("grey");
-  const [isColor4, setColor4] = useState("grey");
-  const [isColor5, setColor5] = useState("grey");
+  const [isColor, setColor] = useState("#ccc");
+  const [isColor1, setColor1] = useState("#ccc");
+  const [isColor2, setColor2] = useState("#ccc");
+  const [isColor3, setColor3] = useState("#ccc");
+  const [isColor4, setColor4] = useState("#ccc");
+  const [isColor5, setColor5] = useState("#ccc");
   const [profile, setProfile] = useState(PLACEHOLDER_IMG);
   const [loading, setLoading] = useState(false);
 
@@ -123,6 +125,7 @@ function SetProfile2({ navigation }) {
       console.log(uploadUserProfile);
       setLoading(false);
     } catch (error) {
+      Alert.alert(error.message);
       console.log(error.message);
     }
   };
@@ -160,6 +163,7 @@ function SetProfile2({ navigation }) {
           handleSubmit,
           setFieldValue,
           values,
+          isValid,
         }) => (
           <>
             <View>
@@ -232,7 +236,17 @@ function SetProfile2({ navigation }) {
                         이름
                       </Text>
                     </View>
-                    <View style={styles.inputField}>
+                    <View
+                      style={[
+                        styles.inputField,
+                        {
+                          borderColor:
+                            values.name.length > 1 || values.name.length === 0
+                              ? "#ccc"
+                              : "red",
+                        },
+                      ]}
+                    >
                       <TextInput
                         placeholderTextColor="#444"
                         placeholder="이름을 입력해주세요."
@@ -252,7 +266,17 @@ function SetProfile2({ navigation }) {
                         나이
                       </Text>
                     </View>
-                    <View style={styles.inputField}>
+                    <View
+                      style={[
+                        styles.inputField,
+                        {
+                          borderColor:
+                            values.age > 19 || values.age.length === 0
+                              ? "#ccc"
+                              : "red",
+                        },
+                      ]}
+                    >
                       <TextInput
                         placeholderTextColor="#444"
                         placeholder="나이를 입력해주세요."
@@ -262,7 +286,7 @@ function SetProfile2({ navigation }) {
                         value={values.age}
                       />
                     </View>
-                    <View style={styles.texts}>
+                    <View style={[styles.texts, { flexDirection: "row" }]}>
                       <Text
                         style={{
                           fontSize: 16,
@@ -271,8 +295,28 @@ function SetProfile2({ navigation }) {
                       >
                         닉네임
                       </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          marginTop: 2.5,
+                          marginLeft: 4,
+                        }}
+                      >
+                        (4글자 이상)
+                      </Text>
                     </View>
-                    <View style={styles.inputField}>
+                    <View
+                      style={[
+                        styles.inputField,
+                        {
+                          borderColor:
+                            values.nickname.length >= 4 ||
+                            values.nickname.length === 0
+                              ? "#ccc"
+                              : "red",
+                        },
+                      ]}
+                    >
                       <TextInput
                         placeholderTextColor="#444"
                         placeholder="닉네임을 입력해주세요."
@@ -293,10 +337,21 @@ function SetProfile2({ navigation }) {
                         주량
                       </Text>
                     </View>
-                    <View style={styles.inputField}>
+                    <View
+                      style={[
+                        styles.inputField,
+                        {
+                          borderColor:
+                            values.amount.length >= 1 ||
+                            values.amount.length === 0
+                              ? "#ccc"
+                              : "red",
+                        },
+                      ]}
+                    >
                       <TextInput
                         placeholderTextColor="#444"
-                        placeholder="주량을 입력해주세요."
+                        placeholder="숫자만 입력해주세요."
                         autoCapitalize="none"
                         onChangeText={handleChange("amount")}
                         onBlur={handleBlur("amount")}
@@ -336,14 +391,14 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor === "grey"
+                        isColor === "#ccc"
                           ? setColor("#C0E8E0") &&
-                            setColor1("grey") &&
-                            setColor2("grey") &&
-                            setColor3("grey") &&
-                            setColor4("grey") &&
-                            setColor5("grey")
-                          : setColor("grey");
+                            setColor1("#ccc") &&
+                            setColor2("#ccc") &&
+                            setColor3("#ccc") &&
+                            setColor4("#ccc") &&
+                            setColor5("#ccc")
+                          : setColor("#ccc");
                         setFieldValue("drink", ["탁주"]);
                       }}
                       value={values.drink}
@@ -358,16 +413,16 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor1 === "grey"
+                        isColor1 === "#ccc"
                           ? setColor1("#C0E8E0")
-                          : setColor1("grey");
-                        isColor1 === "grey"
-                          ? setColor("grey") &&
-                            setColor2("grey") &&
-                            setColor3("grey") &&
-                            setColor4("grey") &&
-                            setColor5("grey")
-                          : setColor1("grey");
+                          : setColor1("#ccc");
+                        isColor1 === "#ccc"
+                          ? setColor("#ccc") &&
+                            setColor2("#ccc") &&
+                            setColor3("#ccc") &&
+                            setColor4("#ccc") &&
+                            setColor5("#ccc")
+                          : setColor1("#ccc");
                         setFieldValue("drink", ["약주•청주"]);
                       }}
                       value={values.drink}
@@ -389,14 +444,14 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor2 === "grey"
+                        isColor2 === "#ccc"
                           ? setColor2("#C0E8E0") &&
-                            setColor("grey") &&
-                            setColor1("grey") &&
-                            setColor3("grey") &&
-                            setColor4("grey") &&
-                            setColor5("grey")
-                          : setColor2("grey");
+                            setColor("#ccc") &&
+                            setColor1("#ccc") &&
+                            setColor3("#ccc") &&
+                            setColor4("#ccc") &&
+                            setColor5("#ccc")
+                          : setColor2("#ccc");
                         setFieldValue("drink", ["과실주"]);
                       }}
                       value={values.drink}
@@ -410,14 +465,14 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor3 === "grey"
+                        isColor3 === "#ccc"
                           ? setColor3("#C0E8E0") &&
-                            setColor("grey") &&
-                            setColor1("grey") &&
-                            setColor2("grey") &&
-                            setColor4("grey") &&
-                            setColor5("grey")
-                          : setColor3("grey");
+                            setColor("#ccc") &&
+                            setColor1("#ccc") &&
+                            setColor2("#ccc") &&
+                            setColor4("#ccc") &&
+                            setColor5("#ccc")
+                          : setColor3("#ccc");
                         setFieldValue("drink", ["증류주"]);
                       }}
                       value={values.drink}
@@ -439,14 +494,14 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor4 === "grey"
+                        isColor4 === "#ccc"
                           ? setColor4("#C0E8E0") &&
-                            setColor("grey") &&
-                            setColor1("grey") &&
-                            setColor2("grey") &&
-                            setColor3("grey") &&
-                            setColor5("grey")
-                          : setColor4("grey");
+                            setColor("#ccc") &&
+                            setColor1("#ccc") &&
+                            setColor2("#ccc") &&
+                            setColor3("#ccc") &&
+                            setColor5("#ccc")
+                          : setColor4("#ccc");
                         setFieldValue("drink", ["리큐르"]);
                       }}
                       value={values.drink}
@@ -461,14 +516,14 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor5 === "grey"
+                        isColor5 === "#ccc"
                           ? setColor5("#C0E8E0") &&
-                            setColor("grey") &&
-                            setColor1("grey") &&
-                            setColor2("grey") &&
-                            setColor3("grey") &&
-                            setColor4("grey")
-                          : setColor5("grey");
+                            setColor("#ccc") &&
+                            setColor1("#ccc") &&
+                            setColor2("#ccc") &&
+                            setColor3("#ccc") &&
+                            setColor4("#ccc")
+                          : setColor5("#ccc");
                         setFieldValue("drink", ["기타주류"]);
                       }}
                       value={values.drink}
@@ -493,6 +548,15 @@ function SetProfile2({ navigation }) {
                       }}
                     >
                       선호 도수
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        marginTop: 34,
+                        marginLeft: 4,
+                      }}
+                    >
+                      (숫자만 입력하세요)
                     </Text>
                   </View>
                   <View
@@ -531,7 +595,7 @@ function SetProfile2({ navigation }) {
                     <Text style={{ marginRight: 40 }}>최소 도수</Text>
                     <Text>최대 도수</Text>
                   </View>
-                  <View style={styles.buttonContainer}>
+                  <View style={styles.buttonContainer(isValid)}>
                     <TouchableOpacity
                       style={styles.buttonDesign}
                       onPress={handleSubmit}
@@ -610,14 +674,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // marginTop: 25,
   },
-  buttonContainer: {
+  buttonContainer: (isValid) => ({
     // position: "absolute",
     marginTop: 30,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#C0E8E0",
+    backgroundColor: isValid ? "#C0E8E0" : "#444",
     height: window.height * 0.09,
-  },
+  }),
   texts: {
     marginLeft: 11,
     marginTop: 24,

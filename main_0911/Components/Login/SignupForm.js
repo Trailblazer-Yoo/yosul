@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import * as Font from "expo-font";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,13 +27,34 @@ function SignupForm({ navigation }) {
       .min(8, "Your password has to have at least 8 characters"),
   });
 
+  const checkEmail = async (email) => {
+    try {
+      await db
+        .collection("users")
+        .get()
+        .then((result) => {
+          result.for((doc) => {
+            if (email === doc.data().email) {
+              Alert.alert("중복된 이메일입니다");
+            }
+          });
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
+    return checkEmail;
+  };
+
   const onSignup = async (email, password) => {
     try {
-      const userEmail = AsyncStorage.setItem("userEmail", email);
-      const userPassword = AsyncStorage.setItem("userPassword", password);
-      navigation.push("SetProfileScreen");
+      if (checkEmail != false) {
+        const userEmail = AsyncStorage.setItem("userEmail", email);
+        const userPassword = AsyncStorage.setItem("userPassword", password);
+        navigation.push("SetProfileScreen");
+      }
     } catch (error) {
-      Alert.alert(error.message);
+      Alert.alert(error.status);
+      navigation.goBack();
       console.log(error.message);
     }
   };
@@ -43,6 +64,7 @@ function SignupForm({ navigation }) {
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
+          checkEmail(values.email);
           onSignup(values.email, values.password);
         }}
         validationSchema={SignupFormSchema}

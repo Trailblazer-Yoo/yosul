@@ -26,11 +26,11 @@ export const SignedOutStack = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="LoginScreen"
+        initialRouteName="SignupScreen"
         screenOptions={screenOptions}
       >
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="KakaoLogin" component={KakaoLogin} />
+        {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} /> */}
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="SetProfileScreen" component={SetProfileScreen} />
       </Stack.Navigator>
