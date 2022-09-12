@@ -7,15 +7,19 @@ import {
   FlatList,
   Linking,
   Dimensions,
-  ActivityIndicator,
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Divider } from "react-native-elements";
+import Snackbar from "react-native-paper";
+import * as Clipboard from "expo-clipboard";
 
 export default function BreweryDetailScreen({ navigation, route }) {
+
+  const PLACEHOLDER_IMG =
+  "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
   let today = new Date();
   let year = today.getFullYear();
   let month = today.getMonth();
@@ -50,13 +54,45 @@ export default function BreweryDetailScreen({ navigation, route }) {
     getEvent();
   }, []);
 
+  // const copyComplete = () => {
+
+  //   return (
+  //     <Snackbar visible={true} onDismiss={false}>
+  //       복사 완료!
+  //     </Snackbar>
+  //   );
+  // };
+
   const renderListItemForAttraction = ({ item, index }) => {
     return (
-      <View style={{ flexDirection: "row" }}>
-        <Image style={styles.img} source={{ uri: item.firstimage }} />
+      <View style={{ justifyContent: "center", marginTop: 20 }}>
+        <Image style={styles.img} source={{ uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG }} />
         <View style={styles.info}>
           <Text style={styles.name}>{item.title}</Text>
-          <Text style={styles.attractionText}>{item.addr1}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginHorizontal: 27,
+            }}
+          >
+            <Text style={styles.attractionText}>{item.addr1}</Text>
+            <TouchableOpacity
+              style={styles.copyAttraction}
+              onPress={async () => {
+                const address1 = item.addr1;
+                await Clipboard.setStringAsync(address1);
+                if (Clipboard.hasStringAsync()) {
+                  alert("복사 완료");
+                  console.log(address1);
+                }
+              }}
+            >
+              <Text style={{ fontSize: 15 }}>복사하기</Text>
+            </TouchableOpacity>
+          </View>
+          <Divider />
         </View>
       </View>
     );
@@ -159,7 +195,18 @@ export default function BreweryDetailScreen({ navigation, route }) {
               style={styles.icon}
               source={require("../assets/location.png")}
             />
-            <Text style={styles.infomationText}>{item.address}</Text>
+            <TouchableOpacity
+              onPress={async () => {
+                const address = item.address;
+                await Clipboard.setStringAsync(address);
+                if (Clipboard.hasStringAsync()) {
+                  alert("복사 완료");
+                  console.log(address);
+                }
+              }}
+            >
+              <Text style={styles.copyInfomationText}>{item.address}</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.detailText}>
             <Image
@@ -202,7 +249,18 @@ export default function BreweryDetailScreen({ navigation, route }) {
               style={styles.icon}
               source={require("../assets/phone.png")}
             />
-            <Text style={styles.infomationText}>{item.telephone}</Text>
+            <TouchableOpacity
+              onPress={async () => {
+                const phoneNumber = item.telephone;
+                await Clipboard.setStringAsync(phoneNumber);
+                if (Clipboard.hasStringAsync()) {
+                  alert("복사 완료");
+                  console.log(phoneNumber);
+                }
+              }}
+            >
+              <Text style={styles.copyInfomationText}>{item.telephone}</Text>
+            </TouchableOpacity>
           </View>
           {typeof item.homepage === "undefined" ? null : (
             <Text onPress={() => Linking.openURL(item.homepage)}>홈페이지</Text>
@@ -278,16 +336,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   img: {
-    width: Dimensions.get("window").width / 5,
-    height: Dimensions.get("window").width / 5,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").width * 0.67,
     resizeMode: "contain",
     borderColor: "#C0E8E0",
-    borderRadius: 20,
+    borderRadius: 10,
     marginRight: 20,
     borderWidth: 1,
     marginBottom: 10,
-    marginLeft: 15,
-    backgroundColor: "#393E59",
+    // marginLeft: 22,
+    backgroundColor: "#C0E8E0",
   },
   icon: {
     width: Dimensions.get("window").width / 20,
@@ -303,13 +361,29 @@ const styles = StyleSheet.create({
   infomationText: {
     fontSize: 17.5,
   },
+  copyInfomationText: {
+    fontSize: 17.5,
+    textDecorationLine: "underline",
+  },
   name: {
     fontSize: 19,
     fontWeight: "600",
-    marginTop: 17,
+    marginTop: 14,
     marginBottom: 13,
+    marginLeft: 28,
   },
   attractionText: {
     fontSize: 15,
+    // marginRight: 40,
+    marginBottom: 18,
+  },
+  copyAttraction: {
+    backgroundColor: "#C0E8E0",
+    borderRadius: 10,
+    marginBottom: 18,
+    width: Dimensions.get("window").width / 7,
+    height: Dimensions.get("window").width / 17,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
