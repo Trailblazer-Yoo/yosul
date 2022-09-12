@@ -6,45 +6,45 @@ import firebase from "../../firebase";
 const db = firebase.firestore();
 
 const BookmarkIcon = ({ item, currentUserEmail }) => {
-  const handleLike = ({ item, currentUserEmail }) => {
-    const currentBookmarkStatus =
-      !item.bookmarksByUsers.includes(currentUserEmail);
+  const [currentBookmarkStatus, setcurrentBookmarkStatus] = useState(
+    !item.bookmarksByUsers.includes(currentUserEmail)
+  );
+  const [currentLength, setCurrentLength] = useState(item.bookmarksByUsers.length);
 
+  const handleLike = () => {
     const update_dict = {};
-    const update_mine = {};
-
-    db.collection("users")
-      .doc(currentUserEmail)
-      .update(
-        currentBookmarkStatus
-          ? (update_dict[`${item.soolName}.bookmarksByUsers`] =
-              firebase.firestore.FieldValue.arrayUnion(currentUserEmail))
-          : (update_dict[`${item.soolName}.bookmarksByUsers`] =
-              firebase.firestore.FieldValue.arrayRemove(currentUserEmail))
+    const update_mine = {}
+    if (currentBookmarkStatus) {
+      update_dict[`${item.soolName}.bookmarksByUsers`] =
+        firebase.firestore.FieldValue.arrayUnion(currentUserEmail);
+      setCurrentLength(currentLength + 1);
+      update_mine["myBookmarksDrinks"] = firebase.firestore.FieldValue.arrayUnion(
+        item.soolName
       );
-
-    db.collection("global")
-      .doc("drinks")
-      .update(
-        currentBookmarkStatus
-          ? (update_mine["myBookmarkDrinks"] =
-              firebase.firestore.FieldValue.arrayUnion(item.soolName))
-          : (update_mine["myBookmarkDrinks"] =
-              firebase.firestore.FieldValue.arrayRemove(item.soolName))
-      );
+    } else {
+      update_dict[`${item.soolName}.bookmarksByUsers`] =
+        firebase.firestore.FieldValue.arrayRemove(currentUserEmail);
+        update_mine["myBookmarksDrinks"] = firebase.firestore.FieldValue.arrayRemove(
+          item.soolName
+        );
+      setCurrentLength(currentLength - 1);
+    }
+    db.collection('users').doc(currentUserEmail).update(update_mine)
+    setcurrentBookmarkStatus(!currentBookmarkStatus);
+    db.collection("global").doc("drinks").update(update_dict);
   };
 
   return (
     <Pressable
       style={{ marginBottom: 2 }}
-      onPress={handleLike(item, currentUserEmail)}
+      onPress={handleLike}
     >
-      {!item.bookmarksByUsers.includes(currentUserEmail) ? (
+      {currentBookmarkStatus ? (
         <Octicons name="star" size={27} color="gray" />
       ) : (
         <Octicons name="star-fill" size={27} color="yellow" />
       )}
-      <Text>{item.bookmarksByUsers.length.toString()}</Text>
+      <Text>{currentLength.toString()}</Text>
     </Pressable>
   );
 };

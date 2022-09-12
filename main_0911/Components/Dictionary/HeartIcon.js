@@ -1,7 +1,4 @@
-import {
-  Text,
-  Pressable,
-} from "react-native";
+import { Text, Pressable } from "react-native";
 import React, { useState } from "react";
 import { Octicons } from "@expo/vector-icons";
 import firebase from "../../firebase";
@@ -9,43 +6,42 @@ import firebase from "../../firebase";
 const db = firebase.firestore();
 
 const HeartIcon = ({ item, currentUserEmail }) => {
-  console.log(item)
-  const handleLike = ({ item, currentUserEmail }) => {
-    const currentLikesStatus =
-      !item.likesByUsers.includes(currentUserEmail);
+  const [currentLikesStatus, setcurrentLikesStatus] = useState(
+    !item.likesByUsers.includes(currentUserEmail)
+  );
+  const [currentLength, setCurrentLength] = useState(item.likesByUsers.length);
 
+  const handleLike = () => {
     const update_dict = {};
     const update_mine = {};
-
-    db.collection("users")
-      .doc(currentUserEmail)
-      .update(
-        currentLikesStatus
-          ? (update_dict[`${item.soolName}.likessByUsers`] =
-              firebase.firestore.FieldValue.arrayUnion(currentUserEmail))
-          : (update_dict[`${item.soolName}.likessByUsers`] =
-              firebase.firestore.FieldValue.arrayRemove(currentUserEmail))
+    if (currentLikesStatus) {
+      update_dict[`${item.soolName}.likesByUsers`] =
+        firebase.firestore.FieldValue.arrayUnion(currentUserEmail);
+      update_mine["myLikesDrinks"] = firebase.firestore.FieldValue.arrayUnion(
+        item.soolName
       );
-
-    db.collection("global")
-      .doc("drinks")
-      .update(
-        currentLikesStatus
-          ? (update_mine["myLikesDrinks"] =
-              firebase.firestore.FieldValue.arrayUnion(item.soolName))
-          : (update_mine["myLikesDrinks"] =
-              firebase.firestore.FieldValue.arrayRemove(item.soolName))
+      setCurrentLength(currentLength + 1);
+    } else {
+      update_dict[`${item.soolName}.likesByUsers`] =
+        firebase.firestore.FieldValue.arrayRemove(currentUserEmail);
+      update_mine["myLikesDrinks"] = firebase.firestore.FieldValue.arrayRemove(
+        item.soolName
       );
+      setCurrentLength(currentLength - 1);
+    }
+    db.collection("global").doc("drinks").update(update_dict);
+    db.collection('users').doc(currentUserEmail).update(update_mine)
+    setcurrentLikesStatus(!currentLikesStatus);
   };
 
   return (
-    <Pressable onPress={handleLike(item, currentUserEmail)}>
-      {!item.likesByUsers.includes(currentUserEmail) ? (
+    <Pressable onPress={handleLike}>
+      {currentLikesStatus ? (
         <Octicons name="heart" size={27} color="gray" />
       ) : (
         <Octicons name="heart-fill" size={27} color="red" />
       )}
-      <Text>{item.likesByUsers.length.toString()}</Text>
+      <Text>{currentLength.toString()}</Text>
     </Pressable>
   );
 };

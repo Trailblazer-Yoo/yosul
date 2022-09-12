@@ -44,14 +44,14 @@ export default function DictionaryScreen({ navigation }) {
       <View style={styles.flatlistcontainer}>
         <SoolListCom item={item} index={index} navigation={navigation} />
         <View style={styles.iconcontainer}>
-          {/* <HeartIcon
+          <HeartIcon
             item={item}
             currentUserEmail={firebase.auth().currentUser.email}
           />
           <BookmarkIcon
             item={item}
             currentUserEmail={firebase.auth().currentUser.email}
-          /> */}
+          />
         </View>
       </View>
     );
@@ -70,6 +70,7 @@ export default function DictionaryScreen({ navigation }) {
       ) : (
         <FlatList
           data={sulList}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={renderListItem}
           ItemSeparatorComponent={ItemSeparatorView}
         />

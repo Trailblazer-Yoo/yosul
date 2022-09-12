@@ -15,11 +15,10 @@ const db = firebase.firestore()
 
 const MyPosts = ({posts, navigation}) => {
 
-  const renderView = ({ itemData }) => {
-    console.log('아이템 데이터',itemData)
+  const renderView = ({itemData}) => {
     return (
       <Pressable onPress={() => navigation.push("PostDetail", { id: itemData.id, item: itemData.item })}>
-        <Image style={styles.imgstyle} source={{uri:itemData.item.imageArray[0]}} />
+        <Image style={styles.imgstyle} source={{uri: item.imageArray[0]}} />
       </Pressable>
     );
   };

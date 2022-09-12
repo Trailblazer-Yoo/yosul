@@ -24,7 +24,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 
 const PLACEHOLDER_IMG =
-  "uri: 'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'";
+'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'
 
 // 허용된 것과 허용되지 않은 것들
 const uploadPostSchema = Yup.object().shape({
@@ -375,6 +375,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 5,
     color: "grey",
+  },
+  onelinetext:{
+    marginLeft:5,
   },
   tags: {},
   loading: {

@@ -11,7 +11,7 @@ import firebase from "../../firebase";
 const window = Dimensions.get("window");
 const db = firebase.firestore();
 
-const MyPosts = ({ posts, index, navigation }) => {
+const Posts = ({ posts, index, navigation }) => {
   return (
     <View style={{ flex: 1 / 2, marginBottom: 30 }}>
       <Pressable
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyPosts;
+export default Posts;

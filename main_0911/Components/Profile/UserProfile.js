@@ -10,6 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import ImageModal from "react-native-image-modal";
+import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import firebase from "../../firebase";
 import {
@@ -21,16 +22,28 @@ import {
 
 const window = Dimensions.get("window");
 const handleSignOut = async () => {
-  await firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      console.log("Signed Out !!");
-    });
+  Alert.alert("로그아웃", "정말 로그아웃 하시겠습니까?", [
+    // 버튼 배열
+    {
+      text: "아니요",
+      style: "cancel",
+    },
+    {
+      text: "네",
+      onPress: async () => {
+        await firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            console.log("Signed Out !!");
+          });
+      },
+    },
+  ]);
 };
 
 function UserProfile({ userInfo, navigation }) {
-  console.log(userInfo)
+  // console.log(userInfo)
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
@@ -43,9 +56,14 @@ function UserProfile({ userInfo, navigation }) {
             backgroundColor: "white",
           }}
         >
-          <TouchableOpacity onPress={handleSignOut}>
-            <Image source={require("../../assets/logout.png")} />
-          </TouchableOpacity>
+          <View style={styles.logout}>
+            <Ionicons
+              onPress={handleSignOut}
+              name="ios-settings-outline"
+              size={24}
+              color="black"
+            />
+          </View>
         </View>
         <View style={styles.backgroundimg} />
         <View
@@ -64,19 +82,17 @@ function UserProfile({ userInfo, navigation }) {
           <View style={styles.textbox}>
             <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <TouchableOpacity
-                style={{ marginTop: 5, flexDirection:'row'}}
+                style={{ marginTop: 5, flexDirection: "row" }}
                 onPress={() =>
                   navigation.navigate("EditProfile", {
                     userInfo: userInfo,
                   })
                 }
               >
-                <Text style={styles.headerText}>닉네임 {userInfo.nickname}</Text>
-                <SimpleLineIcons
-                  name="pencil"
-                  size={17}
-                  color="grey"
-                />
+                <Text style={styles.headerText}>
+                  닉네임 : {userInfo.nickname}
+                </Text>
+                <SimpleLineIcons name="pencil" size={17} color="grey" />
               </TouchableOpacity>
             </View>
             <View
@@ -112,7 +128,7 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 글
                 </Text>
-                <Text style={{ fontSize: 13 }}>25</Text>
+                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksPosts.length.toString()}</Text>
               </View>
               <View
                 style={{
@@ -124,7 +140,7 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 전통주
                 </Text>
-                <Text style={{ fontSize: 13 }}>3</Text>
+                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksDrinks.length.toString()}</Text>
               </View>
             </View>
           </View>
@@ -155,6 +171,7 @@ const styles = StyleSheet.create({
     color: "rgba(0,0,0,0.8)",
     marginLeft: 5,
     fontWeight: "bold",
+    marginRight: 5,
   },
   profileimg: {
     width: 110,
@@ -175,6 +192,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 10,
   },
+  logout: { alignItems: "flex-end", marginRight: 15 },
   profiletag: {
     borderRadius: 20,
     justifyContent: "center",

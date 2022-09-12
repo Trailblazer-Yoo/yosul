@@ -11,7 +11,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import MyDrinks from "../Components/Profile/MyDrinks";
-import MyPosts from "../Components/Profile/MyPost";
+import Posts from "../Components/Profile/Posts";
 import UserProfile from "../Components/Profile/UserProfile";
 import MyBookmarkPosts from "../Components/Profile/MyBookmarkPosts";
 import firebase from "../firebase";
@@ -22,13 +22,12 @@ const db = firebase.firestore();
 const ProfileScreen = ({ navigation }) => {
   const [loading2, setLoading2] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
-  const [bookmarkposts, setBookmkarPosts] = useState([]);
+  const [bookmarkPosts, setBookmarkPosts] = useState([]);
   const [posts, setPosts] = useState([]);
   const [soolList, setSoolList] = useState([]);
 
   // UserProfile 및 기본 정보 데이터 (param : userInfo)
   useEffect(() => {
-    setLoading2(false);
     const unsubscribe = db
       .collection("users")
       .where("owner_uid", "==", firebase.auth().currentUser.uid)
@@ -66,14 +65,33 @@ const ProfileScreen = ({ navigation }) => {
     getSoolDocs();
   }, []);
 
+  const getBookmarksPosts = async () => {
+    const dataSnapShot = (
+      await db.collection("users").doc(firebase.auth().currentUser.email).get()
+    ).data();
+
+    var bookmarkdata = dataSnapShot["myBookmarksPosts"];
+    const data = [];
+    for (let i = 0; i < bookmarkdata.length; i++) {
+      Object.entries(bookmarkdata[i]).map(async ([email, postid]) => {
+        // console.log(email, postid)
+        const tmp = (await db.collection("users").doc(email).collection('posts').doc(postid).get()).data()
+        data.push({id:postid, ...tmp})
+      });
+    }
+    setBookmarkPosts(data)
+  };
+
   // setLoading2(false);
-  // console.log(posts);
+  useEffect(() => {
+    getBookmarksPosts();
+  }, []);
 
   // 내가 쓴 글에 들어갈 컴포넌트
   const MyPostsStack = () => {
     const renderPosts = (itemData) => {
       return (
-        <MyPosts
+        <Posts
           posts={itemData.item}
           index={itemData.id}
           navigation={navigation}
@@ -95,21 +113,32 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   // 게시물 다시보기에 들어갈 컴포넌트
-  const BookmarkPostsStack = () => {
-    return <MyBookmarkPosts posts={bookmarkposts} navigation={navigation} />;
-  };
+  const BookmarkPostsStack = () =>{
+    const renderPosts = (itemData) => {
+      return (
+        <Posts
+          posts={itemData.item}
+          index={itemData.id}
+          navigation={navigation}
+        />
+      );
+    };
 
-  const HomeScreen = () => {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>넣을 화면</Text>
-      </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <FlatList
+          data={bookmarkPosts}
+          renderItem={renderPosts}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          style={{ margin: 3 }}
+        />
+      </SafeAreaView>
     );
   };
 
   // 찜한 전통주에 들어갈 컴포넌트
   const MyDrinksStack = () => {
-
     return (
       <MyDrinks
         mydrinks={userInfo.myBookmarkDrinks}
@@ -120,25 +149,34 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
+  // firebase storage에서 데이터를 매우 많이 불러오므로 이 페이지로 component 우선 사용
+  const HomeScreen = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>넣을 화면</Text>
+      </View>
+    );
+  };
   // console.log(userInfo);
 
   return (
     <View style={styles.containertop}>
       <UserProfile userInfo={userInfo} navigation={navigation} />
       <Tab.Navigator screenOptions={() => screenOptions}>
+        {/* firebase storage에서 데이터를 매우 많이 불러오므로 HomeScreen으로 component 우선 사용 */}
         <Tab.Screen
           name="내가 쓴 글"
-          component={MyPostsStack}
+          component={HomeScreen} // MyPostsStack
           navigation={navigation}
         />
         <Tab.Screen
           name="게시물 다시보기"
-          component={HomeScreen}
+          component={HomeScreen} // BookmarkPostsStack
           navigation={navigation}
         />
         <Tab.Screen
           name="찜한 전통주"
-          component={HomeScreen}
+          component={HomeScreen} // MyDrinksStack
           navigation={navigation}
         />
       </Tab.Navigator>
