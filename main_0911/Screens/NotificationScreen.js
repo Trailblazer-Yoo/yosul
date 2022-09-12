@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textContainer: {
-    // backgroundColor: "blue",
     width: window.width * 0.7,
     height: window.width * 0.16 * 1.2,
     flexDirection: "row",
