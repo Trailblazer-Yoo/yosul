@@ -14,6 +14,7 @@ import {
   Text,
 } from "react-native";
 import firebase from "../firebase";
+import {regionCode} from "../regionCode";
 
 const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.76;
@@ -68,10 +69,11 @@ const HomeScreen = () => {
       if (breweryInfo[i]["areaCode"] === areaCode) {
         data.push(breweryInfo[i]);
       }
-      if (data.length === 5) {
-        break;
-      }
     }
+    data.sort(function compare(a, b){
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    });
+    console.log(data)
     setFilteredBreweryInfo(data);
   };
 
@@ -154,7 +156,7 @@ const HomeScreen = () => {
         renderItem={renderItem}
       />
       <FlatList
-        data={filteredBreweryInfo}
+        data={filteredBreweryInfo.slice(0, 5)}
         keyExtractor={(item, index) => index}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
