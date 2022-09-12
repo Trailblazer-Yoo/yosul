@@ -85,6 +85,7 @@ const ProfileScreen = ({ navigation }) => {
   // setLoading2(false);
   useEffect(() => {
     getBookmarksPosts();
+    setLoading2(false)
   }, []);
 
   // 내가 쓴 글에 들어갈 컴포넌트
