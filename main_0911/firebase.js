@@ -4,12 +4,12 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/storage'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA4i8mfNp2O_AXOfEzH3IqziXVJqD3stYs",
-  authDomain: "ios-teter.firebaseapp.com",
-  projectId: "ios-teter",
-  storageBucket: "ios-teter.appspot.com",
-  messagingSenderId: "1086202831260",
-  appId: "1:1086202831260:web:89b3a4bc6a97dfc030e859"
+  apiKey: "AIzaSyCuzm1YZ58coYo6eZBo6YBxTmFll-48C9Q",
+  authDomain: "kakao-test1.firebaseapp.com",
+  projectId: "kakao-test1",
+  storageBucket: "kakao-test1.appspot.com",
+  messagingSenderId: "620521493567",
+  appId: "1:620521493567:web:796d95b0b18db81f7e148a"
 };
 
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app()

@@ -92,7 +92,7 @@ function SetProfile2({ navigation }) {
       const getPassword = await AsyncStorage.getItem("userPassword");
       const authUser = await firebase
         .auth()
-        .createUserWithEmailAndPassword(getEmail, getEmail);
+        .createUserWithEmailAndPassword(getEmail);
 
       console.log("Firebase SignUp Successful", getEmail, getPassword);
       setLoading(true)

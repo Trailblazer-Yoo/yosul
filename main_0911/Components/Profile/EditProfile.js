@@ -83,20 +83,15 @@ const EditProfile = ({route}) => {
           <Text style={styles.question}>자기소개</Text>
           <TouchableOpacity style={styles.buttonContainer}>
             <TextInput
-            style={styles.textInput}
-            keyboardType ='multiline'
-            onChangeText={(text) => {this.setState({inputText: text})}}
-            placeholder="40자내로 자기소개를 작성해주세요"
-          />
+                          placeholderTextColor="#444"
+                          placeholder="닉네임을 입력해주세요."
+                          autoCapitalize="none"
+                          clearButtonMode="always"
+                          onChangeText={handleChange("nickname")}
+                          onBlur={handleBlur("nickname")}
+                          value={values.nickname}
+                        />
           </TouchableOpacity>
-          <Text style={styles.question}>인스타그램</Text>
-              <TouchableOpacity style={styles.buttonContainer}>
-              <TextInput
-            style={styles.textInput}
-            onChangeText={(text) => {this.setState({inputText: text})}}
-            placeholder="@"
-          />
-            </TouchableOpacity>
           <Text style={styles.question}>주량</Text>  
           <TouchableOpacity style={styles.buttonContainer}>
               <TextInput

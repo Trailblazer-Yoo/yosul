@@ -24,7 +24,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 
 const PLACEHOLDER_IMG =
-  "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
+  "uri: 'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'";
 
 // 허용된 것과 허용되지 않은 것들
 const uploadPostSchema = Yup.object().shape({
@@ -214,7 +214,7 @@ const UploadPost = ({ navigation, route }) => {
           ...imageArray.slice(undefined, imageArray.length - 1),
         ];
         uploadPost2Firebase(tmpArray, values.caption, tagList);
-        console.log("잘 들어갔씀둥");
+        console.log("성공적으로 업로드 되었습니다!");
       }}
       validationSchema={uploadPostSchema}
       validateOnMount={true}
@@ -272,13 +272,17 @@ const UploadPost = ({ navigation, route }) => {
                   />
                 </View>
               )}
+              <Text style={{
+                marginTop: 10,
+                fontSize: 15
+              }}> 태그 작성 </Text>
               <Pressable
                 style={styles.textInputStyle}
                 onPress={() => navigation.navigate("SearchBar")}
               >
                 {!!!route.params ? (
                   <Text style={{ color: "gray", marginLeft: 10 }}>
-                    태그를 입력해주세요
+                    태그를 입력해주세요 ex) #우리술#여술램프#최고
                   </Text>
                 ) : (
                   <Text style={{ color: "gray", marginLeft: 10 }}>
@@ -291,21 +295,31 @@ const UploadPost = ({ navigation, route }) => {
                   {errors.tags}
                 </Text>
               )}
-              <View>
-                <Text style={styles.onelinetitle}>본문 작성</Text>
+              <Text style={{marginTop: 15, fontSize: 15}}> 본문 작성 </Text>
+              <View style={{
+                borderWidth: 3,
+                borderRadius: 5,
+                borderColor: "#C0E8E0",
+                marginTop: 10,
+                width: window.width * 0.93,
+                height: window.width * 0.39,
+                marginBottom: 20,
+              }}>
                 <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={styles.onelinetext}
-                  placeholder="본문을 입력해주세요"
-                  placeholderTextColor="gray"
-                  multiline={true}
-                  onChangeText={handleChange("caption")}
-                  onBlur={handleBlur("caption")}
-                  value={values.caption}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    style={styles.onelinetext}
+                    placeholder="  본문을 입력해주세요"
+                    placeholderTextColor="gray"
+                    multiline={true}
+                    maxLength={500}
+                    onChangeText={handleChange("caption")}
+                    onBlur={handleBlur("caption")}
+                    value={values.caption}
                 />
               </View>
-              <Button onPress={handleSubmit} title="작성" disabled={!isValid} />
+              <Button 
+              onPress={handleSubmit} title="작성" disabled={!isValid} />
             </View>
           </ScrollView>
           {loading === true ? (
@@ -339,14 +353,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     resizeMode: "cover",
-    borderRadius: 20,
+    borderRadius: 5,
     borderColor: "#C0E8E0",
-    borderWidth: 5,
+    borderWidth: 3,
   },
   imagearraywrapper: {
     width: window.width / 5 - 3,
     height: window.width / 5 - 3,
-    borderRadius: 15,
+    borderRadius: 5,
     resizeMode: "cover",
     marginHorizontal: 1,
     marginVertical: 1,
@@ -360,13 +374,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 15,
     marginBottom: 5,
+    color: "grey",
   },
   tags: {},
   loading: {
     position: "absolute",
     left: 0,
     right: 0,
-    top: 0,
+    top: 5,
     bottom: 0,
     opacity: 0.3,
     backgroundColor: "black",
@@ -381,5 +396,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#009688",
     backgroundColor: "white",
+    borderRadius: 5
   },
 });
