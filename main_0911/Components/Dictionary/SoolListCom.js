@@ -9,6 +9,14 @@ import {
 import React from "react";
 
 const SoolListCom = ({ item, index, navigation }) => {
+  const imageArray = {
+    "0": require("../../assets/soolType/0.jpg"),
+    "1": require("../../assets/soolType/1.jpg"),
+    "2": require("../../assets/soolType/2.jpg"),
+    "3": require("../../assets/soolType/3.jpg"),
+    "4": require("../../assets/soolType/4.jpg"),
+  }
+
   return (
     <Pressable
       style={styles.listContainer}
@@ -16,7 +24,9 @@ const SoolListCom = ({ item, index, navigation }) => {
         navigation.push("DictionaryDetailScreen", { id: index, item: item })
       }
     >
-      <Image style={styles.img} source={{ uri: item.img }} />
+      {item.typeCode === 'undefined' ? null : (
+        <Image style={styles.img} source={imageArray[item.typeCode]} />
+      )}
       <View>
         <Text style={styles.name}>{item.soolName}</Text>
         <Text style={styles.text}>

@@ -12,10 +12,17 @@ const window = Dimensions.get('window')
 
 export default function DictionaryDetailScreen({ route }) {
   const item = route.params.item;
+  const imageArray = {
+    "0": require("../assets/soolType/0.jpg"),
+    "1": require("../assets/soolType/1.jpg"),
+    "2": require("../assets/soolType/2.jpg"),
+    "3": require("../assets/soolType/3.jpg"),
+    "4": require("../assets/soolType/4.jpg"),
+  }
   return (
     <View style={styles.container}>
       <View style={styles.uppercontainer}>
-        <Image style={styles.img} source={{ uri: item.img }} />
+        <Image style={styles.img} source={imageArray[item.typeCode]} />
         <View>
         <Text>{item.soolName}</Text>
           <Text>분류: {item.soolType}</Text>
