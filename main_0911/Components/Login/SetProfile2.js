@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
@@ -38,6 +38,8 @@ function SetProfile2({ navigation }) {
   });
   // 한글이 아닌 영어를 사용해야 접근 가능
 
+  const [nicknames, setNicknames] = useState([]);
+
   const alcohols = [
     "탁주",
     "약주•청주",
@@ -55,6 +57,23 @@ function SetProfile2({ navigation }) {
   const [isColor5, setColor5] = useState("#ccc");
   const [profile, setProfile] = useState(PLACEHOLDER_IMG);
   const [loading, setLoading] = useState(false);
+
+  const checkNickname = async () => {
+    try {
+      const nickData = [];
+      await db.collection("users").onSnapshot((snapshot) => {
+        snapshot.docs.map((doc) => nickData.push(doc.data().nickname));
+      });
+      setNicknames(nickData);
+      console.log(nicknames);
+    } catch (error) {
+      console.log(error.message);
+    }
+    return checkNickname;
+  };
+  useEffect(() => {
+    checkNickname();
+  }, []);
 
   const uploadProfileImage = async () => {
     setLoading(true);
@@ -96,34 +115,39 @@ function SetProfile2({ navigation }) {
   ) => {
     try {
       setLoading(true);
-      const getEmail = await AsyncStorage.getItem("userEmail");
-      const getPassword = await AsyncStorage.getItem("userPassword");
-      const authUser = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(getEmail, getPassword);
+      if (!nicknames.includes(nickname)) {
+        const getEmail = await AsyncStorage.getItem("userEmail");
+        const getPassword = await AsyncStorage.getItem("userPassword");
+        const authUser = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(getEmail, getPassword);
 
-      console.log("Firebase SignUp Successful", getEmail, getPassword);
+        console.log("Firebase SignUp Successful", getEmail, getPassword);
 
-      await db.collection("users").doc(authUser.user.email).set({
-        owner_uid: authUser.user.uid,
-        email: authUser.user.email,
-        profile_picture: profile,
-        username: name,
-        age: age,
-        nickname: nickname,
-        amount: amount,
-        drink: drink,
-        minContent: minContent,
-        maxContent: maxContent,
-        myLikesDrinks: [],
-        myBookmarkDrinks: [],
-        myLikesPosts: [],
-        myBookmarkPosts: [],
-        follwing: [],
-        follower: [],
-      });
-      console.log(uploadUserProfile);
-      setLoading(false);
+        await db.collection("users").doc(authUser.user.email).set({
+          owner_uid: authUser.user.uid,
+          email: authUser.user.email,
+          profile_picture: profile,
+          username: name,
+          age: age,
+          nickname: nickname,
+          amount: amount,
+          drink: drink,
+          minContent: minContent,
+          maxContent: maxContent,
+          myLikesDrinks: [],
+          myBookmarksDrinks: [],
+          myLikesPosts: [],
+          myBookmarksPosts: [],
+          follwing: [],
+          follower: [],
+        });
+        console.log(uploadUserProfile);
+        setLoading(false);
+      } else {
+        Alert.alert("이미 존재하는 닉네임입니다.");
+        setLoading(false);
+      }
     } catch (error) {
       Alert.alert(error.message);
       console.log(error.message);

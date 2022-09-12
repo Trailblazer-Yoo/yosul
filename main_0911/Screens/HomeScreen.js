@@ -111,7 +111,7 @@ const HomeScreen = () => {
     );
   };
 
-  const renderTextItem = ({ item, index }) => {
+  const renderTextItem = ({ navigation, item, index }) => {
     return (
       <View style={styles.width}>
         <Pressable
@@ -120,10 +120,11 @@ const HomeScreen = () => {
           }
         >
           <View style={styles.brewery_info}>
+            <Text style={styles.activityText}>{item.activityName}</Text>
             <Text style={styles.breweryName}>{item.name}</Text>
-            <Text style={styles.text}>체험명: {item.activity_name}</Text>
-            <Text style={styles.text}>주종: {item.sul_type}</Text>
-            <Text style={styles.text}>주소: {item.address}</Text>
+
+            {/* <Text style={styles.text}>{item.soolType}</Text>
+            <Text style={styles.text}>{item.address}</Text> */}
           </View>
         </Pressable>
       </View>
@@ -167,7 +168,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'white',
+    backgroundColor: "white",
     paddingTop:
       Platform.OS === "ios"
         ? getStatusBarHeight(true)
@@ -183,7 +184,8 @@ const styles = StyleSheet.create({
   width: {
     flexDirection: "row",
     width: width,
-    paddingLeft: 10,
+    // paddingLeft: 10,
+    justifyContent: "center",
   },
   brewery_photo: {
     height: 200,
@@ -191,8 +193,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   brewery_info: {
-    marginLeft: 30,
+    // position: "absolute",
+    alignItems: "center",
     justifyContent: "center",
+    // backgroundColor: "green",
+    marginBottom: 30,
+  },
+  activityText: {
+    // backgroundColor: "red",
+    marginBottom: 10,
+    fontSize: 20,
+    fontWeight: "400",
+  },
+  breweryName: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
   today_beer: {
     fontSize: 30,
@@ -242,6 +257,7 @@ const styles = StyleSheet.create({
     },
   },
   area: {
+    marginTop: 15,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -20,6 +20,7 @@ import firebase from "../../firebase";
 const db = firebase.firestore();
 
 function SignupForm({ navigation }) {
+  const  [emails, setEmails]  = useState([]);
   const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
     password: Yup.string()
@@ -27,34 +28,41 @@ function SignupForm({ navigation }) {
       .min(8, "Your password has to have at least 8 characters"),
   });
 
-  const checkEmail = async (email) => {
+  const checkEmail = async () => {
     try {
-      await db
-        .collection("users")
-        .get()
-        .then((result) => {
-          result.for((doc) => {
-            if (email === doc.data().email) {
-              Alert.alert("중복된 이메일입니다");
-            }
-          });
-        });
+      const data = [];
+      await db.collection("users").onSnapshot((snapshot) => {
+        snapshot.docs.map((doc) => data.push(doc.id));
+      });
+      setEmails(data);
     } catch (error) {
       console.log(error.message);
     }
     return checkEmail;
   };
+  useEffect(() => {
+    checkEmail();
+    console.log(emails);
+  }, []);
 
   const onSignup = async (email, password) => {
     try {
-      if (checkEmail != false) {
+      if (!emails.includes(email)) {
         const userEmail = AsyncStorage.setItem("userEmail", email);
         const userPassword = AsyncStorage.setItem("userPassword", password);
         navigation.push("SetProfileScreen");
+      } else {
+        Alert.alert("이미 존재하는 이메일입니다");
       }
     } catch (error) {
-      Alert.alert(error.status);
-      navigation.goBack();
+      Alert.alert(
+        error.message[
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          }
+        ]
+      );
       console.log(error.message);
     }
   };
@@ -64,7 +72,6 @@ function SignupForm({ navigation }) {
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          checkEmail(values.email);
           onSignup(values.email, values.password);
         }}
         validationSchema={SignupFormSchema}

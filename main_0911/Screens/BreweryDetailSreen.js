@@ -129,7 +129,6 @@ export default function BreweryDetailScreen({ navigation, route }) {
               width: Dimensions.get("window").width,
               height: Dimensions.get("window").width * 0.85,
               position: "relative",
-              zIndex: 0,
             }}
           >
             <TouchableOpacity onPress={() => navigation.goBack()}>
