@@ -30,7 +30,15 @@ const Stack = createStackNavigator(); // creates object for Stack Navigator
 
 const HomeScreenStack = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptions1}>
+    <Stack.Navigator 
+    screenOptions={({ route }) => {
+      if (route.name === "Home") {
+        return screenOptions1
+      } else {
+        return screenOptions2;
+      }
+    }}
+  >
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
@@ -41,13 +49,13 @@ const CommunityScreenStack = () => {
       <Stack.Screen
         name="CommunityScreen"
         component={CommunityScreen}
-        options={({navigation}) => ({
+        options={({ navigation }) => ({
           headerTitle: "커뮤니티",
           headerRight: () => {
             return (
               <TouchableOpacity
                 style={{ paddingRight: 30 }}
-                onPress={() => navigation.push('NotificationScreen')}
+                onPress={() => navigation.push("NotificationScreen")}
               >
                 <View style={styles.unreadBadge}>
                   <Text style={styles.unreadBadgeText}>11</Text>
@@ -119,10 +127,29 @@ const DictionaryScreenStack = () => {
 };
 const ProfileScreenStack = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptions1}>
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="PostDetail" component={PostDetail} />
-      <Stack.Screen name="EditProfile" component={EditProfile} />
+    <Stack.Navigator
+      screenOptions={({ route }) => {
+        if (route.name === "ProfileScreen") {
+          return screenOptions1
+        } else {
+          return screenOptions2;
+        }
+      }}
+    >
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+      />
+      <Stack.Screen
+        name="PostDetail"
+        component={PostDetail}
+        options={{ headerTitle: "게시물" }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{ headerTitle: "태그 설정" }}
+      />
       <Stack.Screen
         name="DictionaryDetailScreen"
         component={DictionaryDetailScreen}

@@ -6,8 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  ImageBackground,
-  Pressable,
+  Alert
 } from "react-native";
 import ImageModal from "react-native-image-modal";
 import { Ionicons } from "@expo/vector-icons";

@@ -16,7 +16,6 @@ import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Validator from "email-validator";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "../../firebase";
 
@@ -30,7 +29,7 @@ const PLACEHOLDER_IMG =
 function SetProfile2({ navigation }) {
   const SetProfileSchema = Yup.object().shape({
     name: Yup.string().required("이름을 입력해주세요"),
-    age: Yup.number().required(),
+    age: Yup.number().min(20),
     nickname: Yup.string().min(4, "닉네임은 4글자 이상이어야 합니다"),
     amount: Yup.number().required(),
     minContent: Yup.number().required(),
@@ -39,7 +38,6 @@ function SetProfile2({ navigation }) {
   // 한글이 아닌 영어를 사용해야 접근 가능
 
   const [nicknames, setNicknames] = useState([]);
-
   const alcohols = [
     "탁주",
     "약주•청주",
@@ -49,14 +47,35 @@ function SetProfile2({ navigation }) {
     "기타주류",
   ];
 
-  const [isColor, setColor] = useState("#ccc");
-  const [isColor1, setColor1] = useState("#ccc");
-  const [isColor2, setColor2] = useState("#ccc");
-  const [isColor3, setColor3] = useState("#ccc");
-  const [isColor4, setColor4] = useState("#ccc");
-  const [isColor5, setColor5] = useState("#ccc");
   const [profile, setProfile] = useState(PLACEHOLDER_IMG);
+  const [isSelect, setSelect] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [loading, setLoading] = useState(false);
+
+  const colorchange = (idx, drink) => {
+    const drinkname = alcohols[idx];
+    if (drink.includes(drinkname)) {
+      drink.splice(drink.indexOf(drinkname), 1);
+      setSelect([
+        ...isSelect.slice(0, idx),
+        !isSelect[idx],
+        ...isSelect.slice(idx + 1),
+      ]);
+    } else {
+      drink.push(drinkname);
+      setSelect([
+        ...isSelect.slice(0, idx),
+        !isSelect[idx],
+        ...isSelect.slice(idx + 1),
+      ]);
+    }
+  };
 
   const checkNickname = async () => {
     try {
@@ -65,7 +84,6 @@ function SetProfile2({ navigation }) {
         snapshot.docs.map((doc) => nickData.push(doc.data().nickname));
       });
       setNicknames(nickData);
-      console.log(nicknames);
     } catch (error) {
       console.log(error.message);
     }
@@ -185,7 +203,6 @@ function SetProfile2({ navigation }) {
           handleChange,
           handleBlur,
           handleSubmit,
-          setFieldValue,
           values,
           isValid,
         }) => (
@@ -275,6 +292,7 @@ function SetProfile2({ navigation }) {
                         placeholderTextColor="#444"
                         placeholder="이름을 입력해주세요."
                         autoCapitalize="none"
+                        autoCorrect={false}
                         onChangeText={handleChange("name")}
                         onBlur={handleBlur("name")}
                         value={values.name}
@@ -303,8 +321,9 @@ function SetProfile2({ navigation }) {
                     >
                       <TextInput
                         placeholderTextColor="#444"
-                        placeholder="나이를 입력해주세요."
+                        placeholder="나이를 입력해주세요(20세 이상만 가능합니다)."
                         autoCapitalize="none"
+                        autoCorrect={false}
                         onChangeText={handleChange("age")}
                         onBlur={handleBlur("age")}
                         value={values.age}
@@ -326,7 +345,11 @@ function SetProfile2({ navigation }) {
                           marginLeft: 4,
                         }}
                       >
-                        (4글자 이상)
+                        {values.nickname.length === 0
+                          ? "(4글자 이상)"
+                          : values.nickname.length >= 4
+                          ? ""
+                          : "4글자 이상 입력해야 합니다."}
                       </Text>
                     </View>
                     <View
@@ -345,6 +368,7 @@ function SetProfile2({ navigation }) {
                         placeholderTextColor="#444"
                         placeholder="닉네임을 입력해주세요."
                         autoCapitalize="none"
+                        autoCorrect={false}
                         clearButtonMode="always"
                         onChangeText={handleChange("nickname")}
                         onBlur={handleBlur("nickname")}
@@ -365,11 +389,7 @@ function SetProfile2({ navigation }) {
                       style={[
                         styles.inputField,
                         {
-                          borderColor:
-                            values.amount.length >= 1 ||
-                            values.amount.length === 0
-                              ? "#ccc"
-                              : "red",
+                          borderColor: !!Number(values.amount)|| values.amount === '' ? "#ccc" : "red",
                         },
                       ]}
                     >
@@ -377,6 +397,7 @@ function SetProfile2({ navigation }) {
                         placeholderTextColor="#444"
                         placeholder="숫자만 입력해주세요."
                         autoCapitalize="none"
+                        autoCorrect={false}
                         onChangeText={handleChange("amount")}
                         onBlur={handleBlur("amount")}
                         value={values.amount}
@@ -403,7 +424,7 @@ function SetProfile2({ navigation }) {
                         marginLeft: 4,
                       }}
                     >
-                      (하나만 선택하세요)
+                      (중복 선택 가능)
                     </Text>
                   </View>
                   <View
@@ -415,21 +436,13 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor === "#ccc"
-                          ? setColor("#C0E8E0") &&
-                            setColor1("#ccc") &&
-                            setColor2("#ccc") &&
-                            setColor3("#ccc") &&
-                            setColor4("#ccc") &&
-                            setColor5("#ccc")
-                          : setColor("#ccc");
-                        setFieldValue("drink", ["탁주"]);
+                        colorchange(0, values.drink);
                       }}
                       value={values.drink}
                       onChangeValue={handleChange("drink")}
                       style={[
                         styles.checkBoxDesign,
-                        { backgroundColor: isColor },
+                        { backgroundColor: isSelect[0] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[0]}</Text>
@@ -437,23 +450,13 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor1 === "#ccc"
-                          ? setColor1("#C0E8E0")
-                          : setColor1("#ccc");
-                        isColor1 === "#ccc"
-                          ? setColor("#ccc") &&
-                            setColor2("#ccc") &&
-                            setColor3("#ccc") &&
-                            setColor4("#ccc") &&
-                            setColor5("#ccc")
-                          : setColor1("#ccc");
-                        setFieldValue("drink", ["약주•청주"]);
+                        colorchange(1, values.drink);
                       }}
                       value={values.drink}
                       onChangeValue={handleChange("drink")}
                       style={[
                         styles.checkBoxDesignRight,
-                        { backgroundColor: isColor1 },
+                        { backgroundColor: isSelect[1] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[1]}</Text>
@@ -468,20 +471,12 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor2 === "#ccc"
-                          ? setColor2("#C0E8E0") &&
-                            setColor("#ccc") &&
-                            setColor1("#ccc") &&
-                            setColor3("#ccc") &&
-                            setColor4("#ccc") &&
-                            setColor5("#ccc")
-                          : setColor2("#ccc");
-                        setFieldValue("drink", ["과실주"]);
+                        colorchange(2, values.drink);
                       }}
                       value={values.drink}
                       style={[
                         styles.checkBoxDesign,
-                        { backgroundColor: isColor2 },
+                        { backgroundColor: isSelect[2] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[2]}</Text>
@@ -489,21 +484,13 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor3 === "#ccc"
-                          ? setColor3("#C0E8E0") &&
-                            setColor("#ccc") &&
-                            setColor1("#ccc") &&
-                            setColor2("#ccc") &&
-                            setColor4("#ccc") &&
-                            setColor5("#ccc")
-                          : setColor3("#ccc");
-                        setFieldValue("drink", ["증류주"]);
+                        colorchange(3, values.drink);
                       }}
                       value={values.drink}
                       onChangeValue={handleChange("drink")}
                       style={[
                         styles.checkBoxDesignRight,
-                        { backgroundColor: isColor3 },
+                        { backgroundColor: isSelect[3] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[3]}</Text>
@@ -518,21 +505,13 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor4 === "#ccc"
-                          ? setColor4("#C0E8E0") &&
-                            setColor("#ccc") &&
-                            setColor1("#ccc") &&
-                            setColor2("#ccc") &&
-                            setColor3("#ccc") &&
-                            setColor5("#ccc")
-                          : setColor4("#ccc");
-                        setFieldValue("drink", ["리큐르"]);
+                        colorchange(4, values.drink);
                       }}
                       value={values.drink}
                       onChangeValue={handleChange("drink")}
                       style={[
                         styles.checkBoxDesign,
-                        { backgroundColor: isColor4 },
+                        { backgroundColor: isSelect[4] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[4]}</Text>
@@ -540,21 +519,13 @@ function SetProfile2({ navigation }) {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        isColor5 === "#ccc"
-                          ? setColor5("#C0E8E0") &&
-                            setColor("#ccc") &&
-                            setColor1("#ccc") &&
-                            setColor2("#ccc") &&
-                            setColor3("#ccc") &&
-                            setColor4("#ccc")
-                          : setColor5("#ccc");
-                        setFieldValue("drink", ["기타주류"]);
+                        colorchange(5, values.drink);
                       }}
                       value={values.drink}
                       onChangeValue={handleChange("drink")}
                       style={[
                         styles.checkBoxDesignRight,
-                        { backgroundColor: isColor5 },
+                        { backgroundColor: isSelect[5] ? "#C0E8E0" : "#ccc" },
                       ]}
                     >
                       <Text>{alcohols[5]}</Text>
@@ -595,6 +566,7 @@ function SetProfile2({ navigation }) {
                       placeholder="최소"
                       textAlign="center"
                       autoCapitalize="none"
+                      autoCorrect={false}
                       onChangeText={handleChange("minContent")}
                       onBlur={handleBlur("minContent")}
                       value={values.minContent}
@@ -605,6 +577,7 @@ function SetProfile2({ navigation }) {
                       placeholder="최대"
                       textAlign="center"
                       autoCapitalize="none"
+                      autoCorrect={false}
                       onChangeText={handleChange("maxContent")}
                       onBlur={handleBlur("maxContent")}
                       value={values.maxContent}

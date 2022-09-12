@@ -37,8 +37,7 @@ const EditProfile = ({ route }) => {
     maxContent: Yup.number().required(),
   });
 
-  const userInfo = route.params.userInfo;
-  const options = [
+  const alcohols = [
     "탁주",
     "약주•청주",
     "과실주",
@@ -46,16 +45,44 @@ const EditProfile = ({ route }) => {
     "리큐르",
     "기타주류",
   ];
-  const [image, setImage] = useState(userInfo.profile_picture);
-  console.log(userInfo);
-  console.log("경계선");
-  const [isColor, setColor] = useState("#ccc");
-  const [isColor1, setColor1] = useState("#ccc");
-  const [isColor2, setColor2] = useState("#ccc");
-  const [isColor3, setColor3] = useState("#ccc");
-  const [isColor4, setColor4] = useState("#ccc");
-  const [isColor5, setColor5] = useState("#ccc");
+
+  const userInfo = route.params.userInfo;
+  const [isSelect, setSelect] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(userInfo.profile_picture);
+  const [nicknames, setNicknames] = useState([]);
+
+  useEffect(() => {
+    const userdrink = userInfo.drink;
+    const data = [];
+    for (let i = 0; i < userdrink.length; i++) {
+      if (alcohols.includes(userdrink[i])) {
+        data.push(true);
+      } else {
+        data.push(false);
+      }
+    }
+    setSelect(data);
+  }, []);
+
+  const colorchange = (idx, drink) => {
+    const drinkname = alcohols[idx];
+    if (drink.includes(drinkname)) {
+      drink.splice(drink.indexOf(drinkname), 1);
+      setSelect([
+        ...isSelect.slice(0, idx),
+        !isSelect[idx],
+        ...isSelect.slice(idx + 1),
+      ]);
+    } else {
+      drink.push(drinkname);
+      setSelect([
+        ...isSelect.slice(0, idx),
+        !isSelect[idx],
+        ...isSelect.slice(idx + 1),
+      ]);
+    }
+  };
 
   const pickImage = async () => {
     setLoading(true);
@@ -77,9 +104,25 @@ const EditProfile = ({ route }) => {
     let ref = firebase.storage().ref(filename);
     await ref.put(blob);
     const remoteurl = await ref.getDownloadURL();
-    await setImage(remoteurl);
+    await setProfile(remoteurl);
     setLoading(false);
   };
+
+  const checkNickname = async () => {
+    try {
+      const nickData = [];
+      await db.collection("users").onSnapshot((snapshot) => {
+        setNicknames(snapshot.docs.map((doc) => doc.data().nickname));
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+    return checkNickname;
+  };
+
+  useEffect(() => {
+    checkNickname();
+  }, []);
 
   const editUserProfile = async (
     nickname,
@@ -90,35 +133,15 @@ const EditProfile = ({ route }) => {
     image
   ) => {
     setLoading(true);
-    console.log(1);
-    const nickData = [];
-    db.collection("users").onSnapshot((snapshot) => {
-      snapshot.docs.map((doc) => nickData.push(doc.data().nickname));
+    await db.collection("users").doc(firebase.auth().currentUser.email).update({
+      profile_picture: image,
+      nickname: nickname,
+      amount: amount,
+      drink: drink,
+      minContent: minContent,
+      maxContent: maxContent,
     });
-    console.log(nickData);
-    console.log(2);
-
-    if (nickData.includes(nickname)) {
-      setLoading(false);
-      console.log(3);
-      Alert.alert("이미 존재하는 닉네임입니다.");
-      return false;
-    }
-    // else {
-    //   await db
-    //     .collection("users")
-    //     .doc(firebase.auth().currentUser.email)
-    //     .update({
-    //       profile_picture: image,
-    //       nickname: nickname,
-    //       amount: amount,
-    //       drink: drink,
-    //       minContent: minContent,
-    //       maxContent: maxContent,
-    //     });
-    //   console.log(editUserProfile);
-    // }
-
+    console.log(editUserProfile);
     setLoading(false);
   };
 
@@ -133,59 +156,54 @@ const EditProfile = ({ route }) => {
           minContent: userInfo.minContent,
           maxContent: userInfo.maxContent,
         }}
-        onSubmit={(values) => {
-          // console.log(values);
-          editUserProfile(
-            values.nickname,
-            values.amount,
-            values.drink,
-            values.minContent,
-            values.maxContent,
-            image
-          );
-          console.log("들어갔다", values);
+        onSubmit={async (values) => {
+          if (userInfo.nickname === values.nickname) {
+            editUserProfile(
+              values.nickname,
+              values.amount,
+              values.drink,
+              values.minContent,
+              values.maxContent,
+              profile
+            );
+          } else {
+            if (!nicknames.includes(values.nickname)) {
+              editUserProfile(
+                values.nickname,
+                values.amount,
+                values.drink,
+                values.minContent,
+                values.maxContent,
+                profile
+              );
+            } else {
+              Alert.alert("이미 존재하는 닉네임입니다.");
+            }
+          }
         }}
         validationSchema={EditProfileSchema}
         validateOnMount={true}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          setFieldValue,
-          values,
-          isValid,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
             <ScrollView>
               <TouchableOpacity
                 style={styles.profileContainer}
                 onPress={pickImage}
               >
-                {!image ? (
-                  <Avatar
-                    size="xlarge"
-                    rounded // 둥글게 설정하기
-                    overlayContainerStyle={{ backgroundColor: "#C0E8E0" }}
-                    icon={{ name: "user", type: "font-awesome" }}
-                  >
-                    <Accessory size={26} />
-                  </Avatar>
-                ) : (
-                  <View>
-                    <Image
-                      style={{
-                        width: window.width * 0.4,
-                        height: window.width * 0.4,
-                        borderRadius: 100,
-                        resizeMode: "cover",
-                        borderColor: "black",
-                      }}
-                      source={{ uri: image }}
-                    />
-                    <Accessory size={26} />
-                  </View>
-                )}
+                <View>
+                  <Image
+                    style={{
+                      width: window.width * 0.4,
+                      height: window.width * 0.4,
+                      borderRadius: 100,
+                      resizeMode: "cover",
+                      borderColor: "black",
+                    }}
+                    source={{ uri: profile }}
+                  />
+                  <Accessory size={26} />
+                </View>
                 <View
                   style={{
                     alignItems: "center",
@@ -202,7 +220,7 @@ const EditProfile = ({ route }) => {
                       justifyContent: "center",
                     }}
                   >
-                    프로필 사진
+                    프로필 변경
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -223,7 +241,11 @@ const EditProfile = ({ route }) => {
                       marginLeft: 4,
                     }}
                   >
-                    (4글자 이상)
+                    {values.nickname.length === 0
+                      ? "(4글자 이상)"
+                      : values.nickname.length >= 4
+                      ? ""
+                      : "4글자 이상 입력해야 합니다."}
                   </Text>
                 </View>
                 <View
@@ -263,7 +285,7 @@ const EditProfile = ({ route }) => {
                     styles.inputField,
                     {
                       borderColor:
-                        values.amount.length >= 1 || values.amount.length === 0
+                        !!Number(values.amount) || values.amount === ""
                           ? "#ccc"
                           : "red",
                     },
@@ -299,7 +321,7 @@ const EditProfile = ({ route }) => {
                     marginLeft: 4,
                   }}
                 >
-                  (하나만 선택하세요)
+                  (중복 선택 가능)
                 </Text>
               </View>
               <View
@@ -311,42 +333,30 @@ const EditProfile = ({ route }) => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor === "#ccc"
-                      ? setColor("#C0E8E0") &&
-                        setColor1("#ccc") &&
-                        setColor2("#ccc") &&
-                        setColor3("#ccc") &&
-                        setColor4("#ccc") &&
-                        setColor5("#ccc")
-                      : setColor("#ccc");
-                    setFieldValue("drink", ["탁주"]);
+                    colorchange(0, values.drink);
                   }}
                   value={values.drink}
                   onChangeValue={handleChange("drink")}
-                  style={[styles.checkBoxDesign, { backgroundColor: isColor }]}
+                  style={[
+                    styles.checkBoxDesign,
+                    { backgroundColor: isSelect[0] ? "#C0E8E0" : "#ccc" },
+                  ]}
                 >
-                  <Text>{options[0]}</Text>
+                  <Text>{alcohols[0]}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor1 === "#ccc"
-                      ? setColor1("#C0E8E0") &&
-                        setColor2("#ccc") &&
-                        setColor3("#ccc") &&
-                        setColor4("#ccc") &&
-                        setColor5("#ccc")
-                      : setColor1("#ccc");
-                    setFieldValue("drink", ["약주•청주"]);
+                    colorchange(1, values.drink);
                   }}
                   value={values.drink}
                   onChangeValue={handleChange("drink")}
                   style={[
                     styles.checkBoxDesignRight,
-                    { backgroundColor: isColor1 },
+                    { backgroundColor: isSelect[1] ? "#C0E8E0" : "#ccc" },
                   ]}
                 >
-                  <Text>{options[1]}</Text>
+                  <Text>{alcohols[1]}</Text>
                 </TouchableOpacity>
               </View>
               <View
@@ -358,42 +368,29 @@ const EditProfile = ({ route }) => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor2 === "#ccc"
-                      ? setColor2("#C0E8E0") &&
-                        setColor("#ccc") &&
-                        setColor1("#ccc") &&
-                        setColor3("#ccc") &&
-                        setColor4("#ccc") &&
-                        setColor5("#ccc")
-                      : setColor2("#ccc");
-                    setFieldValue("drink", ["과실주"]);
+                    colorchange(2, values.drink);
                   }}
                   value={values.drink}
-                  style={[styles.checkBoxDesign, { backgroundColor: isColor2 }]}
+                  style={[
+                    styles.checkBoxDesign,
+                    { backgroundColor: isSelect[2] ? "#C0E8E0" : "#ccc" },
+                  ]}
                 >
-                  <Text>{options[2]}</Text>
+                  <Text>{alcohols[2]}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor3 === "#ccc"
-                      ? setColor3("#C0E8E0") &&
-                        setColor("#ccc") &&
-                        setColor1("#ccc") &&
-                        setColor2("#ccc") &&
-                        setColor4("#ccc") &&
-                        setColor5("#ccc")
-                      : setColor3("#ccc");
-                    setFieldValue("drink", ["증류주"]);
+                    colorchange(3, values.drink);
                   }}
                   value={values.drink}
                   onChangeValue={handleChange("drink")}
                   style={[
                     styles.checkBoxDesignRight,
-                    { backgroundColor: isColor3 },
+                    { backgroundColor: isSelect[3] ? "#C0E8E0" : "#ccc" },
                   ]}
                 >
-                  <Text>{options[3]}</Text>
+                  <Text>{alcohols[3]}</Text>
                 </TouchableOpacity>
               </View>
               <View
@@ -405,43 +402,30 @@ const EditProfile = ({ route }) => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor4 === "#ccc"
-                      ? setColor4("#C0E8E0") &&
-                        setColor("#ccc") &&
-                        setColor1("#ccc") &&
-                        setColor2("#ccc") &&
-                        setColor3("#ccc") &&
-                        setColor5("#ccc")
-                      : setColor4("#ccc");
-                    setFieldValue("drink", ["리큐르"]);
+                    colorchange(4, values.drink);
                   }}
                   value={values.drink}
                   onChangeValue={handleChange("drink")}
-                  style={[styles.checkBoxDesign, { backgroundColor: isColor4 }]}
+                  style={[
+                    styles.checkBoxDesign,
+                    { backgroundColor: isSelect[4] ? "#C0E8E0" : "#ccc" },
+                  ]}
                 >
-                  <Text>{options[4]}</Text>
+                  <Text>{alcohols[4]}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
-                    isColor5 === "#ccc"
-                      ? setColor5("#C0E8E0") &&
-                        setColor("#ccc") &&
-                        setColor1("#ccc") &&
-                        setColor2("#ccc") &&
-                        setColor3("#ccc") &&
-                        setColor4("#ccc")
-                      : setColor5("#ccc");
-                    setFieldValue("drink", ["기타주류"]);
+                    colorchange(5, values.drink);
                   }}
                   value={values.drink}
                   onChangeValue={handleChange("drink")}
                   style={[
                     styles.checkBoxDesignRight,
-                    { backgroundColor: isColor5 },
+                    { backgroundColor: isSelect[5] ? "#C0E8E0" : "#ccc" },
                   ]}
                 >
-                  <Text>{options[5]}</Text>
+                  <Text>{alcohols[5]}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -524,6 +508,17 @@ const EditProfile = ({ route }) => {
           </>
         )}
       </Formik>
+      {loading === true ? (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            color="#C0E8E0"
+            size="large"
+            style={{ opacity: 1.5 }}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 };
