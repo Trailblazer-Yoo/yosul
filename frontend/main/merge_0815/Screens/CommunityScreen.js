@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, FlatList } from 'react-native';
 import Post from '../Components/Community/Post'
 import { useEffect, useState } from 'react';
 import { POSTS } from '../data/post';
@@ -6,32 +6,45 @@ import firebase from '../firebase'
 
 const db = firebase.firestore()
 
-const CommunityScreen = ({navigation}) => {
-  const [posts, setPosts] = useState([])
+const CommunityScreen = ({ navigation }) => {
+  const renderPosts = (itemData) => {
+    return <Post post ={itemData.item} navigation={navigation}/>;
+  };
 
+  const [posts, setPosts] = useState([])
   useEffect(() => {
     db.collectionGroup('posts')
-    .onSnapshot(snapshot => {
-      setPosts(snapshot.docs.map(post => (
-        {id: post.id, ...post.data()})))
-    })
+    // .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
+    });
   }, [])
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {POSTS.map((post, index) => (
-          <Post post={post} key={index}/>
-        ))}
-      </ScrollView>
+    <SafeAreaView style={{flex: 1}}>
+        <FlatList   
+          data={posts}
+          renderItem={renderPosts}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          style={{ margin: 3 }}/>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor:"white",
-    flex: 1,
-  }
+  screen: {
+    flex :1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
+  },
+  box: {
+    width: '50%',
+    height: '50%',
+    padding: 5
+  },
+  inner: {
+    flex: 1/2
+  },
 })
 
 export default CommunityScreen

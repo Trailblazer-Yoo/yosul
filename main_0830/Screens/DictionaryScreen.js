@@ -23,7 +23,7 @@ export default function DictionaryScreen({ navigation }) {
     data.push(Object.values(dataSnapShot));
     setSulList(data[0]);
     setLoading(true);
-    console.log(data);
+    // console.log(data);
   };
 
   useEffect(() => {
@@ -42,29 +42,30 @@ export default function DictionaryScreen({ navigation }) {
           <Image style={styles.img} source={{ uri: item.img }} />
           <View style={styles.textcontainer}>
             <Text style={styles.name}>{item.soolName}</Text>
-            <Text style={styles.text}>
-              지역 :{" "}
-              {item.breweryAddress.substr(
-                0,
-                item.breweryAddress.indexOf(" ", item.breweryAddress.indexOf(" ") + 1)
-              )}
-            </Text>
+            {typeof(item.breweryAddress) === 'undefined' ? null : (
+              <Text style={styles.text}>
+                지역 :{" "}
+                {item.breweryAddress.substr(
+                  0,
+                  item.breweryAddress.indexOf(" ", item.breweryAddress.indexOf(" ") + 1)
+                )}
+              </Text>)}
             <Text style={styles.text}>도수 :{item.soolAlcohol}</Text>
             <Text style={styles.text}>용량 : {item.soolCapacity}</Text>
-            <Text style={styles.text}>주재료 : {item.soolMaterials}</Text>
-            <Text style={styles.text}>제조 : {item.BreweryName}</Text>
+            <Text style={styles.text}>주재료 : {item.soolMaterial}</Text>
+            <Text style={styles.text}>제조 : {item.breweryName}</Text>
             <Text style={styles.text}>분류 : {item.soolType}</Text>
           </View>
         </Pressable>
         <View style={styles.iconcontainer}>
-          <TouchableOpacity style={{marginBottom:2}}>
+          <Pressable style={{marginBottom:2}}>
             {/* heart / heart-fill */}
             <Octicons name="heart" size={27} color="gray" />
-          </TouchableOpacity>
-          <TouchableOpacity>
+          </Pressable>
+          <Pressable>
             {/* star / start-fill */}
           <Octicons name="star" size={27} color="gray" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     );
@@ -90,6 +91,7 @@ export default function DictionaryScreen({ navigation }) {
         </View>
       ) : (
         <FlatList
+          keyExtractor={(item, index) => index.toString()}
           data={sulList}
           renderItem={renderListItem}
           ItemSeparatorComponent={ItemSeparatorView}
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     width: Dimensions.get("window").width - 20,
-    height: (Dimensions.get("window").width) / 2.5,
+    height: (Dimensions.get("window").width) / 2.1,
     // height: (Dimensions.get("window").width) - 20 / 4,
     padding: 8,
   },

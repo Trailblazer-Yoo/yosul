@@ -38,28 +38,28 @@ class Firebase_updater:
 
             data = {}
 
-            soolName = bs.find('div', {'class':'product-view'}).find('dt', {'class':'subject'}).text
-            soolType = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find('span').text.replace('\r','').replace('\n','').replace('\t','')
-            soolMaterial = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[1].text.replace('\r','').replace('\n','').replace('\t','')
+            soolName = bs.find('div', {'class':'product-view'}).find('dt', {'class':'subject'}).text.replace('+', ' ').replace('/', ', ')
+            soolType = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find('span').text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
+            soolMaterial = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[1].text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
             soolAlcohol = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[2].text.replace('\r','').replace('\n','').replace('\t','').replace(' \xa0','')
-            soolCapacity = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[3].text.replace('\r','').replace('\n','').replace('\t','')
+            soolCapacity = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[3].text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
             # soolImg = bs.find('div', {'class':'product-view'}).find('div', {'class':'img'}).find("img")["src"]
             # soolUrl = 'https://thesool.com'+soolImg
             soolUrl = ''
 
             try:
-                soolPrize = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[4].text.replace('\r','').replace('\n','').replace('\t','')
+                soolPrize = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[4].text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
             except: 
                 pass
 
             try:
-                soolEtc = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[5].text.replace('\r','').replace('\n','').replace('\t','')
+                soolEtc = bs.find('div', {'class':'info'}).find('ul', {'class':'info-list'}).find_all('span')[5].text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
             except:
                 pass
 
-            soolDetailInfo = bs.find('dd', {'class':'intro'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','')
-            soolMatchFood = bs.find('dd', {'class':'food'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','')
-            breweryName = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find('span').text
+            soolDetailInfo = bs.find('dd', {'class':'intro'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
+            soolMatchFood = bs.find('dd', {'class':'food'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
+            breweryName = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find('span').text.replace('+', ', ').replace('/', ', ')
             breweryAddress = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find_all('span')[1].text
             breweryHomepage = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find_all('span')[2].text.replace('\r','').replace('\n','').replace('\t','')
             breweryPhone = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find_all('li')[3].text.replace('문의','')
