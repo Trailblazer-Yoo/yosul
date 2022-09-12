@@ -13,7 +13,7 @@ import {
 import post, { POSTS } from "../../data/post";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
-export function PostDetail({ route }) {
+export function PostDetail({ route, navigation }) {
   const post = route.params.item;
   const date = new Date(post.createdAt.seconds*1000)
   console.log(date)

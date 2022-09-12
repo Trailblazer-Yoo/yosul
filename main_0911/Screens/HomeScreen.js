@@ -7,23 +7,34 @@ import {
   Animated,
   FlatList,
   Image,
+  TextInput,
+  Button,
   StyleSheet,
+  Pressable,
+  Text,
 } from "react-native";
 import firebase from "../firebase";
 
 const { width, height } = Dimensions.get("screen");
+const ITEM_WIDTH = width * 0.76;
+const ITEM_HEIGHT = ITEM_WIDTH * 1.47;
 
-
-const data = [
-  "https://cdn.dribbble.com/users/3281732/screenshots/11192830/media/7690704fa8f0566d572a085637dd1eee.jpg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/13130602/media/592ccac0a949b39f058a297fd1faa38e.jpg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/9165292/media/ccbfbce040e1941972dbc6a378c35e98.jpg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/11205211/media/44c854b0a6e381340fbefe276e03e8e4.jpg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/7003560/media/48d5ac3503d204751a2890ba82cc42ad.jpg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/6727912/samji_illustrator.jpeg?compress=1&resize=1200x1200",
-  "https://cdn.dribbble.com/users/3281732/screenshots/13661330/media/1d9d3cd01504fa3f5ae5016e5ec3a313.jpg?compress=1&resize=1200x1200",
+const images = [
+  "https://images.unsplash.com/photo-1551316679-9c6ae9dec224?w=800&q=80",
+  "https://images.unsplash.com/photo-1562569633-622303bafef5?w=800&q=80",
+  "https://images.unsplash.com/photo-1503656142023-618e7d1f435a?w=800&q=80",
+  "https://images.unsplash.com/photo-1555096462-c1c5eb4e4d64?w=800&q=80",
+  "https://images.unsplash.com/photo-1517957754642-2870518e16f8?w=800&q=80",
+  "https://images.unsplash.com/photo-1546484959-f9a381d1330d?w=800&q=80",
+  "https://images.unsplash.com/photo-1548761208-b7896a6ff225?w=800&q=80",
+  "https://images.unsplash.com/photo-1511208687438-2c5a5abb810c?w=800&q=80",
+  "https://images.unsplash.com/photo-1548614606-52b4451f994b?w=800&q=80",
+  "https://images.unsplash.com/photo-1548600916-dc8492f8e845?w=800&q=80",
 ];
-
+const data = images.map((image, index) => ({
+  key: String(index),
+  photo: image,
+}));
 
 const HomeScreen = () => {
   const [region, setRegion] = useState("경기도");
@@ -72,48 +83,82 @@ const HomeScreen = () => {
     filterBreweryInfo(areaCode);
   }, [breweryInfo]);
 
-  const scrollX = React.useRef(new Animated.Value(0)).current; // 현재 내 X축 값을 저장해놓음
-  const renderItem = ({ item }) => {
+  console.log(filteredBreweryInfo);
+
+  const scrollX = React.useRef(new Animated.Value(0)).current;
+
+  const renderItem = ({ item, index }) => {
+    const inputRange = [
+      (index - 1) * width,
+      index * width,
+      (index + 1) * width,
+    ];
+    const translateX = scrollX.interpolate({
+      inputRange,
+      outputRange: [-width * 0.8, 0, width * 0.8],
+    });
     return (
-      <View style={styles.imagewrapper}>
-        <Image source={{ uri: item }} style={styles.renderstyle} />
+      <View style={{ width, justifyContent: "center", alignItems: "center" }}>
+        <View style={styles.framestyle}>
+          <View style={styles.imagewrapper}>
+            <Animated.Image
+              source={{ uri: item.photo }}
+              style={{ ...styles.imagestyle, transform: [{ translateX }] }}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderTextItem = ({ item, index }) => {
+    return (
+      <View style={styles.width}>
+        <Pressable
+          onPress={() =>
+            navigation.push("BreweryDetailScreen", { id: index, item: item })
+          }
+        >
+          <View style={styles.brewery_info}>
+            <Text style={styles.breweryName}>{item.name}</Text>
+            <Text style={styles.text}>체험명: {item.activity_name}</Text>
+            <Text style={styles.text}>주종: {item.sul_type}</Text>
+            <Text style={styles.text}>주소: {item.address}</Text>
+          </View>
+        </Pressable>
       </View>
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "#000" }}>
-      <StatusBar hidden />
-      <View style={StyleSheet.absoluteFillObject}>
-        {data.map((image, index) => {
-          const inputRange = [
-            (index - 1) * width, // previous Image range
-            index * width, // current Image range
-            (index + 1) * width, // next Image range
-          ];
-          const opacity = scrollX.interpolate({
-            inputRange,
-            outputRange: [0, 1, 0], // 0, 1, 0을 해줌으로서 current 이미지만 나오게 해줌
-          });
-          return (
-            <Animated.Image
-              key={`image-${index}`}
-              source={{ uri: image }}
-              style={[StyleSheet.absoluteFillObject , {opacity}]}
-              blurRadius={20}
-            />
-          );
-        })}
+    <View style={styles.container}>
+      <View style={styles.area}>
+        <TextInput
+          style={styles.areaText}
+          onChangeText={(text) => setRegion(text)}
+        >
+          {region}
+        </TextInput>
+        <Button title="변경" onPress={() => getRegion(region)}></Button>
       </View>
       <Animated.FlatList
         data={data}
+        keyExtractor={(item) => item.key}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled={true}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
           { useNativeDriver: true }
         )}
-        keyExtractor={(_, index) => index.toString()}
-        horizontal={true}
-        pagingEnabled={true}
         renderItem={renderItem}
+      />
+      <FlatList
+        data={filteredBreweryInfo}
+        keyExtractor={(item, index) => index}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled={true}
+        renderItem={(item, index) => renderTextItem(item, index)}
       />
     </View>
   );
@@ -122,6 +167,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'white',
     paddingTop:
       Platform.OS === "ios"
         ? getStatusBarHeight(true)
@@ -170,21 +216,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  imagewrapper: {
-    width: width,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowOpacity: 0.3,
-    shadowOffset:{
-      width:0,
-      height:0
-    } 
-  },
-  renderstyle: {
-    width: width * 0.7,
-    height: height * 0.7,
+  imagestyle: {
+    width: ITEM_WIDTH * 1.2,
+    height: ITEM_HEIGHT,
     resizeMode: "cover",
-    borderRadius: 16,
+  },
+  imagewrapper: {
+    width: ITEM_WIDTH,
+    height: ITEM_HEIGHT,
+    overflow: "hidden",
+    alignItems: "center",
+    borderRadius: 18,
+    // backgroundColor: "black",
+  },
+  framestyle: {
+    borderRadius: 18,
+    padding: 12,
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOpacity: 0.5,
+    shadowRadius: 30,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+  },
+  area: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  areaText: {
+    fontSize: 28,
   },
 });
 

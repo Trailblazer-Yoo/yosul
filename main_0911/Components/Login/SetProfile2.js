@@ -56,6 +56,7 @@ function SetProfile2({ navigation }) {
 
   const uploadProfileImage = async () => {
     setLoading(true);
+    const getEmail = await AsyncStorage.getItem("userEmail");
     let ImageData = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -63,18 +64,22 @@ function SetProfile2({ navigation }) {
       quality: 1,
     });
     if (ImageData.cancelled) {
+      setLoading(false);
       return null;
     }
-    const image = ImageData.uri;
-    const getEmail = await AsyncStorage.getItem("userEmail");
-    const path = `photos/${getEmail}/${Date.now()}`;
-    const response = await fetch(image);
-    const blob = await response.blob();
-    const filename = `${path}${image.substring(image.lastIndexOf("/") + 1)}`;
-    let ref = firebase.storage().ref(filename);
-    await ref.put(blob);
-    const remoteurl = await ref.getDownloadURL();
-    await setProfile(remoteurl);
+    try {
+      const image = ImageData.uri;
+      const path = `photos/${getEmail}/${Date.now()}`;
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const filename = `${path}${image.substring(image.lastIndexOf("/") + 1)}`;
+      let ref = await firebase.storage().ref(filename);
+      await ref.put(blob);
+      const remoteurl = await ref.getDownloadURL();
+      await setProfile(remoteurl);
+    } catch (e) {
+      console.log(e);
+    }
     setLoading(false);
   };
 
@@ -88,16 +93,16 @@ function SetProfile2({ navigation }) {
     maxContent
   ) => {
     try {
+      setLoading(true);
       const getEmail = await AsyncStorage.getItem("userEmail");
       const getPassword = await AsyncStorage.getItem("userPassword");
       const authUser = await firebase
         .auth()
-        .createUserWithEmailAndPassword(getEmail);
+        .createUserWithEmailAndPassword(getEmail, getPassword);
 
       console.log("Firebase SignUp Successful", getEmail, getPassword);
-      setLoading(true)
 
-      db.collection("users").doc(authUser.user.email).set({
+      await db.collection("users").doc(authUser.user.email).set({
         owner_uid: authUser.user.uid,
         email: authUser.user.email,
         profile_picture: profile,
@@ -116,7 +121,7 @@ function SetProfile2({ navigation }) {
         follower: [],
       });
       console.log(uploadUserProfile);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log(error.message);
     }
