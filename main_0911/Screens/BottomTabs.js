@@ -35,7 +35,7 @@ const HomeScreenStack = () => {
     </Stack.Navigator>
   );
 };
-const CommunityScreenStack = () => {
+const CommunityScreenStack = ({navigation}) => {
   return (
     <Stack.Navigator screenOptions={screenOptions2}>
       <Stack.Screen
@@ -47,7 +47,7 @@ const CommunityScreenStack = () => {
             return (
               <TouchableOpacity
                 style={{ paddingRight: 30 }}
-                // onPress={() => navigation.push('NewPostScreen')}
+                onPress={() => navigation.push('NotificationScreen')}
               >
                 <View style={styles.unreadBadge}>
                   <Text style={styles.unreadBadgeText}>11</Text>
@@ -62,6 +62,11 @@ const CommunityScreenStack = () => {
         name="Post"
         component={Post}
         options={{ headerTitle: "커뮤니티" }}
+      />
+      <Stack.Screen
+        name="NotificationScreen"
+        component={NotificationScreen}
+        options={{ headerTitle: "알림" }}
       />
       <Stack.Screen
         name="PostDetail"
@@ -126,7 +131,7 @@ const ProfileScreenStack = () => {
   );
 };
 
-const BottomTabs = () => {
+const BottomTabs = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStack"

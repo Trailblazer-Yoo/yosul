@@ -65,7 +65,7 @@ const Post = ({ posts, navigation }) => {
       .collection("posts")
       .doc(posts.id)
       .update({
-        likes_by_users: currentBookmarksStatus
+        bookmarks_by_users: currentBookmarksStatus
           ? firebase.firestore.FieldValue.arrayUnion(currentUserEmail)
           : firebase.firestore.FieldValue.arrayRemove(currentUserEmail),
       })
@@ -114,9 +114,7 @@ const Post = ({ posts, navigation }) => {
             >
               <CommentIcon posts={posts} />
             </Pressable>
-            <Pressable
-            // onPress={bookmarkHandleLike(posts)}
-            >
+            <Pressable onPress={() => bookmarkHandleLike(posts)}>
               <BookmarkIcon posts={posts} />
             </Pressable>
           </View>
@@ -246,10 +244,14 @@ const CommentIcon = ({ posts }) => (
 
 const BookmarkIcon = ({ posts }) => (
   <View style={styles.box}>
-    <FontAwesome name="bookmark-o" size={20} color="black" />
+    {!posts.bookmarks_by_users.includes(firebase.auth().currentUser.email) ? (
+      <FontAwesome name="bookmark-o" size={20} color="black" />
+      ) : (
+        <FontAwesome name="bookmark" size={20} color="yellow" />
+        )}
     <Text
       style={{ color: "black", fontWeight: "350", marginLeft: 5, bottom: -2 }}
-    >
+      >
       {posts.bookmarks_by_users.length.toLocaleString("en")}
     </Text>
   </View>
