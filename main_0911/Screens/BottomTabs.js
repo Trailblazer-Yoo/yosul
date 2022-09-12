@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import {
   MaterialCommunityIcons,
@@ -22,6 +23,7 @@ import SearchBar from "../Components/UploadPost/SearchBar";
 import Post from "../Components/Community/Post";
 import PostDetail from "../Components/Community/PostDetail";
 import EditProfile from "../Components/Profile/EditProfile";
+import NotificationScreen from "./NotificationScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // creates object for Stack Navigator
@@ -39,7 +41,22 @@ const CommunityScreenStack = () => {
       <Stack.Screen
         name="CommunityScreen"
         component={CommunityScreen}
-        options={{ headerTitle: "커뮤니티" }}
+        options={{
+          headerTitle: "커뮤니티",
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                style={{ paddingRight: 30 }}
+                // onPress={() => navigation.push('NewPostScreen')}
+              >
+                <View style={styles.unreadBadge}>
+                  <Text style={styles.unreadBadgeText}>11</Text>
+                </View>
+                <Octicons name="bell-fill" size={24} color="black" />
+              </TouchableOpacity>
+            );
+          },
+        }}
       />
       <Stack.Screen
         name="Post"
@@ -59,6 +76,7 @@ const UploadPostScreenStack = () => {
     <Stack.Navigator
       initialRouteName="UploadPost"
       screenOptions={screenOptions2}
+      style={styles.container}
     >
       <Stack.Screen
         name="UploadPostScreen"
@@ -96,8 +114,7 @@ const DictionaryScreenStack = () => {
 };
 const ProfileScreenStack = () => {
   return (
-    <Stack.Navigator 
-    screenOptions={screenOptions1}>
+    <Stack.Navigator screenOptions={screenOptions1}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -113,12 +130,11 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStack"
-      screenOptions={({route}) => {
-        if (route.name === 'HomeStack'){
-          return {...screenOptions3, ...{tabBarStyle:transOptions}}
-        }
-        else{
-          return screenOptions3
+      screenOptions={({ route }) => {
+        if (route.name === "HomeStack") {
+          return { ...screenOptions3, ...{ tabBarStyle: transOptions } };
+        } else {
+          return screenOptions3;
         }
       }}
     >
@@ -158,19 +174,6 @@ const BottomTabs = () => {
               }}
             />
           ),
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                style={{ paddingRight: 30 }}
-                // onPress={() => navigation.push('NewPostScreen')}
-              >
-                <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadBadgeText}>11</Text>
-                </View>
-                <Octicons name="bell-fill" size={24} color="black" />
-              </TouchableOpacity>
-            );
-          },
         }}
       />
 
@@ -268,6 +271,15 @@ const screenOptions3 = {
   tabBarLabelStyle: {
     fontSize: 12,
   },
+  headerBackImage: () => {
+    // 뒤로가기 버튼 만들기
+    const style = {
+      marginLeft: Platform.OS === "ios" ? 0 : 0,
+    };
+    return (
+      <Entypo name="chevron-small-left" size={30} color="gray" style={style} />
+    );
+  },
 };
 
 const transOptions = {
@@ -275,11 +287,18 @@ const transOptions = {
   borderTopWidth: 0,
   position: "absolute",
   elevation: 0, // <-- this is the solution
-  opacity:0.8,
+  opacity: 0.8,
 };
 
 const styles = StyleSheet.create({
   maincolor: "#C0E8E0",
+  container: {
+    flex: 1,
+    paddingTop:
+      Platform.OS === "ios"
+        ? getStatusBarHeight(true)
+        : StatusBar.currentHeight,
+  },
   unreadBadge: {
     backgroundColor: "#FF3250",
     position: "absolute",
