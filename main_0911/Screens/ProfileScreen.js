@@ -40,19 +40,6 @@ const ProfileScreen = ({ navigation }) => {
     return getUserInfo();
   }, []);
 
-  // 내가 쓴 글에 들어갈 데이터 (params : posts)
-  // useEffect(() => {
-  //   db.collection("users")
-  //     .doc(firebase.auth().currentUser.email)
-  //     .collection("posts")
-  //     // .orderBy("createdAt", "desc")
-  //     .onSnapshot((snapshot) => {
-  //       setPosts(
-  //         snapshot.docs.map((post) => ({ id: post.id, ...post.data() }))
-  //       );
-  //     });
-  // }, []);
-
   const getPosts = () => {
     const data = [];
     db.collection("users")
@@ -174,13 +161,13 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   // firebase storage에서 데이터를 매우 많이 불러오므로 이 페이지로 component 우선 사용
-  const HomeScreen = () => {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>넣을 화면</Text>
-      </View>
-    );
-  };
+  // const HomeScreen = () => {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <Text>넣을 화면</Text>
+  //     </View>
+  //   );
+  // };
 
   return (
     <SafeAreaView style={styles.containertop}>
@@ -199,17 +186,17 @@ const ProfileScreen = ({ navigation }) => {
             {/* firebase storage에서 데이터를 매우 많이 불러오므로 HomeScreen으로 component 우선 사용 */}
             <Tab.Screen
               name="내가 쓴 글"
-              component={HomeScreen} // MyPostsStack
+              component={MyPostsStack} // 
               navigation={navigation}
             />
             <Tab.Screen
               name="게시물 다시보기"
-              component={HomeScreen} // BookmarkPostsStack
+              component={BookmarkPostsStack} // 
               navigation={navigation}
             />
             <Tab.Screen
               name="찜한 전통주"
-              component={HomeScreen} // MyDrinksStack
+              component={MyDrinksStack} // 
               navigation={navigation}
             />
           </Tab.Navigator>

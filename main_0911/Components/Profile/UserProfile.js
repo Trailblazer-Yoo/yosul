@@ -42,6 +42,7 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
     nickname: "",
     myBookmarksPosts: [],
     myBookmarksDrinks: [],
+    profile_picture:''
   });
 
   useEffect(() => {
@@ -79,9 +80,9 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
           }}
         >
           <ImageModal
-            resizeMode="contain"
+            resizeMode="cover"
             style={styles.profileimg}
-            source={require("../../assets/lopy.png")}
+            source={{uri:UserInfo.profile_picture}}
             onRequestClose={() => setModalVisible(false)}
           ></ImageModal>
           <View style={styles.textbox}>

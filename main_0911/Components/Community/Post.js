@@ -19,6 +19,7 @@ import firebase from "../../firebase";
 const db = firebase.firestore();
 const window = Dimensions.get("window");
 
+// 사진 갯수 : post.imageArray.length
 const Post = ({ posts, navigation }) => {
   const likesHandleLike = async (posts) => {
     const currentUserEmail = firebase.auth().currentUser.email;

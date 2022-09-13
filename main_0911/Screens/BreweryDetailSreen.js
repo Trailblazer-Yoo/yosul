@@ -124,25 +124,14 @@ export default function BreweryDetailScreen({ navigation, route }) {
     <ScrollView>
       <View style={styles.container}>
         <View style={{}}>
-          <ImageBackground
+          <Image
             source={require("../assets/brewery1.png")}
             style={{
               width: Dimensions.get("window").width,
               height: Dimensions.get("window").width * 0.85,
               position: "relative",
             }}
-          >
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image
-                source={require("../assets/arrow.png")}
-                style={{
-                  marginTop: 50,
-                  marginLeft: 20,
-                  position: "relative",
-                }}
-              />
-            </TouchableOpacity>
-          </ImageBackground>
+          />
         </View>
 
         <View style={styles.breweryDetail}>

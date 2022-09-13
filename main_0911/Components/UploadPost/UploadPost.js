@@ -318,8 +318,23 @@ const UploadPost = ({ navigation, route }) => {
                     value={values.caption}
                 />
               </View>
-              <Button 
-              onPress={handleSubmit} title="작성" disabled={!isValid} />
+              <View style={styles.buttonContainer(isValid)}>
+                    <TouchableOpacity
+                      style={styles.buttonDesign}
+                      onPress={handleSubmit}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          fontWeight: "500",
+                          color: "white",
+                          margin: 25,
+                        }}
+                      >
+                        설정 완료
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
             </View>
           </ScrollView>
           {loading === true ? (
@@ -365,10 +380,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
     marginVertical: 1,
   },
+  buttonContainer: (isValid) => ({
+    // position: "absolute",
+    marginTop: 20,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: isValid ? "#C0E8E0" : "#444",
+    height: window.height * 0.09,
+  }),
   uploadphototext: {
     color: "white",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  buttonDesign: {
+    alignItems: "center",
+    justifyContent: "center",
+    // marginTop: 25,
   },
   onelinetitle: {
     marginTop: 20,

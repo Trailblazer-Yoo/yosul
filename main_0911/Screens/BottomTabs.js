@@ -60,7 +60,7 @@ const CommunityScreenStack = () => {
                 onPress={() => navigation.push("NotificationScreen")}
               >
                 <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadBadgeText}>11</Text>
+                  <Text style={styles.unreadBadgeText}>!</Text>
                 </View>
                 <Octicons name="bell-fill" size={24} color="black" />
               </TouchableOpacity>

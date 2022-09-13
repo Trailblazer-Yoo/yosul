@@ -115,13 +115,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.activityText}>{item.activityName}</Text>
           <Text style={styles.breweryName}>{item.name}</Text>
         </View>
-      </View>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.area}>
+        <View style={{top:-15}}>
         <TouchableOpacity
           onPress={
             // (text) => setRegion(text) 우선 변경 안되게
@@ -132,6 +126,12 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         {/* <Button title="변경" onPress={() => getRegion(region)}></Button> */}
       </View>
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
       <Animated.FlatList
         data={filteredBreweryInfo.slice(0, 7)}
         keyExtractor={(item, index) => index}
@@ -244,12 +244,14 @@ const styles = StyleSheet.create({
   area: {
     marginTop: 15,
     position:'absolute',
-    right:width * .85,
+    right:width * .435,
     paddingTop: width * 0.1
     
   },
   areaText: {
-    fontSize: 20,
+    fontSize: 17,
+    opacity:0.35,
+    alignItems:'center'
   },
 });
 
