@@ -135,6 +135,9 @@ const PostImage = ({ posts }) => {
           uri: posts.imageArray[0],
         }}
       />
+      <View style={{position:'absolute', top: 10, right: 5, borderRadius: 20, backgroundColor:'#5d5e5d', opacity:0.6, width: 35, justifyContent: 'center', alignItems:'center'}}>
+        <Text style={{color: 'white', alignItems: 'center', justifyContent: 'center'}}>1/{posts.imageArray.length}</Text> 
+      </View>
     </View>
   );
 };

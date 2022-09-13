@@ -78,7 +78,7 @@ const UploadPost = ({ navigation, route }) => {
     let ImageData = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [2, 2],
+      aspect: [9, 16],
       quality: 1,
     });
     if (ImageData.cancelled) {
@@ -95,7 +95,7 @@ const UploadPost = ({ navigation, route }) => {
     let ImageData = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [2, 2],
+      aspect: [9, 16],
       quality: 1,
     });
     if (ImageData.cancelled) {
@@ -329,6 +329,7 @@ const UploadPost = ({ navigation, route }) => {
                           fontWeight: "500",
                           color: "white",
                           margin: 25,
+                          marginTop: 5
                         }}
                       >
                         설정 완료

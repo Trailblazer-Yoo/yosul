@@ -49,7 +49,6 @@ export function PostDetail({ route, navigation }) {
         </TouchableOpacity>
       </View>
       <View style={{flex:1,height:height*0.5, justifyContent:'center', alignItems:'center'}}>
-        <Text>헬로우</Text>
         {/* <View style={{flex:1, width: "100%", height: 500, marginTop: 3, flexDirection:"row"}}>
             <View style={{flex:1}}>
                 {post.imageArray.map((imageUrls, index) =>
@@ -82,7 +81,6 @@ export function PostDetail({ route, navigation }) {
             />;
           }}
         />
-        <Text>헬로우</Text>
       </View>
       <View style={styles.postOptionsContainer}>
         <View
@@ -150,9 +148,30 @@ export function PostDetail({ route, navigation }) {
       >
         {date.getMonth()}.{date.getDate()}
       </Text>
-    </ScrollView>
-  );
-}
+      <View style ={{flexDirection: 'row', marginTop: 7, marginLeft: -7}}>
+          <Image source={{ uri: post.profile_picture }} 
+                  style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 50,
+                  marginLeft: 6,
+                  marginTop: 5,
+                  marginRight: 8}}/>
+              <TextInput placeholder='댓글을 입력하시오'/>
+                <TouchableOpacity
+                    style={styles.buttonDesign}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          marginTop: 5
+                        }}>
+                      댓글 게시
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+            );
+          }
 
 const styles = StyleSheet.create({
   postContainer: {
@@ -191,6 +210,14 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 4,
   },
+  buttonDesign: { 
+    borderRadius: 20, 
+    backgroundColor:"#c0e8e0", 
+    width: 30, 
+    justifyContent: 'center', 
+    alignItems:'center',
+
+  }
 });
 
 export default PostDetail;
