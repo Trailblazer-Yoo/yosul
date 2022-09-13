@@ -288,6 +288,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               horizontal={true}
               data={attraction.slice(0, 5)}
               renderItem={renderListItemForAttraction}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         )}
@@ -304,6 +305,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               horizontal={true}
               data={event.slice(0, 5)}
               renderItem={renderListItemForEvent}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
         )}

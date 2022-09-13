@@ -203,14 +203,6 @@ function SetProfile2({ navigation }) {
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
             <View>
-              <View style={{ alignItems: "center", marginBottom: 20 }}>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                  프로필 설정
-                </Text>
-              </View>
-              <Divider />
-            </View>
-            <View>
               <View>
                 <ProgressBar
                   progress={1}

@@ -18,13 +18,13 @@ const ITEM_WIDTH = width * 0.76;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.47;
 
 const images = [
-  "https://images.unsplash.com/photo-1551316679-9c6ae9dec224?w=800&q=80",
-  "https://images.unsplash.com/photo-1562569633-622303bafef5?w=800&q=80",
-  "https://images.unsplash.com/photo-1503656142023-618e7d1f435a?w=800&q=80",
-  "https://images.unsplash.com/photo-1555096462-c1c5eb4e4d64?w=800&q=80",
-  "https://images.unsplash.com/photo-1517957754642-2870518e16f8?w=800&q=80",
-  "https://images.unsplash.com/photo-1546484959-f9a381d1330d?w=800&q=80",
-  "https://images.unsplash.com/photo-1548761208-b7896a6ff225?w=800&q=80",
+  "../../assets/brewery/그린영농조합.png",
+  "../../assets/brewery/밝은세상영농조합.png",
+  "../../assets/brewery/배상면주가.png",
+  "../../assets/brewery/배혜정도.png",
+  "../../assets/brewery/산머루농원.png",
+  "../../assets/brewery/술샘.png",
+  "../../assets/brewery/좋은술.png",
 ];
 
 const HomeScreen = ({ navigation }) => {
@@ -102,26 +102,31 @@ const HomeScreen = ({ navigation }) => {
             }
           >
             <Animated.Image
-              source={{ uri: item.image }}
+              source={{ uri: item.photo }}
               style={{ ...styles.imagestyle, transform: [{ translateX }] }}
             />
           </Pressable>
+        </View>
+        <View style={{ marginTop: 5, marginRight: 110 }}>
+          <Text style={{ fontSize: 8, color: "#444" }}>
+            출처 : 카카오맵 로드뷰 (https://map.kakao.com)
+          </Text>
         </View>
         <View style={styles.brewery_info}>
           <Text style={styles.activityText}>{item.activityName}</Text>
           <Text style={styles.breweryName}>{item.name}</Text>
         </View>
-        <View style={{top:-15}}>
-        <TouchableOpacity
-          onPress={
-            // (text) => setRegion(text) 우선 변경 안되게
-            console.log("지역변경")
-          }
-        >
-          <Text style={styles.areaText}>{region}</Text>
-        </TouchableOpacity>
-        {/* <Button title="변경" onPress={() => getRegion(region)}></Button> */}
-      </View>
+        <View style={{ top: -15 }}>
+          <TouchableOpacity
+            onPress={
+              // (text) => setRegion(text) 우선 변경 안되게
+              console.log("지역변경")
+            }
+          >
+            <Text style={styles.areaText}>{region}</Text>
+          </TouchableOpacity>
+          {/* <Button title="변경" onPress={() => getRegion(region)}></Button> */}
+        </View>
       </View>
     );
   };
@@ -239,15 +244,14 @@ const styles = StyleSheet.create({
   },
   area: {
     marginTop: 15,
-    position:'absolute',
-    right:width * .435,
-    paddingTop: width * 0.1
-    
+    position: "absolute",
+    right: width * 0.435,
+    paddingTop: width * 0.1,
   },
   areaText: {
     fontSize: 17,
-    opacity:0.35,
-    alignItems:'center'
+    opacity: 0.35,
+    alignItems: "center",
   },
 });
 
