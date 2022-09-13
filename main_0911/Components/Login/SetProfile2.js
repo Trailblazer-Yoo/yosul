@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { Avatar, Accessory, Divider } from "react-native-elements";
 import { Formik } from "formik";
+import { ProgressBar } from "react-native-paper";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "../../firebase";
@@ -24,7 +25,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("screen");
 
 const PLACEHOLDER_IMG =
-'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'
+  "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg";
 
 function SetProfile2({ navigation }) {
   const SetProfileSchema = Yup.object().shape({
@@ -199,13 +200,7 @@ function SetProfile2({ navigation }) {
         validationSchema={SetProfileSchema}
         validateOnMount={true}
       >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          isValid,
-        }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
             <View>
               <View style={{ alignItems: "center", marginBottom: 20 }}>
@@ -217,6 +212,11 @@ function SetProfile2({ navigation }) {
             </View>
             <View>
               <View>
+                <ProgressBar
+                  progress={1}
+                  color="#C0E8E0"
+                  // style={{ marginTop: 50 }}
+                />
                 <ScrollView style={{ height: window.height * 0.9 }}>
                   <TouchableOpacity
                     style={styles.profileContainer}
@@ -389,7 +389,10 @@ function SetProfile2({ navigation }) {
                       style={[
                         styles.inputField,
                         {
-                          borderColor: !!Number(values.amount)|| values.amount === '' ? "#ccc" : "red",
+                          borderColor:
+                            !!Number(values.amount) || values.amount === ""
+                              ? "#ccc"
+                              : "red",
                         },
                       ]}
                     >

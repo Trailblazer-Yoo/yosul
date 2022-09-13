@@ -13,6 +13,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
+import { ProgressBar } from "react-native-paper";
 import * as Yup from "yup";
 import Validator from "email-validator";
 import firebase from "../../firebase";
@@ -20,7 +21,7 @@ import firebase from "../../firebase";
 const db = firebase.firestore();
 
 function SignupForm({ navigation }) {
-  const  [emails, setEmails]  = useState([]);
+  const [emails, setEmails] = useState([]);
   const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
     password: Yup.string()
