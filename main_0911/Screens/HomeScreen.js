@@ -12,9 +12,10 @@ import {
   StyleSheet,
   Pressable,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import firebase from "../firebase";
-import {regionCode} from "../regionCode";
+import { regionCode } from "../regionCode";
 
 const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.76;
@@ -28,16 +29,9 @@ const images = [
   "https://images.unsplash.com/photo-1517957754642-2870518e16f8?w=800&q=80",
   "https://images.unsplash.com/photo-1546484959-f9a381d1330d?w=800&q=80",
   "https://images.unsplash.com/photo-1548761208-b7896a6ff225?w=800&q=80",
-  "https://images.unsplash.com/photo-1511208687438-2c5a5abb810c?w=800&q=80",
-  "https://images.unsplash.com/photo-1548614606-52b4451f994b?w=800&q=80",
-  "https://images.unsplash.com/photo-1548600916-dc8492f8e845?w=800&q=80",
 ];
-const data = images.map((image, index) => ({
-  key: String(index),
-  photo: image,
-}));
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [region, setRegion] = useState("경기도");
   const [areaCode, setAreaCode] = useState("31");
   const [breweryInfo, setBreweryInfo] = useState([]);
@@ -67,13 +61,14 @@ const HomeScreen = () => {
     const data = [];
     for (let i = 0; i < breweryInfo.length; i++) {
       if (breweryInfo[i]["areaCode"] === areaCode) {
-        data.push(breweryInfo[i]);
+        data.push({ ...breweryInfo[i], image: images[i] });
       }
     }
-    data.sort(function compare(a, b){
+    data.sort(function compare(a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
-    console.log(data)
+
+    console.log("결과", data);
     setFilteredBreweryInfo(data);
   };
 
@@ -88,7 +83,6 @@ const HomeScreen = () => {
   console.log(filteredBreweryInfo);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
-
   const renderItem = ({ item, index }) => {
     const inputRange = [
       (index - 1) * width,
@@ -102,50 +96,45 @@ const HomeScreen = () => {
     return (
       <View style={{ width, justifyContent: "center", alignItems: "center" }}>
         <View style={styles.framestyle}>
-          <View style={styles.imagewrapper}>
+          <Pressable
+            style={styles.imagewrapper}
+            onPress={() =>
+              navigation.push("BreweryDetailScreen", {
+                id: index,
+                item: item,
+              })
+            }
+          >
             <Animated.Image
-              source={{ uri: item.photo }}
+              source={{ uri: item.image }}
               style={{ ...styles.imagestyle, transform: [{ translateX }] }}
             />
-          </View>
+          </Pressable>
+        </View>
+        <View style={styles.brewery_info}>
+          <Text style={styles.activityText}>{item.activityName}</Text>
+          <Text style={styles.breweryName}>{item.name}</Text>
         </View>
       </View>
     );
   };
 
-  const renderTextItem = ({ navigation, item, index }) => {
-    return (
-      <View style={styles.width}>
-        <Pressable
-          onPress={() =>
-            navigation.push("BreweryDetailScreen", { id: index, item: item })
-          }
-        >
-          <View style={styles.brewery_info}>
-            <Text style={styles.activityText}>{item.activityName}</Text>
-            <Text style={styles.breweryName}>{item.name}</Text>
-
-            {/* <Text style={styles.text}>{item.soolType}</Text>
-            <Text style={styles.text}>{item.address}</Text> */}
-          </View>
-        </Pressable>
-      </View>
-    );
-  };
   return (
     <View style={styles.container}>
       <View style={styles.area}>
-        <TextInput
-          style={styles.areaText}
-          onChangeText={(text) => setRegion(text)}
+        <TouchableOpacity
+          onPress={
+            // (text) => setRegion(text) 우선 변경 안되게
+            console.log("지역변경")
+          }
         >
-          {region}
-        </TextInput>
-        <Button title="변경" onPress={() => getRegion(region)}></Button>
+          <Text style={styles.areaText}>{region}</Text>
+        </TouchableOpacity>
+        {/* <Button title="변경" onPress={() => getRegion(region)}></Button> */}
       </View>
       <Animated.FlatList
-        data={data}
-        keyExtractor={(item) => item.key}
+        data={filteredBreweryInfo.slice(0, 7)}
+        keyExtractor={(item, index) => index}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         pagingEnabled={true}
@@ -154,14 +143,6 @@ const HomeScreen = () => {
           { useNativeDriver: true }
         )}
         renderItem={renderItem}
-      />
-      <FlatList
-        data={filteredBreweryInfo.slice(0, 5)}
-        keyExtractor={(item, index) => index}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled={true}
-        renderItem={(item, index) => renderTextItem(item, index)}
       />
     </View>
   );
@@ -196,6 +177,7 @@ const styles = StyleSheet.create({
   },
   brewery_info: {
     // position: "absolute",
+    marginTop: 30,
     alignItems: "center",
     justifyContent: "center",
     // backgroundColor: "green",
@@ -203,6 +185,7 @@ const styles = StyleSheet.create({
   },
   activityText: {
     // backgroundColor: "red",
+    color: "gray",
     marginBottom: 10,
     fontSize: 20,
     fontWeight: "400",
@@ -260,11 +243,13 @@ const styles = StyleSheet.create({
   },
   area: {
     marginTop: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    position:'absolute',
+    right:width * .85,
+    paddingTop: width * 0.1
+    
   },
   areaText: {
-    fontSize: 28,
+    fontSize: 20,
   },
 });
 

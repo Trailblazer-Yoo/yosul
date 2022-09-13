@@ -42,7 +42,7 @@ const handleSignOut = async () => {
 };
 
 function UserProfile({ userInfo, navigation }) {
-  // console.log(userInfo)
+  console.log(userInfo.myBookmarksPosts.length)
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
@@ -127,7 +127,7 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 글
                 </Text>
-                <Text style={{ fontSize: 13 }}>13</Text>
+                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksPosts.length}</Text>
               </View>
               <View
                 style={{
@@ -139,7 +139,7 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 전통주
                 </Text>
-                <Text style={{ fontSize: 13 }}>13</Text>
+                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksDrinks.length}</Text>
               </View>
             </View>
           </View>

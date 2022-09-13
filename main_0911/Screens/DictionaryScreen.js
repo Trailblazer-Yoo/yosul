@@ -47,10 +47,12 @@ export default function DictionaryScreen({ navigation }) {
           <HeartIcon
             item={item}
             currentUserEmail={firebase.auth().currentUser.email}
+            screenState={false}
           />
           <BookmarkIcon
             item={item}
             currentUserEmail={firebase.auth().currentUser.email}
+            screenState={false}
           />
         </View>
       </View>

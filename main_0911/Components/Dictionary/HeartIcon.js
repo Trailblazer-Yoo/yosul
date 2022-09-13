@@ -1,11 +1,11 @@
-import { Text, Pressable } from "react-native";
-import React, { useState } from "react";
+import { Text, Pressable, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Octicons } from "@expo/vector-icons";
 import firebase from "../../firebase";
 
 const db = firebase.firestore();
 
-const HeartIcon = ({ item, currentUserEmail }) => {
+const HeartIcon = ({ item, currentUserEmail, screenState }) => {
   const [currentLikesStatus, setcurrentLikesStatus] = useState(
     !item.likesByUsers.includes(currentUserEmail)
   );
@@ -30,18 +30,28 @@ const HeartIcon = ({ item, currentUserEmail }) => {
       setCurrentLength(currentLength - 1);
     }
     db.collection("global").doc("drinks").update(update_dict);
-    db.collection('users').doc(currentUserEmail).update(update_mine)
     setcurrentLikesStatus(!currentLikesStatus);
+    db.collection("users").doc(currentUserEmail).update(update_mine);
   };
 
   return (
     <Pressable onPress={handleLike}>
-      {currentLikesStatus ? (
-        <Octicons name="heart" size={27} color="gray" />
-      ) : (
-        <Octicons name="heart-fill" size={27} color="red" />
-      )}
-      <Text>{currentLength.toString()}</Text>
+      <View
+        style={{
+          alignItems: "center",
+          flexDirection: screenState ? "row" : "column",
+        }}
+      >
+        {currentLikesStatus ? (
+          <Octicons name="heart" size={27} color="gray" />
+        ) : (
+          <Octicons name="heart-fill" size={27} color="red" />
+        )}
+        <Text
+        style={{marginLeft: screenState ? 15 : 0,
+        fontSize:16}}
+        >{currentLength.toString()}</Text>
+      </View>
     </Pressable>
   );
 };

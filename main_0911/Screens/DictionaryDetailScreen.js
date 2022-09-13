@@ -5,69 +5,199 @@ import {
   Dimensions,
   Image,
   Linking,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
+import firebase from "../firebase";
+import HeartIcon from "../Components/Dictionary/HeartIcon";
+import BookmarkIcon from "../Components/Dictionary/BookmarkIcon";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const window = Dimensions.get('window')
+const window = Dimensions.get("window");
+const db = firebase.firestore();
 
 export default function DictionaryDetailScreen({ route }) {
   const item = route.params.item;
   const imageArray = {
-    "0": require("../assets/soolType/0.jpg"),
-    "1": require("../assets/soolType/1.jpg"),
-    "2": require("../assets/soolType/2.jpg"),
-    "3": require("../assets/soolType/3.jpg"),
-    "4": require("../assets/soolType/4.jpg"),
-  }
+    0: require("../assets/soolType/0.jpg"),
+    1: require("../assets/soolType/1.jpg"),
+    2: require("../assets/soolType/2.jpg"),
+    3: require("../assets/soolType/3.jpg"),
+    4: require("../assets/soolType/4.jpg"),
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.uppercontainer}>
-        <Image style={styles.img} source={imageArray[item.typeCode]} />
-        <View>
-        <Text>{item.soolName}</Text>
-          <Text>분류: {item.soolType}</Text>
-          <Text>주재료: {item.soolMaterial}</Text>
-          <Text>도수: {item.soolAlcohol}</Text>
-          <Text>용량: {item.soolCapacity}</Text>
+    <SafeAreaView style={styles.remain}>
+      <ScrollView style={styles.container}>
+        <View style={styles.uppercontainer}>
+          <Image style={styles.img} source={imageArray[item.typeCode]} />
+          <View>
+            <Text style={styles.titletext}>{item.soolName}</Text>
+            <Text style={styles.listtext}>분류 : {item.soolType}</Text>
+            <Text style={styles.listtext}>도수 :{item.soolAlcohol}</Text>
+            <Text style={styles.listtext}>용량 : {item.soolCapacity}</Text>
+            <Text style={styles.listtext}>
+              지역 :{" "}
+              {item.breweryAddress === "None"
+                ? " 정보없음 "
+                : item.breweryAddress.substr(
+                    0,
+                    item.breweryAddress.indexOf(
+                      " ",
+                      item.breweryAddress.indexOf(" ") + 1
+                    )
+                  )}
+            </Text>
+            <Text style={styles.listtext}>도수 :{item.soolAlcohol}</Text>
+            <Text style={styles.listtext}>분류 : {item.soolType}</Text>
+            <View style={styles.iconwrapper}>
+              <HeartIcon
+                item={item}
+                currentUserEmail={firebase.auth().currentUser.email}
+                screenState={true}
+              />
+              <BookmarkIcon
+                item={item}
+                currentUserEmail={firebase.auth().currentUser.email}
+                screenState={true}
+              />
+            </View>
+          </View>
         </View>
-      </View>
-      <View>
-        <Text>수상 내역: {item.soolPrize}</Text>
-        <Text>어울리는 음식: {item.soolMatchFood}</Text>
-        <Text>양조장: {item.breweryName}</Text>
-        <Text>주소: {item.breweryAddress}</Text>
-        <Text>전화번호: {item.breweryPhone}</Text>
-        <Text onPress={() => Linking.openURL(item.breweryHomepage)}>홈페이지로 이동</Text>
-        <Text>상세: {item.soolDetailInfo}</Text>
-        <Text>기타: {item.soolEtc}</Text>
-      </View>
-    </View>
+        <View>
+          {!item.soolDetailInfo ? (
+            <></>
+          ) : (
+            <View style={{ marginTop: 25 }}>
+              <Text style={styles.contenttitle}>저희 술은</Text>
+              <Text style={styles.contents}>{item.soolDetailInfo}</Text>
+            </View>
+          )}
+          <View style={{ marginTop: 50 }}>
+            <Text style={styles.contenttitle}>다음으로 만들었습니다!</Text>
+            <Text>{item.soolMaterial}</Text>
+          </View>
+          {!item.soolPrize ? (
+            <></>
+          ) : (
+            <View style={{ marginTop: 50 }}>
+              <Text style={styles.contenttitle}>이런 경력도 있습니다!</Text>
+              <Text>{item.soolPrize}</Text>
+            </View>
+          )}
+          {!item.soolMatchFood ? (
+            <></>
+          ) : (
+            <View style={{ marginTop: 50 }}>
+              <Text style={styles.contenttitle}>
+                함께 드시면 더욱 좋습니다!
+              </Text>
+              <Text>{item.soolMatchFood}</Text>
+            </View>
+          )}
+          {!item.breweryName ? (
+            <></>
+          ) : (
+            <View style={{ marginTop: 50 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.contenttitle}>
+                  직접 방문해보시는건 어떤가요?
+                </Text>
+              </View>
+              <Text>양조장 : {item.breweryName}</Text>
+            </View>
+          )}
+          {!item.breweryAddress ? (
+            <></>
+          ) : (
+            <Text>상세주소: {item.breweryAddress}</Text>
+          )}
+          {!item.breweryPhone ? (
+            <></>
+          ) : (
+            <Text>전화번호: {item.breweryPhone}</Text>
+          )}
+          {!item.breweryHomepage ? (
+            <></>
+          ) : (
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => Linking.openURL(item.breweryHomepage)}
+            >
+              <MaterialCommunityIcons
+                name="search-web"
+                size={20}
+                color="black"
+              />
+              <Text>홈페이지 방문을 원하면 클릭해주세요!</Text>
+            </TouchableOpacity>
+          )}
+          {!item.soolEtc ? (
+            <></>
+          ) : (
+            <View style={{ marginTop: 50 }}>
+              <Text style={styles.contenttitle}>기타이력</Text>
+              <Text>{item.soolEtc}</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  remain: { flex: 1, backgroundColor: "#fff", paddingVertical: 35 },
   container: {
-    flex: 1,
     backgroundColor: "#fff",
-    padding: 30
+    paddingHorizontal: 30,
   },
   uppercontainer: {
-    // width:window.width/2,
-    // height:window.width/2,
+    width: window.width / 2.3,
     flexDirection: "row",
+  },
+  titletext: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: -2,
+    marginBottom: 10,
+  },
+  iconwrapper: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  listtext: {
+    fontSize: 14,
+  },
+  contenttitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  contents: {
+    fontSize: 16,
   },
   header: {
     fontSize: 30,
     marginBottom: 10,
   },
   img: {
-    width:window.width/2.2,
-    height:window.width/2.2,
+    width: window.width / 2.3,
+    height: window.width / 2.3,
     resizeMode: "contain",
     marginBottom: 10,
-    borderColor:'black',
-    borderWidth:5,
-    borderRadius:30,
-    marginRight:15,
+    borderColor: "black",
+    borderWidth: 5,
+    borderRadius: 30,
+    marginRight: 15,
   },
 });

@@ -24,6 +24,7 @@ import Post from "../Components/Community/Post";
 import PostDetail from "../Components/Community/PostDetail";
 import EditProfile from "../Components/Profile/EditProfile";
 import NotificationScreen from "./NotificationScreen";
+import BreweryDetailScreen from "./BreweryDetailSreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // creates object for Stack Navigator
@@ -32,14 +33,15 @@ const HomeScreenStack = () => {
   return (
     <Stack.Navigator 
     screenOptions={({ route }) => {
-      if (route.name === "Home") {
+      if (route.name === "HomeScreen") {
         return screenOptions1
       } else {
         return screenOptions2;
       }
     }}
   >
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="BreweryDetailScreen" component={BreweryDetailScreen} options={{ headerTitle: "상세" }}/>
     </Stack.Navigator>
   );
 };
@@ -162,13 +164,8 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="HomeStack"
-      screenOptions={({ route }) => {
-        if (route.name === "HomeStack") {
-          return { ...screenOptions3, ...{ tabBarStyle: transOptions } };
-        } else {
-          return screenOptions3;
-        }
-      }}
+      screenOptions={screenOptions3
+      }
     >
       <Tab.Screen
         name="HomeStack"

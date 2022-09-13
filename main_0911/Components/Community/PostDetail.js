@@ -7,20 +7,23 @@ import {
   Pressable,
   View,
   Image,
-  Button,
+  SafeAreaView,
+  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import post, { POSTS } from "../../data/post";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
+const {width, height} = Dimensions.get('window')
+
 export function PostDetail({ route, navigation }) {
   const post = route.params.item;
   const date = new Date(post.createdAt.seconds*1000)
+  console.log('포스트', post)
   console.log(date)
 
-  console.log(post)
     return (
-      <View style={styles.postContainer}>
+      <SafeAreaView style={styles.postContainer}>
         <View style={styles.postUserData}>
           <TouchableOpacity>
             <View
@@ -118,15 +121,15 @@ export function PostDetail({ route, navigation }) {
         >{date.getMonth()}.
           {date.getDate()}
         </Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
 const styles = StyleSheet.create({
   postContainer: {
     justifyContent: "center",
-    width: "100%",
-    height: 640,
+    width: width,
+    height: width * 1.41,
   },
   postUserData: {
     flexDirection: "row",

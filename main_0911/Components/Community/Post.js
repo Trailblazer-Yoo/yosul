@@ -4,20 +4,16 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Dimensions,
   Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Divider } from "react-native-elements";
 import {
   AntDesign,
   Feather,
   FontAwesome,
   SimpleLineIcons,
 } from "@expo/vector-icons";
-import ImageView from "react-native-image-viewing";
-import ImageModal from "react-native-image-modal";
 import firebase from "../../firebase";
 
 const db = firebase.firestore();
@@ -85,7 +81,6 @@ const Post = ({ posts, navigation }) => {
 
   return (
     <View style={{ flex: 1 / 2, marginBottom: 30 }}>
-      <Divider width={2} orientation="vertical" />
       <Pressable
         onPress={() =>
           navigation.push("PostDetail", { id: posts.id, item: posts })
@@ -96,9 +91,6 @@ const Post = ({ posts, navigation }) => {
       </Pressable>
       <View style={{ marginHorizontal: 15, marginTop: 10 }}>
         <Tag posts={posts} />
-        {/* <Caption posts={posts} />
-                    <CommentsSection posts={posts} />
-                    <Comment posts={posts} /> */}
         <View style={styles.FooterIconWrapper}>
           <View style={styles.lefeFooterIconsContainer}>
             <Pressable onPress={() => likesHandleLike(posts)}>
@@ -124,34 +116,44 @@ const Post = ({ posts, navigation }) => {
   );
 };
 
-const PostImage = ({ posts }) => (
-  <View style={{ flex: 1, width: "99%", height: 300, marginTop: 3 }}>
-    <Image
-      style={{
-        width: window.width * 0.49,
-        height: window.width * 0.69,
-        borderRadius: 10,
-      }}
-      source={{
-        uri: posts.imageArray[0],
-      }}
-    />
-  </View>
-);
+const PostImage = ({ posts }) => {
+  const width = window.width * 0.49;
+  const height = window.width * 0.49 * 1.41;
+  return (
+    <View style={{ flex: 1, width: window.width * 0.49 * 1.45, marginTop: 3 }}>
+      <Image
+        style={{
+          width,
+          height,
+          borderRadius: 10,
+        }}
+        source={{
+          uri: posts.imageArray[0],
+        }}
+      />
+    </View>
+  );
+};
 
 const PostHeader = ({ posts }) => (
   <View
     style={{
       flexDirection: "row",
       justifyContent: "space-between",
-      marginTop: 5,
+      marginTop: 10,
       alignItems: "center",
-      width: window.width,
+      width: window.width * 0.49,
     }}
   >
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Image source={{ uri: posts.profile_picture }} style={styles.story} />
-      <Text style={{ color: "black", marginLeft: 5, fontWeight: "700" }}>
+      <Text style={{ color: "black", marginLeft: 10, fontWeight: "700" }}>
         {posts.user}
       </Text>
     </View>
@@ -159,61 +161,36 @@ const PostHeader = ({ posts }) => (
 );
 
 const Tag = ({ posts }) => (
-  <View style={{ flexDirection: "row", marginTop: 15 }}>
+  <View
+    style={{flexDirection:'row', marginTop: 2, width: window.width * 0.49, flexWrap:'wrap' }}
+  >
     {posts.tags.map((tag, index) => (
-      <View key={index}>
-        <Text style={{ color: "black" }}>
-          <Text
-            style={{
-              backgroundColor: "#c0e8e0",
-            }}
-          >
-            {"#"}
-            {tag}
+      <View
+        key={index}
+        style={{
+          // justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View>
+          <Text style={{ color: "black", flexWrap: "wrap" }}>
+            <Text
+              style={{
+                backgroundColor: "#c0e8e0",
+                flexWrap: "wrap",
+                flex: 1,
+              }}
+            >
+              {"#"}
+              {tag}
+            </Text>
+            {"  "}
           </Text>
-          {"  "}
-        </Text>
+        </View>
       </View>
     ))}
   </View>
 );
-
-// 내용 어느정도 이상 넘어가면 펼치기로 하기!
-// const Caption = ({ posts }) => (
-//     <View style={{  width:"100%" }}>
-//         <Text style={{ color: 'black' }}>
-//             <Text style={{ fontWeight: '600' }}></Text>
-//             <Text> {posts.caption}</Text>
-//         </Text>
-//     </View>
-// )
-
-// const CommentsSection = ({ posts }) => (
-//     <View style={{ flex:1 , width:"100%" }}>
-//         <View style={{ alignItems: 'flex-end', justifyContent: 'center', }}>
-//             <Text style ={{marginTop: 5,fontSize: 10}}>{posts.date}</Text>
-//         </View>
-//         {!!posts.comments.length && (
-//             <Text style={{ color: 'gray' }}>
-//                 View{posts.comments.length > 1 ? ' all' : ''} {posts.comments.length}{' '}
-//                 {posts.comments.length > 1 ? 'comments' : 'comment'}
-//             </Text>
-//         )}
-//     </View>
-// )
-
-// const Comment = ({ posts }) => (
-//     <>
-//         {posts.comments.map((comment, index) => (
-//             <View key={index} style={{ flexDirection: 'row', width:"100%" }}>
-//                 <Text style={{ color: 'black' }}>
-//                     <Text style={{ fontWeight: '600' }}>{comment.user}</Text>{' '}
-//                     {comment.comment}
-//                 </Text>
-//             </View>
-//         ))}
-//     </>
-// )
 
 const HeartIcon = ({ posts }) => (
   <View style={styles.box}>
@@ -246,12 +223,12 @@ const BookmarkIcon = ({ posts }) => (
   <View style={styles.box}>
     {!posts.bookmarks_by_users.includes(firebase.auth().currentUser.email) ? (
       <FontAwesome name="bookmark-o" size={20} color="black" />
-      ) : (
-        <FontAwesome name="bookmark" size={20} color="yellow" />
-        )}
+    ) : (
+      <FontAwesome name="bookmark" size={20} color="yellow" />
+    )}
     <Text
       style={{ color: "black", fontWeight: "350", marginLeft: 5, bottom: -2 }}
-      >
+    >
       {posts.bookmarks_by_users.length.toLocaleString("en")}
     </Text>
   </View>

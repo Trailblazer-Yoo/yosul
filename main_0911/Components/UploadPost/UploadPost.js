@@ -273,7 +273,7 @@ const UploadPost = ({ navigation, route }) => {
                 </View>
               )}
               <Text style={{
-                marginTop: 10,
+                marginTop: 15,
                 fontSize: 15
               }}> 태그 작성 </Text>
               <Pressable
@@ -309,7 +309,7 @@ const UploadPost = ({ navigation, route }) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     style={styles.onelinetext}
-                    placeholder="  본문을 입력해주세요"
+                    placeholder="본문을 입력해주세요"
                     placeholderTextColor="gray"
                     multiline={true}
                     maxLength={500}
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   uploadphotowrapper: {
-    height: window.width * 0.87,
+    height: window.width * 0.87 * 1.41,
     backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
@@ -358,8 +358,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   imagearraywrapper: {
-    width: window.width / 5 - 3,
-    height: window.width / 5 - 3,
+    width: window.width / 5,
+    height: window.width / 5 * 1.41,
     borderRadius: 5,
     resizeMode: "cover",
     marginHorizontal: 1,
@@ -394,6 +394,7 @@ const styles = StyleSheet.create({
   textInputStyle: {
     height: 40,
     marginTop: 10,
+    marginBottom: 10,
     borderWidth: 1,
     direction: "row",
     justifyContent: "center",

@@ -24,7 +24,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("screen");
 
 const PLACEHOLDER_IMG =
-  "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
+'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'
 
 function SetProfile2({ navigation }) {
   const SetProfileSchema = Yup.object().shape({
