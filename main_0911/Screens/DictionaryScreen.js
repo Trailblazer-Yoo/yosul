@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   iconcontainer: {
-    marginTop: 4,
+    marginTop: 3,
     alignItems: "center",
   },
 });

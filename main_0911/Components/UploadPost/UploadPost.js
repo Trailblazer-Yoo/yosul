@@ -163,7 +163,7 @@ const UploadPost = ({ navigation, route }) => {
         .collection("posts")
         .add({
           imageArray: remoteImageArray,
-          user: currentLoggedInUser.username,
+          nickname: currentLoggedInUser.nickname,
           profile_picture: currentLoggedInUser.profilePicture,
           owner_uid: firebase.auth().currentUser.uid,
           owner_email: firebase.auth().currentUser.email,

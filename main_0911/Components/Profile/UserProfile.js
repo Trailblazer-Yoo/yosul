@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,17 +6,13 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import ImageModal from "react-native-image-modal";
-import { Ionicons } from "@expo/vector-icons";
 import { Divider } from "react-native-elements";
 import firebase from "../../firebase";
 import {
-  AntDesign,
-  Feather,
-  FontAwesome,
-  SimpleLineIcons,
+  SimpleLineIcons,Ionicons
 } from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
@@ -41,8 +37,18 @@ const handleSignOut = async () => {
   ]);
 };
 
-function UserProfile({ userInfo, navigation }) {
-  console.log(userInfo.myBookmarksPosts.length)
+function UserProfile({ userInfo, navigation, mypostslen }) {
+  const [UserInfo, setUserInfo] = useState({
+    nickname: "",
+    myBookmarksPosts: [],
+    myBookmarksDrinks: [],
+  });
+
+  useEffect(() => {
+    if (userInfo !== undefined){
+    setUserInfo(userInfo)}
+  }, [userInfo]);
+
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
@@ -84,12 +90,12 @@ function UserProfile({ userInfo, navigation }) {
                 style={{ marginTop: 5, flexDirection: "row" }}
                 onPress={() =>
                   navigation.navigate("EditProfile", {
-                    userInfo: userInfo,
+                    userInfo: UserInfo,
                   })
                 }
               >
                 <Text style={styles.headerText}>
-                  닉네임 : {userInfo.nickname}
+                  닉네임 : {UserInfo.nickname}
                 </Text>
                 <SimpleLineIcons name="pencil" size={17} color="grey" />
               </TouchableOpacity>
@@ -115,7 +121,7 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   내가 쓴 글
                 </Text>
-                <Text style={{ fontSize: 13 }}>12</Text>
+                <Text style={{ fontSize: 13 }}>{mypostslen}</Text>
               </View>
               <View
                 style={{
@@ -127,7 +133,9 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 글
                 </Text>
-                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksPosts.length}</Text>
+                <Text style={{ fontSize: 13 }}>
+                  {UserInfo.myBookmarksPosts.length}
+                </Text>
               </View>
               <View
                 style={{
@@ -139,7 +147,9 @@ function UserProfile({ userInfo, navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 15 }}>
                   저장한 전통주
                 </Text>
-                <Text style={{ fontSize: 13 }}>{userInfo.myBookmarksDrinks.length}</Text>
+                <Text style={{ fontSize: 13 }}>
+                  {UserInfo.myBookmarksDrinks.length}
+                </Text>
               </View>
             </View>
           </View>
@@ -151,6 +161,7 @@ function UserProfile({ userInfo, navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   rootContainer: {
     width: window.width,

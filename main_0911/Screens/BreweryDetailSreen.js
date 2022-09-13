@@ -9,6 +9,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ImageBackground,
+  Pressable
 } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -106,7 +107,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             navigation.push("BreweryDetailScreen", { id: index, item: item })
           }
         >
-          <Image style={styles.img} source={{ uri: item.firstimage }} />
+          <Image style={styles.img} source={{  uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG }} />
           <View style={styles.info}>
             <Text style={styles.name}>{item.title}</Text>
             <Text style={styles.text}>시작: {item.eventstartdate}</Text>

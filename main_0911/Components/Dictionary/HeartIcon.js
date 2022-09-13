@@ -43,9 +43,9 @@ const HeartIcon = ({ item, currentUserEmail, screenState }) => {
         }}
       >
         {currentLikesStatus ? (
-          <Octicons name="heart" size={27} color="gray" />
+          <Octicons name="heart" size={25} color="gray" />
         ) : (
-          <Octicons name="heart-fill" size={27} color="red" />
+          <Octicons name="heart-fill" size={25} color="red" />
         )}
         <Text
         style={{marginLeft: screenState ? 15 : 0,

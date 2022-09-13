@@ -1,7 +1,6 @@
-import { StyleSheet, TouchableOpacity, Image, Text, View, SafeAreaView, ScrollView, FlatList, Pressable } from 'react-native';
+import { SafeAreaView, FlatList } from 'react-native';
 import Post from '../Components/Community/Post'
-import { useEffect, useState } from 'react';
-import { POSTS } from '../data/post'; 
+import React, { useEffect, useState } from 'react';
 import firebase from '../firebase'
 
 const db = firebase.firestore()
@@ -32,21 +31,5 @@ const CommunityScreen = ({navigation}) => {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex :1,
-    justifyContent: "flex-start",
-    alignItems: "flex-start"
-  },
-  box: {
-    width: '50%',
-    height: '50%',
-    padding: 5
-  },
-  inner: {
-    flex: 1/2
-  },
-})
 
 export default CommunityScreen

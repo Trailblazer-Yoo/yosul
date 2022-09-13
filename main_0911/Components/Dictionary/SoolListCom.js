@@ -36,12 +36,13 @@ const SoolListCom = ({ item, index, navigation }) => {
         <Text style={styles.name}>{item.soolName}</Text>
         <Text style={styles.text}>
           지역 :{" "}
-          {item.breweryAddress === ' None ' || item.breweryAddress ==='' ?
+          {item.breweryAddress === ' None ' || item.breweryAddress === undefined ?
           "정보없음"
           :
           item.breweryAddress.substr(
             0,
             item.breweryAddress.indexOf(
+
               " ",
               item.breweryAddress.indexOf(" ") + 1
             )

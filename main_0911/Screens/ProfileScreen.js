@@ -21,23 +21,23 @@ const db = firebase.firestore();
 
 const ProfileScreen = ({ navigation }) => {
   const [loading2, setLoading2] = useState(true);
-  const [userInfo, setUserInfo] = useState([]);
   const [bookmarkPosts, setBookmarkPosts] = useState([]);
   // const [posts, setPosts] = useState([]);
   const [soolList, setSoolList] = useState([]);
 
   // UserProfile 및 기본 정보 데이터 (param : userInfo)
-  useEffect(() => {
-    const unsubscribe = db
-      .collection("users")
-      .where("owner_uid", "==", firebase.auth().currentUser.uid)
-      .limit(1)
-      .onSnapshot((snapshot) =>
-        snapshot.docs.map((doc) => {
-          setUserInfo(doc.data());
-        })
+  const getUserInfo = () => {
+    const data = []
+    db.collection("users")
+      .doc(firebase.auth().currentUser.email)
+      .onSnapshot((snapshot) => 
+        data.push(snapshot.data())
       );
-    return unsubscribe;
+    return data
+  };
+
+  const userInfo = useMemo(() => {
+    return getUserInfo();
   }, []);
 
   // 내가 쓴 글에 들어갈 데이터 (params : posts)
@@ -60,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
       .collection("posts")
       // .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
-          snapshot.docs.map((post) => data.push({ id: post.id, ...post.data() }))
+        snapshot.docs.map((post) => data.push({ id: post.id, ...post.data() }));
       });
     return data;
   };
@@ -68,6 +68,7 @@ const ProfileScreen = ({ navigation }) => {
   const posts = useMemo(() => {
     return getPosts();
   }, []);
+
 
   // 찜한 전통주에 들어갈 데이터 (params : sulList)
   const getSoolDocs = async () => {
@@ -90,18 +91,24 @@ const ProfileScreen = ({ navigation }) => {
     const data = [];
     for (let i = 0; i < bookmarkdata.length; i++) {
       Object.entries(bookmarkdata[i]).map(async ([email, postid]) => {
-        // console.log(email, postid)
-        const tmp = (await db.collection("users").doc(email).collection('posts').doc(postid).get()).data()
-        data.push({id:postid, ...tmp})
+        const tmp = (
+          await db
+            .collection("users")
+            .doc(email)
+            .collection("posts")
+            .doc(postid)
+            .get()
+        ).data();
+        data.push({ id: postid, ...tmp });
       });
     }
-    setBookmarkPosts(data)
+    setBookmarkPosts(data);
   };
 
   // setLoading2(false);
   useEffect(() => {
     getBookmarksPosts();
-    setLoading2(false)
+    setLoading2(false);
   }, []);
 
   // 내가 쓴 글에 들어갈 컴포넌트
@@ -130,7 +137,7 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   // 게시물 다시보기에 들어갈 컴포넌트
-  const BookmarkPostsStack = () =>{
+  const BookmarkPostsStack = () => {
     const renderPosts = (itemData) => {
       return (
         <Posts
@@ -158,7 +165,7 @@ const ProfileScreen = ({ navigation }) => {
   const MyDrinksStack = () => {
     return (
       <MyDrinks
-        mydrinks={userInfo.myBookmarkDrinks}
+        mydrinks={userInfo[0].myBookmarkDrinks}
         soolList={soolList}
         currentUserEmail={firebase.auth().currentUser.email}
         navigation={navigation}
@@ -174,41 +181,41 @@ const ProfileScreen = ({ navigation }) => {
       </View>
     );
   };
-  // console.log(userInfo);
 
   return (
-    <View style={styles.containertop}>
-      <UserProfile userInfo={userInfo} navigation={navigation} />
-      <Tab.Navigator screenOptions={() => screenOptions}>
-        {/* firebase storage에서 데이터를 매우 많이 불러오므로 HomeScreen으로 component 우선 사용 */}
-        <Tab.Screen
-          name="내가 쓴 글"
-          component={HomeScreen} // MyPostsStack
-          navigation={navigation}
-        />
-        <Tab.Screen
-          name="게시물 다시보기"
-          component={HomeScreen} // BookmarkPostsStack
-          navigation={navigation}
-        />
-        <Tab.Screen
-          name="찜한 전통주"
-          component={HomeScreen} // MyDrinksStack
-          navigation={navigation}
-        />
-      </Tab.Navigator>
+    <SafeAreaView style={styles.containertop}>
       {loading2 === true ? (
         <View style={styles.loading}>
           <ActivityIndicator
-            color="#C0E8E0"
+            color="grey"
+            style={{ marginTop: 10 }}
             size="large"
-            style={{ opacity: 1.5 }}
           />
         </View>
       ) : (
-        <></>
+        <>
+          <UserProfile userInfo={userInfo[0]} navigation={navigation} mypostslen={posts.length}/>
+          <Tab.Navigator screenOptions={() => screenOptions}>
+            {/* firebase storage에서 데이터를 매우 많이 불러오므로 HomeScreen으로 component 우선 사용 */}
+            <Tab.Screen
+              name="내가 쓴 글"
+              component={HomeScreen} // MyPostsStack
+              navigation={navigation}
+            />
+            <Tab.Screen
+              name="게시물 다시보기"
+              component={HomeScreen} // BookmarkPostsStack
+              navigation={navigation}
+            />
+            <Tab.Screen
+              name="찜한 전통주"
+              component={HomeScreen} // MyDrinksStack
+              navigation={navigation}
+            />
+          </Tab.Navigator>
+        </>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -233,7 +240,7 @@ const styles = StyleSheet.create({
         ? getStatusBarHeight(true)
         : StatusBar.currentHeight,
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   loading: {
     position: "absolute",

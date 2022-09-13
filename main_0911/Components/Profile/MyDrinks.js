@@ -17,17 +17,17 @@ import firebase from "../../firebase";
 const window = Dimensions.get("window");
 const db = firebase.firestore();
 
-const MyDrinks = ({ mydrinks, soolList, currentUserEmail, navigation }) => {
+const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
   const [drinks, setDrinks] = useState([]);
   const isFocused = navigation.isFocused();
 
   useEffect(() => {
     const data = [];
-    if (mydrinks !== undefined) {
+    if (userInfo !== undefined) {
+      const mydrinks = userInfo[0].myBookmarksDrinks
       for (let i = 0; i < mydrinks.length; i++) {
         data.push(soolList[mydrinks[i]]);
       }
-      console.log("매번 바뀌는 중");
     }
     setDrinks(data);
   }, [isFocused]);

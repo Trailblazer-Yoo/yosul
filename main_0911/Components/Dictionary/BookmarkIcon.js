@@ -44,9 +44,9 @@ const BookmarkIcon = ({ item, currentUserEmail, screenState }) => {
         }}
       >
         {currentBookmarkStatus ? (
-          <Octicons name="star" size={27} color="gray" />
+          <Octicons name="star" size={25} color="gray" />
         ) : (
-          <Octicons name="star-fill" size={27} color="yellow" />
+          <Octicons name="star-fill" size={25} color="yellow" />
         )}
         <Text style={{ marginLeft: screenState ? 15 : 0, fontSize: 16 }}>
           {currentLength.toString()}

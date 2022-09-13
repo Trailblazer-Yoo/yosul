@@ -13,9 +13,9 @@ const db = firebase.firestore();
 
 const Posts = ({ posts, index, navigation }) => {
   return (
-    <View style={{ flex: 1 / 2, marginBottom: 30 }}>
+    <View style={{ flex: 1 / 2, marginBottom: 0 }}>
       <Pressable
-        style={{ flex: 1, width: "99%", height: 300, marginTop: 3 }}
+        style={{ flex: 1, width: window.width * 0.49, height: window.width * 0.49 * 1.41, marginTop: 3 }}
         onPress={() =>
           navigation.push("PostDetail", { id: index, item: posts })
         }
@@ -29,8 +29,8 @@ const Posts = ({ posts, index, navigation }) => {
 const PostImage = ({ posts }) => (
   <Image
     style={{
-      width: "100%",
-      height: 300,
+      width: window.width * 0.49,
+      height: window.width * 0.49 * 1.41,
       borderRadius: 10,
     }}
     source={{
@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   imgstyle: {
-    width: window.width / 2 - 4,
-    height: window.width / 1.4,
+    width: window.width * 0.49,
+    height: window.width * 0.49 * 1.41,
     borderRadius: 10,
     resizeMode: "cover",
     marginHorizontal: 1,
