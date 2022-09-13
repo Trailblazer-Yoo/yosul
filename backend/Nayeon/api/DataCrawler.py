@@ -10,7 +10,7 @@ from firebase_admin import firestore
 class Firebase_updater:
     def __init__(self):
         db_url = 'https://kakao-test1.firebaseio.com/'
-        cred = credentials.Certificate("kakao-test1-firebase-adminsdk-crjqj-a1b52b8196.json")
+        cred = credentials.Certificate("kakao-test1-firebase-adminsdk-crjqj-29c7f4adb4.json")
         firebase_admin.initialize_app(cred, {'databaseURL':db_url})
         self.db = firestore.client()
 
@@ -79,7 +79,7 @@ class Firebase_updater:
             except:
                 pass
 
-            soolDetailInfo = bs.find('dd', {'class':'intro'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
+            soolDetailInfo = bs.find('dd', {'class':'intro'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ').replace('&amp;', '').replace('amp;', '').replace('lt;', '').replace('gt;', '').replace('&#039;', '').replace('&quot;', '').replace('#039;', '').replace('quot;', '').replace(';', '')
             soolMatchFood = bs.find('dd', {'class':'food'}).find('div', {'class':'text'}).text.replace('\r','').replace('\n','').replace('\t','').replace('+', ', ').replace('/', ', ')
             breweryName = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find('span').text.replace('+', ', ').replace('/', ', ')
             breweryAddress = bs.find('dd', {'class':'place'}).find('div', {'class':'text'}).find_all('span')[1].text
