@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: (isValid) => ({
     // position: "absolute",
-    marginTop: 20,
+    marginTop: 40,
     width: "100%",
     alignItems: "center",
     backgroundColor: isValid ? "#C0E8E0" : "#444",
