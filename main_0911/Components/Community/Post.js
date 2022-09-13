@@ -47,7 +47,7 @@ const Post = ({ posts, navigation }) => {
         myLikesPosts: currentLikeStatus
           ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
           : firebase.firestore.FieldValue.arrayRemove(myLikePost),
-      notification: currentLikeStatus
+        notification: currentLikeStatus
           ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
           : firebase.firestore.FieldValue.arrayRemove(myLikePost),
       });
@@ -135,8 +135,32 @@ const PostImage = ({ posts }) => {
           uri: posts.imageArray[0],
         }}
       />
-      <View style={{position:'absolute', top: 10, right: 5, borderRadius: 20, backgroundColor:'#5d5e5d', opacity:0.6, width: 35, justifyContent: 'center', alignItems:'center'}}>
-        <Text style={{color: 'white', alignItems: 'center', justifyContent: 'center'}}>1/{posts.imageArray.length}</Text> 
+      <View
+        style={{
+          position: "absolute",
+          top: 10,
+          left: width * 0.75,
+          borderRadius: 20,
+          backgroundColor: "#5d5e5d",
+          opacity: 0.35,
+          width: 35,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {posts.imageArray.length !== 1 ? (
+          <Text
+            style={{
+              color: "white",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            +{posts.imageArray.length}
+          </Text>
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );
@@ -169,7 +193,12 @@ const PostHeader = ({ posts }) => (
 
 const Tag = ({ posts }) => (
   <View
-    style={{flexDirection:'row', marginTop: 2, width: window.width * 0.49, flexWrap:'wrap' }}
+    style={{
+      flexDirection: "row",
+      marginTop: 2,
+      width: window.width * 0.49,
+      flexWrap: "wrap",
+    }}
   >
     {posts.tags.map((tag, index) => (
       <View

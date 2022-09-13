@@ -329,13 +329,14 @@ const UploadPost = ({ navigation, route }) => {
                           fontWeight: "500",
                           color: "white",
                           margin: 25,
-                          marginTop: 5
+                          marginTop: 21
                         }}
                       >
                         설정 완료
                       </Text>
                     </TouchableOpacity>
                   </View>
+                  <View style={{height:300}}></View>
             </View>
           </ScrollView>
           {loading === true ? (

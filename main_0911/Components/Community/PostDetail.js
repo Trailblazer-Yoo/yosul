@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   Pressable,
+  TextInput,
   View,
   Image,
   ScrollView,
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import post, { POSTS } from "../../data/post";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import firebase from "../../firebase";
 
@@ -116,7 +116,7 @@ export function PostDetail({ route, navigation }) {
         <Text style={{ fontSize: 14, marginLeft: 5 }}>
           Liked by{" "}
           <Text style={{ fontWeight: "700" }}>
-              {post.likes_by_users[0].username} and others
+              {post.likes_by_users.length} and others
             </Text>
         </Text>
       </TouchableOpacity>

@@ -6,7 +6,6 @@ import SignupScreen from "./Screens/SignupScreen";
 import BottomTabs from "./Screens/BottomTabs";
 import KakaoLogin from "./Components/Login/KakaoLogin";
 import SetProfileScreen from "./Screens/SetProfileScreen";
-import PreferredDrinkScreen from "./Screens/PreferredDrinkScreen";
 import { Entypo } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();

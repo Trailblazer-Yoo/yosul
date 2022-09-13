@@ -1,0 +1,23 @@
+npm install @react-navigation/native
+npm install react-native-safe-area-context
+npm install @react-navigation/stack
+npm install react-native-gesture-handler
+npm install @react-navigation/bottom-tabs
+npm install @react-navigation/material-top-tabs
+npm install react-native-tab-view
+npm i @react-native-async-storage/async-storage
+npm install react-native-status-bar-height
+npm install firebase
+npm install formik
+npm install yup
+npm install react-native-webview
+npm install email-validator
+npm install react-native-elements
+npm i expo-clipboard
+npm install react-native-image-modal
+npm install react-native-fast-image
+npm install react-native-pager-view
+npm i @expo/vector-icons
+# npm install --save @react-native-clipboard/clipboard
+expo install expo-image-picker
+# npm install react-native-image-picker
