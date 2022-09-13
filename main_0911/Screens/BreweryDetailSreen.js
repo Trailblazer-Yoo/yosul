@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Pressable,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { Divider } from "react-native-elements";
@@ -18,9 +18,8 @@ import Snackbar from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 
 export default function BreweryDetailScreen({ navigation, route }) {
-
   const PLACEHOLDER_IMG =
-  "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
+    "https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png";
   let today = new Date();
   let year = today.getFullYear();
   let month = today.getMonth();
@@ -67,7 +66,12 @@ export default function BreweryDetailScreen({ navigation, route }) {
   const renderListItemForAttraction = ({ item, index }) => {
     return (
       <View style={{ justifyContent: "center", marginTop: 20 }}>
-        <Image style={styles.img} source={{ uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG }} />
+        <Image
+          style={styles.img}
+          source={{
+            uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG,
+          }}
+        />
         <View style={styles.info}>
           <Text style={styles.name}>{item.title}</Text>
           <View
@@ -102,20 +106,42 @@ export default function BreweryDetailScreen({ navigation, route }) {
   const renderListItemForEvent = ({ item, index }) => {
     return (
       <View>
-        <Pressable
-          onPress={() =>
-            navigation.push("BreweryDetailScreen", { id: index, item: item })
-          }
-        >
-          <Image style={styles.img} source={{  uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG }} />
-          <View style={styles.info}>
-            <Text style={styles.name}>{item.title}</Text>
-            <Text style={styles.text}>시작: {item.eventstartdate}</Text>
-            <Text style={styles.text}>종료: {item.eventenddate}</Text>
-            <Text style={styles.text}>주소: {item.addr1}</Text>
-            <Text style={styles.text}>전화번호: {item.tel}</Text>
-          </View>
-        </Pressable>
+        <Image
+          style={styles.festivalImg}
+          source={{
+            uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG,
+          }}
+        />
+        <View style={styles.info}>
+          <Text style={styles.name}>{item.title}</Text>
+          <Text style={styles.festivalText}>
+            일정 : {item.eventstartdate} ~ {item.eventenddate}
+          </Text>
+          <TouchableOpacity
+            onPress={async () => {
+              const addr1 = item.addr1;
+              await Clipboard.setStringAsync(addr1);
+              if (Clipboard.hasStringAsync()) {
+                alert("복사 완료");
+                console.log(addr1);
+              }
+            }}
+          >
+            <Text style={styles.copyFestivalText}>주소: {item.addr1}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={async () => {
+              const tel = item.tel;
+              await Clipboard.setStringAsync(tel);
+              if (Clipboard.hasStringAsync()) {
+                alert("복사 완료");
+                console.log(tel);
+              }
+            }}
+          >
+            <Text style={styles.copyFestivalText}>전화번호: {item.tel}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -143,7 +169,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             }}
           >
             <Text style={{ fontSize: 16, color: "#393E59", marginBottom: 15 }}>
-              {item.activity_name}
+              {item.activityName}
             </Text>
           </View>
           <View
@@ -202,7 +228,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               style={styles.icon}
               source={require("../assets/barrel.png")}
             />
-            <Text style={styles.infomationText}>{item.sul_type}</Text>
+            <Text style={styles.infomationText}>{item.soolType}</Text>
           </View>
           <View style={styles.detailText}>
             <Image style={styles.icon} source={require("../assets/time.png")} />
@@ -257,18 +283,9 @@ export default function BreweryDetailScreen({ navigation, route }) {
         </View>
         {attraction.length === 0 ? null : (
           <View style={styles.attraction}>
-            <Text
-              style={{
-                fontSize: 23,
-                fontWeight: "bold",
-                marginBottom: 20,
-                marginLeft: 15,
-              }}
-            >
-              같이 방문하면 좋은 관광지
-            </Text>
+            <Text style={styles.recommendTitle}>같이 방문하면 좋은 관광지</Text>
             <FlatList
-              // horizontal={true}
+              horizontal={true}
               data={attraction.slice(0, 5)}
               renderItem={renderListItemForAttraction}
             />
@@ -276,7 +293,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
         )}
         {event.length === 0 ? null : (
           <View style={styles.tourEvent}>
-            <Text>
+            <Text style={styles.recommendTitle}>
               {item.address.substr(
                 0,
                 item.address.indexOf(" ", item.address.indexOf(" ") + 1)
@@ -321,7 +338,7 @@ const styles = StyleSheet.create({
   },
   tourEvent: {
     flex: 1,
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
     marginBottom: 20,
   },
   img: {
@@ -336,6 +353,17 @@ const styles = StyleSheet.create({
     // marginLeft: 22,
     backgroundColor: "#C0E8E0",
   },
+  festivalImg: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").width * 0.67,
+    resizeMode: "contain",
+    borderColor: "#fff",
+    borderRadius: 10,
+    marginRight: 20,
+    borderWidth: 1,
+    marginBottom: 10,
+    // marginLeft: 22,
+  },
   icon: {
     width: Dimensions.get("window").width / 20,
     height: Dimensions.get("window").width / 20,
@@ -349,6 +377,17 @@ const styles = StyleSheet.create({
   },
   infomationText: {
     fontSize: 17.5,
+  },
+  festivalText: {
+    fontSize: 15,
+    marginLeft: 27,
+    marginBottom: 4,
+  },
+  copyFestivalText: {
+    fontSize: 15,
+    marginLeft: 27,
+    marginBottom: 4,
+    textDecorationLine: "underline",
   },
   copyInfomationText: {
     fontSize: 17.5,
@@ -374,5 +413,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width / 17,
     justifyContent: "center",
     alignItems: "center",
+  },
+  recommendTitle: {
+    fontSize: 23,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginLeft: 15,
   },
 });
