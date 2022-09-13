@@ -43,7 +43,7 @@ function UserProfile({ navigation }) {
           }}
         >
           <TouchableOpacity onPress={handleSignOut}>
-            <Image source={require("../../assets/logout.png")} />
+            {/* <Image source={require("../../assets/logout.png")} /> */}
           </TouchableOpacity>
         </View>
         <View style={styles.backgroundimg} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import {
@@ -23,7 +23,7 @@ const ProfileScreen = ({ navigation }) => {
   const [loading2, setLoading2] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
   const [bookmarkPosts, setBookmarkPosts] = useState([]);
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [soolList, setSoolList] = useState([]);
 
   // UserProfile 및 기본 정보 데이터 (param : userInfo)
@@ -41,16 +41,32 @@ const ProfileScreen = ({ navigation }) => {
   }, []);
 
   // 내가 쓴 글에 들어갈 데이터 (params : posts)
-  useEffect(() => {
+  // useEffect(() => {
+  //   db.collection("users")
+  //     .doc(firebase.auth().currentUser.email)
+  //     .collection("posts")
+  //     // .orderBy("createdAt", "desc")
+  //     .onSnapshot((snapshot) => {
+  //       setPosts(
+  //         snapshot.docs.map((post) => ({ id: post.id, ...post.data() }))
+  //       );
+  //     });
+  // }, []);
+
+  const getPosts = () => {
+    const data = [];
     db.collection("users")
       .doc(firebase.auth().currentUser.email)
       .collection("posts")
       // .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
-        setPosts(
-          snapshot.docs.map((post) => ({ id: post.id, ...post.data() }))
-        );
+          snapshot.docs.map((post) => data.push({ id: post.id, ...post.data() }))
       });
+    return data;
+  };
+
+  const posts = useMemo(() => {
+    return getPosts();
   }, []);
 
   // 찜한 전통주에 들어갈 데이터 (params : sulList)
