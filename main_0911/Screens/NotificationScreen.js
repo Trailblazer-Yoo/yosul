@@ -30,6 +30,7 @@ export default function NotificationScreen({ navigation }) {
           id: post.id,
           caption: post.data()["caption"],
           likes_By_Users: post.data()["likes_by_users"],
+          user_profiles: '',
           cnt: post.data()["likes_by_users"].length,
           thumbnailImage: post.data().imageArray[0],
         }))

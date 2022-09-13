@@ -46,6 +46,9 @@ const Post = ({ posts, navigation }) => {
         myLikesPosts: currentLikeStatus
           ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
           : firebase.firestore.FieldValue.arrayRemove(myLikePost),
+      notification: currentLikeStatus
+          ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
+          : firebase.firestore.FieldValue.arrayRemove(myLikePost),
       });
   };
 

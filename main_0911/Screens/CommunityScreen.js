@@ -26,7 +26,7 @@ const CommunityScreen = ({navigation}) => {
           renderItem={renderPosts}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          style={{ margin: 3 }}
+          style={{ margin: 3 , backgroundColor:'#fff' }}
             />
     </SafeAreaView>
   )

@@ -9,10 +9,10 @@ import {
   Dimensions,
   TouchableOpacity,
   ImageBackground,
-  Pressable
+  Pressable,
+  ScrollView
 } from "react-native";
 import React from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { Divider } from "react-native-elements";
 import Snackbar from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
