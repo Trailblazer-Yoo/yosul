@@ -17,15 +17,15 @@ const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.76;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.47;
 
-const images = [
-  "../../assets/brewery/그린영농조합.png",
-  "../../assets/brewery/밝은세상영농조합.png",
-  "../../assets/brewery/배상면주가.png",
-  "../../assets/brewery/배혜정도.png",
-  "../../assets/brewery/산머루농원.png",
-  "../../assets/brewery/술샘.png",
-  "../../assets/brewery/좋은술.png",
-];
+const images = {
+  "그린영농조합": require('../assets/brewery/greenyoungnong.png'),
+  "밝은세상영농조합": require('../assets/brewery/balguensaesang.png'),
+  "배상면주가" : require('../assets/brewery/baesangmyeon.png'),
+  "배혜정도가": require('../assets/brewery/baehyejungdoga.png'),
+  "산머루농원": require('../assets/brewery/sanmeoru.png'),
+  "술샘": require('../assets/brewery/soolsam1.png'),
+  "좋은술":require('../assets/brewery/joeunsool.png'),
+};
 
 const HomeScreen = ({ navigation }) => {
   const [region, setRegion] = useState("경기도");
@@ -54,18 +54,23 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const filterBreweryInfo = () => {
-    const data = [];
+    const data1 = [];
     for (let i = 0; i < breweryInfo.length; i++) {
       if (breweryInfo[i]["areaCode"] === areaCode) {
-        data.push({ ...breweryInfo[i], image: images[i] });
+        data1.push({ ...breweryInfo[i] });
       }
     }
-    data.sort(function compare(a, b) {
+    data1.sort(function compare(a, b) {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
 
-    console.log("결과", data);
-    setFilteredBreweryInfo(data);
+    const data2 = []
+    for (var d of data1){
+      let key = d['name']
+        data2.push({...d, ...{image: images[d['name']]}})
+      }
+      
+    setFilteredBreweryInfo(data2);
   };
 
   useEffect(() => {
@@ -76,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
     filterBreweryInfo(areaCode);
   }, [breweryInfo]);
 
-  console.log(filteredBreweryInfo);
+  console.log(filteredBreweryInfo.image);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const renderItem = ({ item, index }) => {
@@ -102,7 +107,7 @@ const HomeScreen = ({ navigation }) => {
             }
           >
             <Animated.Image
-              source={{ uri: item.photo }}
+              source={ item.image }
               style={{ ...styles.imagestyle, transform: [{ translateX }] }}
             />
           </Pressable>

@@ -54,10 +54,6 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
-        <Image
-          style={styles.backgroundimg}
-          source={require("../../assets/backgroundimg.png")}
-        />
         <View
           style={{
             backgroundColor: "white",
@@ -190,11 +186,10 @@ const styles = StyleSheet.create({
   profileimg: {
     width: window.width*0.23,
     height: window.height/9,
-    borderRadius: 100,
+    borderRadius: window.width * 0.5,
     borderWidth: 1.5,
-    justifyContent: "center",
+    justifyContent:'center',
     borderColor: "#C0E8E0",
-    marginLeft: window.width/2.5,
   },
   textbox: {
     width: window.width - 170,

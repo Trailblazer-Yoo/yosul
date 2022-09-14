@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import React, { useState, useEffect, useMemo } from "react";
+import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import HeartIcon from "../Dictionary/HeartIcon";
 import BookmarkIcon from "../Dictionary/BookmarkIcon";
 import SoolListCom from "../Dictionary/SoolListCom";
@@ -16,18 +10,33 @@ const db = firebase.firestore();
 
 const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
   const [drinks, setDrinks] = useState([]);
-  const isFocused = navigation.isFocused();
+  // console.log("아나시발", userInfo);
+  // console.log("내 드링크", userInfo[0]);
+  // console.log("슈밟슐발", drinks);
 
   useEffect(() => {
     const data = [];
-    if (userInfo !== undefined) {
-      const mydrinks = userInfo[0].myBookmarksDrinks
-      for (let i = 0; i < mydrinks.length; i++) {
-        data.push(soolList[mydrinks[i]]);
+    if (userInfo[0] !== undefined) {
+      const mydrinks = userInfo[0].myBookmarksDrinks;
+      for (var drink of mydrinks) {
+        data.push(soolList[drink]);
       }
+      setDrinks(data);
     }
-    setDrinks(data);
-  }, [isFocused]);
+  }, []);
+
+  console.log("시발시발시발", drinks);
+
+  // useEffect(() => {
+  //   const data = [];
+  //   if (userInfo !== undefined) {
+  //     const mydrinks = userInfo.myBookmarksDrinks
+  //     for (let i = 0; i < mydrinks.length; i++) {
+  //       data.push(soolList[mydrinks[i]]);
+  //     }
+  //   }
+  //   setDrinks(data);
+  // }, []);
 
   const renderListItem = ({ item, index }) => {
     return (
@@ -41,22 +50,23 @@ const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      {drinks === [] ? (
-        <View>
-          <Text>Hello</Text>
-        </View>
-      ) : (
+  if (
+    (drinks === []) |
+    (!!drinks.includes(undefined))
+  ) {
+    return <></>;
+  } else {
+    return (
+      <View style={styles.container}>
         <FlatList
           data={drinks}
           keyExtractor={(item, index) => index.toString()}
           horizontal={false} // numColumn을 설정하기 위해서 horizontal=false설정
           renderItem={renderListItem}
         />
-      )}
-    </View>
-  );
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

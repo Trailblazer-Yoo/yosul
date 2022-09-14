@@ -6,6 +6,8 @@ import {
   Pressable,
 } from "react-native";
 
+const window = Dimensions.get('screen')
+
 const Posts = ({ posts, index, navigation }) => {
   return (
     <View style={{ flex: 1 / 2, marginBottom: 0 }}>

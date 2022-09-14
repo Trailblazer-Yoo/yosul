@@ -72,7 +72,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             uri: !!item.firstimage ? item.firstimage : PLACEHOLDER_IMG,
           }}
         />
-        <View style={styles.info}>
+        <View style={{marginLeft:5}}>
           <Text style={styles.name}>{item.title}</Text>
           <View
             style={{
@@ -82,9 +82,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               marginHorizontal: 27,
             }}
           >
-            <Text style={styles.attractionText}>{item.addr1}</Text>
             <TouchableOpacity
-              style={styles.copyAttraction}
               onPress={async () => {
                 const address1 = item.addr1;
                 await Clipboard.setStringAsync(address1);
@@ -94,7 +92,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
                 }
               }}
             >
-              <Text style={{ fontSize: 15 }}>복사하기</Text>
+              <Text style={styles.attractionText}>{item.addr1}</Text>
             </TouchableOpacity>
           </View>
           <Divider />
@@ -149,9 +147,9 @@ export default function BreweryDetailScreen({ navigation, route }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View style={{}}>
+        <View>
           <Image
-            source={require("../assets/brewery1.png")}
+            source={item.image}
             style={{
               width: Dimensions.get("window").width,
               height: Dimensions.get("window").width * 0.85,
@@ -286,6 +284,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             <Text style={styles.recommendTitle}>같이 방문하면 좋은 관광지</Text>
             <FlatList
               horizontal={true}
+              pagingEnabled={true}
               data={attraction.slice(0, 5)}
               renderItem={renderListItemForAttraction}
               showsHorizontalScrollIndicator={false}
@@ -302,6 +301,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               행사
             </Text>
             <FlatList
+              pagingEnabled={true}
               horizontal={true}
               data={event.slice(0, 5)}
               renderItem={renderListItemForEvent}
@@ -349,7 +349,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     borderColor: "#C0E8E0",
     borderRadius: 10,
-    marginRight: 20,
     borderWidth: 1,
     marginBottom: 10,
     // marginLeft: 22,
@@ -361,7 +360,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     borderColor: "#fff",
     borderRadius: 10,
-    marginRight: 20,
     borderWidth: 1,
     marginBottom: 10,
     // marginLeft: 22,
@@ -406,6 +404,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     // marginRight: 40,
     marginBottom: 18,
+    textDecorationLine:'underline',
   },
   copyAttraction: {
     backgroundColor: "#C0E8E0",

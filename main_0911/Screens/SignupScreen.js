@@ -6,10 +6,10 @@ import { ProgressBar } from "react-native-paper";
 export function SignupScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <ProgressBar progress={0.5} color="#C0E8E0" />
       <View style={styles.logoContainer}>
         <Image source={require("../assets/logo2.png")} />
       </View>
+      {/* <ProgressBar progress={10} color="#C0E8E0" /> */}
       <SignupForm navigation={navigation} />
     </View>
   );

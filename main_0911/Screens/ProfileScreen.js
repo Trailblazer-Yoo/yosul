@@ -38,6 +38,7 @@ const ProfileScreen = ({ navigation }) => {
   const userInfo = useMemo(() => {
     return getUserInfo();
   }, []);
+  console.log(userInfo)
 
   const getPosts = () => {
     const data = [];
@@ -54,7 +55,6 @@ const ProfileScreen = ({ navigation }) => {
   const posts = useMemo(() => {
     return getPosts();
   }, []);
-
 
   // 찜한 전통주에 들어갈 데이터 (params : sulList)
   const getSoolDocs = async () => {
@@ -151,7 +151,7 @@ const ProfileScreen = ({ navigation }) => {
   const MyDrinksStack = () => {
     return (
       <MyDrinks
-        mydrinks={userInfo[0]}
+        userInfo={userInfo}
         soolList={soolList}
         currentUserEmail={firebase.auth().currentUser.email}
         navigation={navigation}
@@ -160,13 +160,13 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   // firebase storage에서 데이터를 매우 많이 불러오므로 이 페이지로 component 우선 사용
-  // const HomeScreen = () => {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <Text>넣을 화면</Text>
-  //     </View>
-  //   );
-  // };
+  const HomeScreen = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>넣을 화면</Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.containertop}>
@@ -182,20 +182,20 @@ const ProfileScreen = ({ navigation }) => {
         <>
           <UserProfile userInfo={userInfo[0]} navigation={navigation} mypostslen={posts.length}/>
           <Tab.Navigator screenOptions={() => screenOptions}>
-            {/* firebase storage에서 데이터를 매우 많이 불러오므로 HomeScreen으로 component 우선 사용 */}
+            
             <Tab.Screen
               name="내가 쓴 글"
-              component={MyPostsStack} // 
+              component={MyPostsStack}
               navigation={navigation}
             />
             <Tab.Screen
               name="게시물 다시보기"
-              component={BookmarkPostsStack} // 
+              component={BookmarkPostsStack} 
               navigation={navigation}
             />
             <Tab.Screen
               name="찜한 전통주"
-              component={MyDrinksStack} // 
+              component={MyDrinksStack} 
               navigation={navigation}
             />
           </Tab.Navigator>
