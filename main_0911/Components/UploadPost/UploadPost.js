@@ -19,6 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Formik } from "formik";
 import validUrl from "valid-url";
 import firebase from "../../firebase";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const db = firebase.firestore();
 const window = Dimensions.get("window");
@@ -296,7 +297,7 @@ const UploadPost = ({ navigation, route }) => {
               <Text
                 style={{
                   marginTop: 15,
-                  fontSize: 15,
+                  fontSize: RFPercentage(1.73),
                 }}
               >
                 {" "}
@@ -321,7 +322,7 @@ const UploadPost = ({ navigation, route }) => {
                   {errors.tags}
                 </Text>
               )}
-              <Text style={{ marginTop: 15, fontSize: 15 }}> 본문 작성 </Text>
+              <Text style={{ marginTop: 15, fontSize: RFPercentage(1.73) }}> 본문 작성 </Text>
               <View
                 style={{
                   borderWidth: 3,
@@ -353,7 +354,7 @@ const UploadPost = ({ navigation, route }) => {
                 >
                   <Text
                     style={{
-                      fontSize: 30,
+                      fontSize: RFPercentage(3.46),
                       fontWeight: "500",
                       color: "white",
                       margin: 23,

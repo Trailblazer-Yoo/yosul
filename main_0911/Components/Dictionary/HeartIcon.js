@@ -2,6 +2,7 @@ import { Text, Pressable, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Octicons } from "@expo/vector-icons";
 import firebase from "../../firebase";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const db = firebase.firestore();
 
@@ -49,7 +50,7 @@ const HeartIcon = ({ item, currentUserEmail, screenState }) => {
         )}
         <Text
         style={{marginLeft: screenState ? 15 : 0,
-        fontSize:16}}
+        fontSize:RFPercentage(1.84)}}
         >{currentLength.toString()}</Text>
       </View>
     </Pressable>

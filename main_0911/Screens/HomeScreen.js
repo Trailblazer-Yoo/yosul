@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import firebase from "../firebase";
 import { regionCode } from "../regionCode";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.76;
@@ -113,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
           </Pressable>
         </View>
         <View style={{ marginTop: width*0.012, marginRight: width*0.3 }}>
-          <Text style={{ fontSize: 8, color: "#444" }}>
+          <Text style={{ fontSize: RFPercentage(0.92), color: "#444" }}>
             출처 : 카카오맵 로드뷰 (https://map.kakao.com)
           </Text>
         </View>

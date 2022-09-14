@@ -12,6 +12,7 @@ import image1 from "../../assets/soolType/1.jpg"
 import image2 from "../../assets/soolType/2.jpg"
 import image3 from "../../assets/soolType/3.jpg"
 import image4 from "../../assets/soolType/4.jpg"
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const window = Dimensions.get("window");
 
@@ -77,14 +78,14 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "black",
-    fontSize: 17,
+    fontSize: RFPercentage(1.96),
     fontWeight: "600",
     marginBottom: 3,
     marginTop: 3,
   },
   text: {
     color: "black",
-    fontSize: 15,
+    fontSize: RFPercentage(1.73),
     marginBottom: 1,
   },
 });

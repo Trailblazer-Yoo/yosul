@@ -2,6 +2,7 @@ import { Text, Pressable, View } from "react-native";
 import React, { useState } from "react";
 import { Octicons } from "@expo/vector-icons";
 import firebase from "../../firebase";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const db = firebase.firestore();
 
@@ -48,7 +49,7 @@ const BookmarkIcon = ({ item, currentUserEmail, screenState }) => {
         ) : (
           <Octicons name="star-fill" size={25} color="yellow" />
         )}
-        <Text style={{ marginLeft: screenState ? 15 : 0, fontSize: 16 }}>
+        <Text style={{ marginLeft: screenState ? 15 : 0, fontSize: RFPercentage(1.84) }}>
           {currentLength.toString()}
         </Text>
       </View>

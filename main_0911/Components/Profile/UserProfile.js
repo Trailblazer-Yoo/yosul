@@ -12,6 +12,7 @@ import ImageModal from "react-native-image-modal";
 import { Divider } from "react-native-elements";
 import firebase from "../../firebase";
 import { SimpleLineIcons, Ionicons } from "@expo/vector-icons";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const window = Dimensions.get("window");
 
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   headerText: {
-    fontSize: window.width * 0.035,
+    fontSize: RFPercentage(2),
     color: "rgba(0,0,0,0.8)",
     fontWeight: "bold",
     marginHorizontal: 5,
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   listtext: {
     marginBottom: window.width * 0.017,
     fontWeight: "600",
-    fontSize: window.width * 0.03,
+    fontSize: RFPercentage(1.5),
   },
 
   logout: {
