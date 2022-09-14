@@ -86,6 +86,10 @@ const PostDetail = ({ route }) => {
     const myBookmarkPost = {};
     myBookmarkPost[post.owner_email] = post.id;
 
+    if (currentUserEmail===post.owner_email){
+      Alert.alert("오류", "내 글은 저장할 수 없습니다.");
+      return;
+    }
     db.collection("users")
       .doc(post.owner_email)
       .collection("posts")

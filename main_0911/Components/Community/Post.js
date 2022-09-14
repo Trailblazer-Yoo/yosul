@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
@@ -62,6 +63,10 @@ const Post = ({ posts, navigation }) => {
     const currentBookmarksStatus =
       !posts.bookmarks_by_users.includes(currentUserEmail);
 
+    if (currentUserEmail===posts.owner_email){
+      Alert.alert("오류", "내 글은 저장할 수 없습니다.");
+      return;
+    }
     db.collection("users")
       .doc(posts.owner_email)
       .collection("posts")
