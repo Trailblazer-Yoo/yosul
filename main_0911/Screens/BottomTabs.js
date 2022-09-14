@@ -1,8 +1,14 @@
-import React from "react";
+import React, {useEffect,useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Text, View, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import {
   MaterialCommunityIcons,
   Ionicons,
@@ -25,27 +31,47 @@ import PostDetail from "../Components/Community/PostDetail";
 import EditProfile from "../Components/Profile/EditProfile";
 import NotificationScreen from "./NotificationScreen";
 import BreweryDetailScreen from "./BreweryDetailSreen";
+import firebase from "../firebase";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator(); // creates object for Stack Navigator
+const db = firebase.firestore();
 
 const HomeScreenStack = () => {
+
   return (
-    <Stack.Navigator 
-    screenOptions={({ route }) => {
-      if (route.name === "HomeScreen") {
-        return screenOptions1
-      } else {
-        return screenOptions2;
-      }
-    }}
-  >
+    <Stack.Navigator
+      screenOptions={({ route }) => {
+        if (route.name === "HomeScreen") {
+          return screenOptions1;
+        } else {
+          return screenOptions2;
+        }
+      }}
+    >
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="BreweryDetailScreen" component={BreweryDetailScreen} options={{ headerTitle: "상세" }}/>
+      <Stack.Screen
+        name="BreweryDetailScreen"
+        component={BreweryDetailScreen}
+        options={{ headerTitle: "상세" }}
+      />
     </Stack.Navigator>
   );
 };
 const CommunityScreenStack = () => {
+  // const [notilen, setNotilen] = useState(0);
+  // useEffect(() => {
+  //   db.collection("users")
+  //     .doc(firebase.auth().currentUser.email)
+  //     .collection('posts')
+  //     .onSnapshot((snapshot) => {
+  //       if (snapshot.docChanges().length === 0) {
+  //         return;
+  //       }
+  //       setNotilen(snapshot.docChanges()[newIndex].length);
+  //     });
+  // }, []);
+
   return (
     <Stack.Navigator screenOptions={screenOptions2}>
       <Stack.Screen
@@ -56,12 +82,12 @@ const CommunityScreenStack = () => {
           headerRight: () => {
             return (
               <TouchableOpacity
-                style={{ paddingRight: 30 }}
+                style={{ paddingRight: 15 }}
                 onPress={() => navigation.push("NotificationScreen")}
               >
-                <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadBadgeText}>!</Text>
-                </View>
+                {/* <View style={styles.unreadBadge}>
+                  <Text style={styles.unreadBadgeText}>{notilen}</Text>
+                </View> */}
                 <Octicons name="bell-fill" size={24} color="black" />
               </TouchableOpacity>
             );
@@ -132,16 +158,13 @@ const ProfileScreenStack = () => {
     <Stack.Navigator
       screenOptions={({ route }) => {
         if (route.name === "ProfileScreen") {
-          return screenOptions1
+          return screenOptions1;
         } else {
           return screenOptions2;
         }
       }}
     >
-      <Stack.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-      />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen
         name="PostDetail"
         component={PostDetail}
@@ -162,11 +185,7 @@ const ProfileScreenStack = () => {
 
 const BottomTabs = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="HomeStack"
-      screenOptions={screenOptions3
-      }
-    >
+    <Tab.Navigator initialRouteName="HomeStack" screenOptions={screenOptions3}>
       <Tab.Screen
         name="HomeStack"
         component={HomeScreenStack}

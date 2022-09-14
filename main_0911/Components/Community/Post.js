@@ -18,6 +18,8 @@ import firebase from "../../firebase";
 
 const db = firebase.firestore();
 const window = Dimensions.get("window");
+const width = window.width * 0.49;
+const height = window.width * 0.49 * 1.41;
 
 // 사진 갯수 : post.imageArray.length
 const Post = ({ posts, navigation }) => {
@@ -84,7 +86,7 @@ const Post = ({ posts, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 / 2, marginBottom: 30 }}>
+    <View style={{ flex: 1 / 2, marginBottom: width * 0.1 }}>
       <Pressable
         onPress={() =>
           navigation.push("PostDetail", { id: posts.id, item: posts })
@@ -121,10 +123,9 @@ const Post = ({ posts, navigation }) => {
 };
 
 const PostImage = ({ posts }) => {
-  const width = window.width * 0.49;
-  const height = window.width * 0.49 * 1.41;
+
   return (
-    <View style={{ flex: 1, width: window.width * 0.49 * 1.45, marginTop: 3 }}>
+    <View style={{ width: window.width * 0.49 * 1.45, marginTop: 3, flexDirection:'row' }}>
       <Image
         style={{
           width,
@@ -135,33 +136,33 @@ const PostImage = ({ posts }) => {
           uri: posts.imageArray[0],
         }}
       />
-      <View
-        style={{
-          position: "absolute",
-          top: 10,
-          left: width * 0.75,
-          borderRadius: 20,
-          backgroundColor: "#5d5e5d",
-          opacity: 0.35,
-          width: 35,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
         {posts.imageArray.length !== 1 ? (
-          <Text
+          <View
             style={{
-              color: "white",
-              alignItems: "center",
+              right: width * 0.18,
+              top : width * 0.02,
+              borderRadius: 50,
+              backgroundColor: "#5d5e5d",
+              opacity: 0.8,
+              width: width*0.15,
+              height : width * 0.09,
               justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            +{posts.imageArray.length}
-          </Text>
+            <Text
+              style={{
+                color: "white",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              +{posts.imageArray.length}
+            </Text>
+          </View>
         ) : (
           <></>
         )}
-      </View>
     </View>
   );
 };

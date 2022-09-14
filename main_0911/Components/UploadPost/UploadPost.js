@@ -4,7 +4,7 @@ import {
   Text,
   Image,
   TextInput,
-  Button,
+  Alert,
   Dimensions,
   StyleSheet,
   SafeAreaView,
@@ -24,7 +24,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 
 const PLACEHOLDER_IMG =
-'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg'
+  "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/309/59932b0eb046f9fa3e063b8875032edd_crop.jpeg";
 
 // 허용된 것과 허용되지 않은 것들
 const uploadPostSchema = Yup.object().shape({
@@ -51,7 +51,7 @@ const UploadPost = ({ navigation, route }) => {
       .onSnapshot((snapshot) =>
         snapshot.docs.map((doc) => {
           setCurrentLoggedInUser({
-            username: doc.data().username,
+            username: doc.data().nickname,
             profilePicture: doc.data().profile_picture,
           });
         })
@@ -102,7 +102,11 @@ const UploadPost = ({ navigation, route }) => {
       return null;
     }
     if (index === (imageArray.length - 1).toString()) {
-      setImageArray([ImageData.uri, ...imageArray]);
+      setImageArray([
+        ...imageArray.slice(0, -1),
+        ImageData.uri,
+        imageArray.slice(-1)[0],
+      ]);
     } else {
       await imageArray.splice(index, 1, ImageData.uri);
       await setImageArray([...imageArray]);
@@ -129,9 +133,7 @@ const UploadPost = ({ navigation, route }) => {
   const uploadPost2Firebase = async (imagearray, caption, taglist) => {
     try {
       setLoading(true);
-      for (let i = 0; i < taglist.length; i++) {
-        const tag = await taglist[i];
-        console.log(tag);
+      for (var tag of taglist) {
         const update = {};
         if (items.includes(tag)) {
           update[`${tag}.count`] = dataSnapShot[tag].count + 1;
@@ -146,24 +148,25 @@ const UploadPost = ({ navigation, route }) => {
       const path = await `photos/${
         firebase.auth().currentUser.email
       }/${Date.now()}`;
-      for (let i = 0; i < imagearray.length; i++) {
-        const response = await fetch(imagearray[i]);
+      for (var image of imagearray) {
+        const response = await fetch(image);
         const blob = await response.blob();
-        const filename = await `${path}${imagearray[i].substring(
-          imagearray[i].lastIndexOf("/") + 1
+        const filename = await `${path}${image.substring(
+          image.lastIndexOf("/") + 1
         )}`;
-        let ref = firebase.storage().ref(filename);
+        let ref = await firebase.storage().ref(filename);
         await ref.put(blob);
         const remoteurl = await ref.getDownloadURL();
         await remoteImageArray.push(remoteurl);
       }
+      setLoading(false)
       const unsubscribe = await db
         .collection("users")
         .doc(firebase.auth().currentUser.email)
         .collection("posts")
         .add({
           imageArray: remoteImageArray,
-          nickname: currentLoggedInUser.nickname,
+          nickname: currentLoggedInUser.username,
           profile_picture: currentLoggedInUser.profilePicture,
           owner_uid: firebase.auth().currentUser.uid,
           owner_email: firebase.auth().currentUser.email,
@@ -195,7 +198,28 @@ const UploadPost = ({ navigation, route }) => {
   const ImageView = ({ item, index }) => {
     return (
       <TouchableOpacity
-        onPress={() => editImageArray(index.toString())}
+        onPress={
+          imageArray[index] === PLACEHOLDER_IMG
+            ? () => {
+                editImageArray(index.toString());
+              }
+            : () =>
+                Alert.alert("수정", "이 사진을 삭제 혹은 수정하시겠습니까?", [
+                  // 버튼 배열
+                  {
+                    text: "삭제",
+                    onPress: () => {
+                      setImageArray(imageArray.filter((array) => array !== item));
+                    },
+                  },
+                  {
+                    text: "수정",
+                    onPress: () => {
+                      editImageArray(index.toString());
+                    },
+                  },
+                ])
+        }
         onChange={imageArray}
       >
         <Image source={{ uri: item }} style={styles.imagearraywrapper} />
@@ -209,10 +233,7 @@ const UploadPost = ({ navigation, route }) => {
         caption: "",
       }}
       onSubmit={async (values) => {
-        const tmpArray = await [
-          thumbnailUrl,
-          ...imageArray.slice(undefined, imageArray.length - 1),
-        ];
+        const tmpArray = await [thumbnailUrl, ...imageArray.slice(0, -1)];
         uploadPost2Firebase(tmpArray, values.caption, tagList);
         console.log("성공적으로 업로드 되었습니다!");
       }}
@@ -272,10 +293,15 @@ const UploadPost = ({ navigation, route }) => {
                   />
                 </View>
               )}
-              <Text style={{
-                marginTop: 15,
-                fontSize: 15
-              }}> 태그 작성 </Text>
+              <Text
+                style={{
+                  marginTop: 15,
+                  fontSize: 15,
+                }}
+              >
+                {" "}
+                태그 작성{" "}
+              </Text>
               <Pressable
                 style={styles.textInputStyle}
                 onPress={() => navigation.navigate("SearchBar")}
@@ -295,48 +321,50 @@ const UploadPost = ({ navigation, route }) => {
                   {errors.tags}
                 </Text>
               )}
-              <Text style={{marginTop: 15, fontSize: 15}}> 본문 작성 </Text>
-              <View style={{
-                borderWidth: 3,
-                borderRadius: 5,
-                borderColor: "#C0E8E0",
-                marginTop: 10,
-                width: window.width * 0.93,
-                height: window.width * 0.39,
-                marginBottom: 20,
-              }}>
+              <Text style={{ marginTop: 15, fontSize: 15 }}> 본문 작성 </Text>
+              <View
+                style={{
+                  borderWidth: 3,
+                  borderRadius: 5,
+                  borderColor: "#C0E8E0",
+                  marginTop: 10,
+                  width: window.width * 0.93,
+                  height: window.width * 0.39,
+                  marginBottom: 20,
+                }}
+              >
                 <TextInput
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    style={styles.onelinetext}
-                    placeholder="본문을 입력해주세요"
-                    placeholderTextColor="gray"
-                    multiline={true}
-                    maxLength={500}
-                    onChangeText={handleChange("caption")}
-                    onBlur={handleBlur("caption")}
-                    value={values.caption}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={styles.onelinetext}
+                  placeholder="본문을 입력해주세요"
+                  placeholderTextColor="gray"
+                  multiline={true}
+                  maxLength={500}
+                  onChangeText={handleChange("caption")}
+                  onBlur={handleBlur("caption")}
+                  value={values.caption}
                 />
               </View>
               <View style={styles.buttonContainer(isValid)}>
-                    <TouchableOpacity
-                      style={styles.buttonDesign}
-                      onPress={handleSubmit}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 30,
-                          fontWeight: "500",
-                          color: "white",
-                          margin: 25,
-                          marginTop: 21
-                        }}
-                      >
-                        설정 완료
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{height:300}}></View>
+                <TouchableOpacity
+                  style={styles.buttonDesign}
+                  onPress={handleSubmit}
+                >
+                  <Text
+                    style={{
+                      fontSize: 30,
+                      fontWeight: "500",
+                      color: "white",
+                      margin: 25,
+                      marginTop: 21,
+                    }}
+                  >
+                    작성 완료
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ height: 300 }}></View>
             </View>
           </ScrollView>
           {loading === true ? (
@@ -376,7 +404,7 @@ const styles = StyleSheet.create({
   },
   imagearraywrapper: {
     width: window.width / 5,
-    height: window.width / 5 * 1.41,
+    height: (window.width / 5) * 1.41,
     borderRadius: 5,
     resizeMode: "cover",
     marginHorizontal: 1,
@@ -406,8 +434,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: "grey",
   },
-  onelinetext:{
-    marginLeft:5,
+  onelinetext: {
+    marginLeft: 5,
   },
   tags: {},
   loading: {
@@ -430,6 +458,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#009688",
     backgroundColor: "white",
-    borderRadius: 5
+    borderRadius: 5,
   },
 });
