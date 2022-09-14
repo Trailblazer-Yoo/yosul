@@ -4,13 +4,13 @@ import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCbm83Cp4qSZ4b6UDq15Ux6TmsCPncw0TQ",
-    authDomain: "yosul-bc7c8.firebaseapp.com",
-    projectId: "yosul-bc7c8",
-    storageBucket: "yosul-bc7c8.appspot.com",
-    messagingSenderId: "160421882753",
-    appId: "1:160421882753:web:c4eb0036ff1118f8639680"
-  };
+  apiKey: "AIzaSyASAYjykr8YIXU9T6BeQZHm_7TuoKYhc5U",
+  authDomain: "yosul-c4fd0.firebaseapp.com",
+  projectId: "yosul-c4fd0",
+  storageBucket: "yosul-c4fd0.appspot.com",
+  messagingSenderId: "433262248708",
+  appId: "1:433262248708:web:701948265dfeb2bcbd0651"
+};
 
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 

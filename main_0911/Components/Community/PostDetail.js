@@ -428,7 +428,7 @@ const PostComments = ({ comments }) => (
         >
           <Image 
           source={{ uri: comment.comment_profile_picture }} 
-                    style={{ width: 20, height: 20 }}
+                    style={{ width: 20, height: 20, marginRight:11 }}
                     borderRadius={50}
                     />
           <Text style={{ fontWeight: "700" }}>{comment.comment_nickname}</Text>
