@@ -270,7 +270,7 @@ const EditProfile = ({ route }) => {
                       fontWeight: "500",
                     }}
                   >
-                    주량
+                    주량(소주기준)
                   </Text>
                 </View>
                 <View
