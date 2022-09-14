@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   logout: { 
     alignItems: "flex-end", 
-    marginRight: 15,
+    marginRight: window.width/25,
     height : window.height/37 },
   profiletag: {
     borderRadius: 20,

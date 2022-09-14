@@ -391,6 +391,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: window.width * 0.98,
     backgroundColor: "white",
+    borderRadius: 10,
   },
   uploadphotowrapper: {
     height: window.width * 0.87 * 1.41,
@@ -398,7 +399,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     resizeMode: "cover",
-    borderRadius: 5,
+    borderRadius: 10,
     borderColor: "#C0E8E0",
     borderWidth: 3,
   },

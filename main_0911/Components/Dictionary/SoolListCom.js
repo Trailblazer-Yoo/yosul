@@ -13,6 +13,8 @@ import image2 from "../../assets/soolType/2.jpg"
 import image3 from "../../assets/soolType/3.jpg"
 import image4 from "../../assets/soolType/4.jpg"
 
+const window = Dimensions.get("window");
+
 const imageArray = {
   '0': image0,
   '1': image1,
@@ -32,7 +34,7 @@ const SoolListCom = ({ item, index, navigation }) => {
       {item.typeCode === 'undefined' ? null : (
         <Image style={styles.img} source={imageArray[`${item.typeCode}`]} />
       )}
-      <View>
+      <View style={{ justifyContent: "space-evenly" }}>
         <Text style={styles.name}>{item.soolName}</Text>
         <Text style={styles.text}>
           지역 :{" "}
@@ -67,8 +69,10 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     borderColor: "#C0E8E0",
     borderRadius: 20,
-    marginRight: 20,
+    marginRight: Dimensions.get("window").width / 27,
     borderWidth: 1,
+    marginTop: Dimensions.get("window").width / 30,
+    marginBottom: Dimensions.get("window").width / 30,
   },
   name: {
     color: "black",
