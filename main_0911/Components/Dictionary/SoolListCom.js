@@ -60,12 +60,13 @@ const SoolListCom = ({ item, index, navigation }) => {
 const styles = StyleSheet.create({
   listContainer: {
     flexDirection: "row",
-    color: "grey",
+    alignItems:'center',
     backgroundColor: "white",
   },
   img: {
     width: Dimensions.get("window").width / 5,
     height: Dimensions.get("window").width / 5,
+    backgroundColor:'red',
     resizeMode: "contain",
     borderColor: "#C0E8E0",
     borderRadius: 20,

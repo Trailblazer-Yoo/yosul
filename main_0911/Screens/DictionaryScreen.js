@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
   flatlistcontainer: {
     justifyContent: "space-between",
     flexDirection: "row",
-    width: Dimensions.get("window").width - 20,
-    height: (Dimensions.get("window").width - 20) / 4,
+    width: Dimensions.get("window").width * 0.95,
+    height: (Dimensions.get("window").width * 0.95) /4,
     padding: 8,
   },
   item: {

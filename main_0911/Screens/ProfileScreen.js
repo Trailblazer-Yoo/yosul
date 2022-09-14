@@ -189,7 +189,7 @@ const ProfileScreen = ({ navigation }) => {
               navigation={navigation}
             />
             <Tab.Screen
-              name="게시물 다시보기"
+              name="저장한 게시물"
               component={BookmarkPostsStack} 
               navigation={navigation}
             />

@@ -14,6 +14,7 @@ import HeartIcon from "../Components/Dictionary/HeartIcon";
 import BookmarkIcon from "../Components/Dictionary/BookmarkIcon";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Clipboard from "expo-clipboard";
 
 const window = Dimensions.get("window");
 const db = firebase.firestore();
@@ -71,7 +72,7 @@ export default function DictionaryDetailScreen({ route }) {
           ) : (
             <View style={{ marginTop: 25 }}>
               <Text style={styles.contenttitle}>저희 술은</Text>
-              <Text style={styles.contents}>{item.soolDetailInfo}</Text>
+              <Text>{item.soolDetailInfo}</Text>
             </View>
           )}
           <View style={{ marginTop: 50 }}>
@@ -117,12 +118,44 @@ export default function DictionaryDetailScreen({ route }) {
           {!item.breweryAddress ? (
             <></>
           ) : (
-            <Text>상세주소: {item.breweryAddress}</Text>
+            <TouchableOpacity
+              onPress={async () => {
+                const addr1 = item.breweryAddress;
+                await Clipboard.setStringAsync(addr1);
+                if (Clipboard.hasStringAsync()) {
+                  alert("복사 완료");
+                  console.log(addr1);
+                }
+              }}
+            >
+              <Text>
+                상세주소:{" "}
+                <Text style={{ textDecorationLine: "underline" }}>
+                  {item.breweryAddress}
+                </Text>
+              </Text>
+            </TouchableOpacity>
           )}
           {!item.breweryPhone ? (
             <></>
           ) : (
-            <Text>전화번호: {item.breweryPhone}</Text>
+            <TouchableOpacity
+              onPress={async () => {
+                const phone = item.breweryPhone;
+                await Clipboard.setStringAsync(phone);
+                if (Clipboard.hasStringAsync()) {
+                  alert("복사 완료");
+                  console.log(phone);
+                }
+              }}
+            >
+              <Text>
+                전화번호:{" "}
+                <Text style={{ textDecorationLine: "underline" }}>
+                  {item.breweryPhone}
+                </Text>
+              </Text>
+            </TouchableOpacity>
           )}
           {!item.breweryHomepage ? (
             <></>
@@ -182,9 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 4,
-  },
-  contents: {
-    fontSize: 16,
   },
   img: {
     width: window.width / 2.3,

@@ -11,9 +11,7 @@ import {
 import ImageModal from "react-native-image-modal";
 import { Divider } from "react-native-elements";
 import firebase from "../../firebase";
-import {
-  SimpleLineIcons,Ionicons
-} from "@expo/vector-icons";
+import { SimpleLineIcons, Ionicons } from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
 
@@ -43,49 +41,44 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
     nickname: "",
     myBookmarksPosts: [],
     myBookmarksDrinks: [],
-    profile_picture:''
+    profile_picture: "",
   });
 
   useEffect(() => {
-    if (userInfo !== undefined){
-    setUserInfo(userInfo)}
+    if (userInfo !== undefined) {
+      setUserInfo(userInfo);
+    }
   }, [userInfo]);
 
   return (
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
-        <View
-          style={{
-            backgroundColor: "white",
-          }}
-        >
-          <View style={styles.logout}>
-            <Ionicons
-              onPress={handleSignOut}
-              name="ios-settings-outline"
-              size={24}
-              color="black"
-            />
-          </View>
+        <View style={styles.logout}>
+          <Ionicons
+            onPress={handleSignOut}
+            name="ios-settings-outline"
+            size={24}
+            color="black"
+          />
         </View>
-        <View style={styles.backgroundimg} />
-        <View
-          style={{
-            backgroundColor: "white",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+
+        <View style={styles.profileimgback}>
           <ImageModal
             resizeMode="cover"
             style={styles.profileimg}
-            source={{uri:UserInfo.profile_picture}}
+            source={{ uri: UserInfo.profile_picture }}
             onRequestClose={() => setModalVisible(false)}
-          ></ImageModal>
+          />
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
           <View style={styles.textbox}>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <View style={{ alignItems: "center" }}>
               <TouchableOpacity
-                style={{ marginTop: 5, flexDirection: "row" }}
+                style={{ marginTop: window.width * 0.03, flexDirection: "row" }}
                 onPress={() =>
                   navigation.navigate("EditProfile", {
                     userInfo: UserInfo,
@@ -102,50 +95,45 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                marginTop: 13,
+                marginTop: window.width * 0.06,
               }}
             ></View>
-            <Divider style={{ marginTop: 20 }} />
+            <Divider style={{ marginVertical: window.width * 0.01 }} />
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: window.width * 0.05,
+              }}
             >
               <View
                 style={{
-                  marginTop: 20,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                  내가 쓴 글
-                </Text>
-                <Text style={{ fontSize: 13 }}>{mypostslen}</Text>
+                <Text style={styles.listtext}>내가 쓴 글</Text>
+                <Text style={styles.listtext}>{mypostslen}</Text>
               </View>
               <View
                 style={{
-                  marginTop: 20,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                  저장한 글
-                </Text>
-                <Text style={{ fontSize: 13 }}>
+                <Text style={styles.listtext}>저장한 게시물</Text>
+                <Text style={styles.listtext}>
                   {UserInfo.myBookmarksPosts.length}
                 </Text>
               </View>
               <View
                 style={{
-                  marginTop: 20,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                  저장한 전통주
-                </Text>
-                <Text style={{ fontSize: 13 }}>
+                <Text style={styles.listtext}>찜한 전통주</Text>
+                <Text style={styles.listtext}>
                   {UserInfo.myBookmarksDrinks.length}
                 </Text>
               </View>
@@ -153,61 +141,51 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
           </View>
         </View>
       </View>
-      <View>
-        <TouchableOpacity></TouchableOpacity>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   rootContainer: {
+    marginTop:window.width*0.02,
     width: window.width,
     height: window.width / 1.5,
-    justifyContent: "center",
     backgroundColor: "white",
-    
-  },
-  backgroundimg: {
-    width: window.width,
-    flex: 1,
-    backgroundColor: "rgba(250,250,250,0.8)",
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
   },
   headerText: {
-    fontSize: 15,
+    fontSize: window.width * 0.035,
     color: "rgba(0,0,0,0.8)",
-    marginLeft: 5,
     fontWeight: "bold",
-    marginRight: 5,
+    marginHorizontal: 5,
   },
+  profileimgback: {
+    left:window.width *0.38,
+    marginTop:window.width*0.03,
+
+   },
   profileimg: {
-    width: window.width*0.23,
-    height: window.height/9,
-    borderRadius: window.width * 0.5,
+    width: window.width * 0.23,
+    height: window.width * 0.23,
+    borderRadius: window.width,
     borderWidth: 1.5,
-    justifyContent:'center',
     borderColor: "#C0E8E0",
   },
   textbox: {
-    width: window.width - 170,
-    // borderRadius: 15,
-    // borderWidth: 1.6,
-    // borderColor: "black",
-    marginTop: 3,
-    marginBottom: 10,
-  },
-  logout: { 
-    alignItems: "flex-end", 
-    marginRight: window.width/25,
-    height : window.height/37 },
-  profiletag: {
-    borderRadius: 20,
+    marginTop: window.width * 0.02,
+    width: window.width * 0.7,
+    height: window.width * 0.3,
     justifyContent: "center",
-    backgroundColor: "#C0E8E0",
-    marginRight: 5,
+  },
+  listtext: {
+    marginBottom: window.width * 0.017,
+    fontWeight: "600",
+    fontSize: window.width * 0.03,
+  },
+
+  logout: {
+    alignItems: "flex-end",
+    marginRight: window.width * 0.03,
+    height: window.width * 0.06,
   },
 });
 

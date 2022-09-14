@@ -15,7 +15,7 @@ import { regionCode } from "../regionCode";
 
 const { width, height } = Dimensions.get("screen");
 const ITEM_WIDTH = width * 0.76;
-const ITEM_HEIGHT = ITEM_WIDTH * 1.47;
+const ITEM_HEIGHT = height * 0.518;
 
 const images = {
   "그린영농조합": require('../assets/brewery/greenyoungnong.png'),
@@ -112,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
             />
           </Pressable>
         </View>
-        <View style={{ marginTop: 5, marginRight: 110 }}>
+        <View style={{ marginTop: width*0.012, marginRight: width*0.3 }}>
           <Text style={{ fontSize: 8, color: "#444" }}>
             출처 : 카카오맵 로드뷰 (https://map.kakao.com)
           </Text>
@@ -163,64 +163,27 @@ const styles = StyleSheet.create({
         ? getStatusBarHeight(true)
         : StatusBar.currentHeight,
   },
-  today_brewery: {
-    fontSize: 30,
-    fontWeight: "bold",
-    paddingTop: 20,
-    paddingLeft: 20,
-    paddingBottom: 20,
-  },
   width: {
     flexDirection: "row",
     width: width,
     // paddingLeft: 10,
     justifyContent: "center",
   },
-  brewery_photo: {
-    height: 200,
-    width: 200,
-    borderRadius: 10,
-  },
   brewery_info: {
-    // position: "absolute",
-    marginTop: 30,
+    marginTop: width*0.07,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "green",
-    marginBottom: 30,
+    marginBottom: width*0.06,
   },
   activityText: {
-    // backgroundColor: "red",
     color: "gray",
-    marginBottom: 10,
-    fontSize: 20,
+    marginBottom: width*0.02,
+    fontSize: width*0.045,
     fontWeight: "400",
   },
   breweryName: {
-    fontSize: 30,
+    fontSize: width*0.08,
     fontWeight: "bold",
-  },
-  today_beer: {
-    fontSize: 30,
-    fontWeight: "bold",
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingBottom: 20,
-  },
-  beer_photo: {
-    height: 200,
-    width: 200,
-    borderRadius: 10,
-  },
-  beer_info: {
-    marginLeft: 30,
-    justifyContent: "center",
-  },
-  underbar: {
-    marginTop: 35,
-    marginBottom: 35,
-    alignItems: "center",
-    justifyContent: "center",
   },
   imagestyle: {
     width: ITEM_WIDTH * 1.2,
@@ -232,29 +195,23 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     overflow: "hidden",
     alignItems: "center",
-    borderRadius: 18,
+    borderRadius: width*0.04,
     // backgroundColor: "black",
   },
   framestyle: {
-    borderRadius: 18,
-    padding: 12,
+    borderRadius: width *0.04,
+    padding: width *0.033,
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOpacity: 0.5,
-    shadowRadius: 30,
+    shadowRadius: width*0.06,
     shadowOffset: {
       width: 0,
       height: 0,
     },
   },
-  area: {
-    marginTop: 15,
-    position: "absolute",
-    right: width * 0.435,
-    paddingTop: width * 0.1,
-  },
   areaText: {
-    fontSize: 17,
+    fontSize: width*0.05,
     opacity: 0.35,
     alignItems: "center",
   },
