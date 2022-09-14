@@ -1,10 +1,19 @@
-import { View, Text, Alert, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  StyleSheet,
+  Pressable,
+  Dimensions,
+} from "react-native";
 import React from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
 import firebase from "../../firebase";
+
+const window = Dimensions.get("window");
 
 const FindPassword = ({ navigation }) => {
   const FindPasswordFormSchema = Yup.object().shape({
@@ -27,7 +36,7 @@ const FindPassword = ({ navigation }) => {
     }
   };
   return (
-    <View>
+    <View style={{ backgroundColor: "#fff" }}>
       <Formik
         initialValues={{ email: "" }}
         onSubmit={(values) => {
@@ -38,28 +47,43 @@ const FindPassword = ({ navigation }) => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
-            <Text>이메일을 입력하세요</Text>
             <View
-              style={[
-                styles.inputField,
-                {
-                  borderColor:
-                    values.email.length < 1 || Validator.validate(values.email)
-                      ? "#ccc"
-                      : "red",
-                },
-              ]}
+              style={{
+                justifyContent: "flex-start",
+                alignItems: "center",
+                backgroundColor: "#fff",
+                height: window.height * 0.15,
+                marginTop: window.height * 0.2,
+              }}
             >
-              <TextInput
-                placeholderTextColor="#444"
-                placeholder="email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="email"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
-              />
+              <Text style={{ fontSize: 30 }}>
+                가입하신 이메일을 입력하세요.
+              </Text>
+            </View>
+            <View style={{ marginBottom: window.height * 0.12 }}>
+              <View
+                style={[
+                  styles.inputField,
+                  {
+                    borderColor:
+                      values.email.length < 1 ||
+                      Validator.validate(values.email)
+                        ? "#ccc"
+                        : "red",
+                  },
+                ]}
+              >
+                <TextInput
+                  placeholderTextColor="#444"
+                  placeholder="email"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="email"
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                  value={values.email}
+                />
+              </View>
             </View>
             <Pressable
               titleSize={20}
@@ -67,7 +91,7 @@ const FindPassword = ({ navigation }) => {
               onPress={handleSubmit}
               disabled={!isValid}
             >
-              <Text style={styles.buttonText}>로그인</Text>
+              <Text style={styles.buttonText}>비밀번호 찾기</Text>
             </Pressable>
           </>
         )}
