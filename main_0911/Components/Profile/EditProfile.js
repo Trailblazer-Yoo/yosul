@@ -85,6 +85,7 @@ const EditProfile = ({ route }) => {
       quality: 1,
     });
     if (ImageData.cancelled) {
+      setLoading(false)
       return null;
     }
     const image = ImageData.uri;

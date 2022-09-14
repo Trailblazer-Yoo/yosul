@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Modal,
@@ -19,6 +19,8 @@ import {
   FontAwesome,
   AntDesign,
 } from "@expo/vector-icons";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import firebase from "../../firebase";
 
 const db = firebase.firestore();
@@ -27,27 +29,30 @@ const width = window.width * 0.49;
 const height = window.width * 0.49 * 1.41;
 
 const PostDetail = ({ route }) => {
-  const [post, setPost] = useState(route.params.item);
-  // const [myInfo, setMyInfo] = useState(
-  //   db
-  //     .collection("users")
-  //     .doc(firebase.auth().currentUser.email)
-  //     .onSnapshot((snapshot) => myInfo.push(snapshot.data()))
-  // );
-  // console.log("포스트", post);
-  // console.log(post.imageArray);
+  const post = route.params.item;
+  const [currentLikeStatus, setLikesStatus] = useState(
+    !post.likes_by_users.includes(firebase.auth().currentUser.email)
+  );
+  const [currentBookmarksStatus, setBookmarkStatus] = useState(
+    !post.bookmarks_by_users.includes(firebase.auth().currentUser.email)
+  );
+  const [comments, setcomments] = useState([
+    { comment_nickname: "", comment_profile_picture: "", comment: "" },
+  ]);
+  useEffect(() => {
+    setcomments(post.comments);
+  }, []);
 
-  commentHandleLike = (post) => {
-    db.collection("users").doc(post.email).collection(post.id).update({
-      comments: firebase.firestore.FieldValue.arrayUnion(),
-    });
-  };
+  console.log(comments);
 
-  const likesHandleLike = async (post) => {
+  const SetCommentSchema = Yup.object().shape({
+    comment: Yup.string().required("댓글을 입력해주세요"),
+  });
+
+  const likesHandleLike = async (post, currentLikeStatus) => {
     const currentUserEmail = firebase.auth().currentUser.email;
     const myLikePost = {};
     myLikePost[post.owner_email] = post.id;
-    const currentLikeStatus = !post.likes_by_users.includes(currentUserEmail);
 
     db.collection("users")
       .doc(post.owner_email)
@@ -73,14 +78,13 @@ const PostDetail = ({ route }) => {
           ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
           : firebase.firestore.FieldValue.arrayRemove(myLikePost),
       });
+    setLikesStatus(!currentLikeStatus);
   };
 
-  const bookmarkHandleLike = async (post) => {
+  const bookmarkHandleLike = async (post, currentBookmarksStatus) => {
     const currentUserEmail = firebase.auth().currentUser.email;
     const myBookmarkPost = {};
     myBookmarkPost[post.owner_email] = post.id;
-    const currentBookmarksStatus =
-      !post.bookmarks_by_users.includes(currentUserEmail);
 
     db.collection("users")
       .doc(post.owner_email)
@@ -103,82 +107,209 @@ const PostDetail = ({ route }) => {
           ? firebase.firestore.FieldValue.arrayUnion(myBookmarkPost)
           : firebase.firestore.FieldValue.arrayRemove(myBookmarkPost),
       });
+    setBookmarkStatus(!currentBookmarksStatus);
+  };
+
+  const uploadComment = async (post, comment, comments) => {
+    console.log("왜안되");
+    const user = (
+      await db.collection("users").doc(firebase.auth().currentUser.email).get()
+    ).data();
+    const update = {
+      comment_nickname: user.nickname,
+      comment_profile_picture: user.profile_picture,
+      comment: comment,
+    };
+
+    await db
+      .collection("users")
+      .doc(post.owner_email)
+      .collection("posts")
+      .doc(post.id)
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion(update),
+      });
+    console.log(update);
+    const newcomments = [...comments, update];
+
+    console.log(newcomments);
+    setcomments(newcomments);
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <View style={{ flex: 1 }}>
-        <ScrollView style={styles.postContainer}>
-          <View
-            style={{
-              backgroundColor: "white",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 5,
-              height: window.width * 0.1,
-            }}
-          >
-            <PostHeader post={post} />
-            <PostDate post={post} />
-          </View>
-          <Image
-            style={{ width: "100%", height: "100%", resizeMode: "contain" }}
-            source={{ uri: post.imageArray[1] }}
-          />
+    <Formik
+      initialValues={{
+        comment: "",
+      }}
+      onSubmit={(values) => {
+        console.log(values.comment);
+        uploadComment(post, values.comment, comments);
+        console.log("들어갔다", values);
+      }}
+      validationSchema={SetCommentSchema}
+      validateOnMount={true}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <View style={{ flex: 1 }}>
+            <ScrollView style={styles.postContainer}>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingHorizontal: 5,
+                  height: window.width * 0.1,
+                }}
+              >
+                <PostHeader post={post} />
+                <PostDate post={post} />
+              </View>
+              <Image
+                style={{
+                  width: window.width * 0.87,
+                  height: window.width * 0.87 * 1.41,
+                  resizeMode: "contain",
+                }}
+                source={{ uri: post.imageArray[0] }}
+              />
 
-          <PostImage post={post} />
-          <View style={{ height: window.width * 0.1 }}>
-            <ScrollView
-              horizontal={true}
-              pagingEnabled={false}
-              showsHorizontalScrollIndicator={false}
-            >
-              <PostTag post={post} />
+              {/* <PostImage post={post} /> */}
+              <View
+                style={{
+                  height: window.width * 0.1,
+                  marginLeft: window.width * 0.03,
+                }}
+              >
+                <ScrollView
+                  horizontal={true}
+                  pagingEnabled={false}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  <PostTag post={post} />
+                </ScrollView>
+              </View>
+              <View style={{ marginLeft: window.width * 0.005 }}>
+                <View style={{ marginBottom: 10 }}>
+                  <LikesOthers post={post} />
+
+                  <PostCaption post={post} />
+                </View>
+                <PostComments comments={comments} />
+              </View>
+
+              <View style={styles.postOptionsContainer}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    width: window.width * 0.7,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => likesHandleLike(post, currentLikeStatus)}
+                  >
+                    <HeartIcon currentLikeStatus={currentLikeStatus} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      bookmarkHandleLike(post, currentBookmarksStatus)
+                    }
+                  >
+                    <BookmarkIcon
+                      currentBookmarksStatus={currentBookmarksStatus}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {/* 좋아요 수 */}
+              {/* 댓글 */}
+              {/* 시간 */}
             </ScrollView>
           </View>
-          <LikesOthers post={post} />
-
-          <PostCaption post={post} />
-          <PostComments post={post} />
-
-          {/* 하트랑 북마크 등 */}
-          <View style={styles.postOptionsContainer}>
+          {/* 댓글 작성 */}
+          <View
+            style={{
+              flex: 0.1,
+              backgroundColor: "white",
+              flexDirection: "row",
+            }}
+          >
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: "white",
-                width: window.width * 0.7,
+                marginTop: 20,
+                width: window.width * 0.976,
+                justifyContent: "center",
               }}
             >
-              {/* <Ionicons
-              name={post.likes_by_users.includes(post.eamil) ? "heart" : "heart-outline"}
-              size={27}
-              color={props.post.liked ? "#FF3E3E" : "black"}
-              style={{ marginRight: 10 }}
-            /> */}
-              <TouchableOpacity>
-                <HeartIcon post={post} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <BookmarkIcon post={post} />
-              </TouchableOpacity>
+              <View
+                style={{
+                  width: window.width * 0.13,
+                  alignItems: "flex-end",
+                }}
+              >
+                <Image
+                  source={{ uri: post.profile_picture }}
+                  style={{
+                    width: window.width * 0.1,
+                    height: window.width * 0.1,
+                    borderRadius: 50,
+                    padding: 5,
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginLeft: 10,
+                  width: window.width * 0.82,
+                  height: window.width * 0.1,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderColor: "#c0e8e0",
+                  borderWidth: 1,
+                  // backgroundColor: "blue",
+                }}
+              >
+                <TextInput
+                  style={{ paddingLeft: 10 }}
+                  placeholderTextColor="#444"
+                  placeholder="댓글을 입력해주세요."
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  onChangeText={handleChange("comment")}
+                  onBlur={handleBlur("comment")}
+                  value={values.comment}
+                />
+                <View
+                  style={{
+                    width: window.width * 0.13,
+                    alignItems: "center",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={styles.buttonDesign}
+                    onPress={handleSubmit}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 10,
+                      }}
+                    >
+                      추가
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </View>
-          {/* 좋아요 수 */}
-          {/* 댓글 */}
-          {/* 시간 */}
-        </ScrollView>
-      </View>
-      {/* 댓글 작성 */}
-      <View
-        style={{ flex: 0.1, backgroundColor: "white", flexDirection: "row" }}
-      >
-        <CommentWrite post={post} commentHandleLike={commentHandleLike} />
-      </View>
-    </View>
+        </View>
+      )}
+    </Formik>
   );
 };
 
@@ -215,6 +346,7 @@ const PostDate = ({ post }) => {
         fontWeight: "500",
         marginLeft: 15,
         marginTop: 5,
+        marginRight:10,
       }}
     >
       {date.getMonth()}.{date.getDate()}
@@ -222,46 +354,50 @@ const PostDate = ({ post }) => {
   );
 };
 
-const PostImage = ({ post }) => {
-  return (
-    <View
-    // style={{ width: width, height: height }}
-    >
-      <Text>플랫리스트</Text>
-      <FlatList
-        data={post.imageArray}
-        horizontal={true}
-        keyExtractor={(_, index) => index.toString()}
-        // showsHorizontalScrollIndicator={false}
-        pagingEnabled={true}
-        renderItem={({ item, index }) => {
-          return (
-            <View key={index}>
-              <Image
-                source={{ uri: item }}
-                style={{
-                  resizeMode: "contain",
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
-            </View>
-          );
-        }}
-      />
-      <Text>플랫리스트</Text>
-    </View>
-  );
-};
+// const PostImage = ({ post }) => {
+//   return (
+//     <View
+//     // style={{ width: width, height: height }}
+//     >
+//       <Text>플랫리스트</Text>
+//       <FlatList
+//         data={post.imageArray}
+//         horizontal={true}
+//         keyExtractor={(_, index) => index.toString()}
+//         // showsHorizontalScrollIndicator={false}
+//         pagingEnabled={true}
+//         renderItem={({ item, index }) => {
+//           return (
+//             <View key={index}>
+//               <Image
+//                 source={{ uri: item }}
+//                 style={{
+//                   resizeMode: "contain",
+//                   width: "100%",
+//                   height: "100%",
+//                 }}
+//               />
+//             </View>
+//           );
+//         }}
+//       />
+//       <Text>플랫리스트</Text>
+//     </View>
+//   );
+// };
 
 const LikesOthers = ({ post }) => (
   <TouchableOpacity style={styles.likesViewContainer}>
     <Text style={{ fontSize: 14 }}>
       {post.likes_by_users.length}명이 게시글을 좋아합니다{" "}
+    </Text>
+    {post.likes_by_users[0] > 0 ? (
       <Text style={{ fontWeight: "700" }}>
         {post.likes_by_users[0]} 외 {post.likes_by_users.length - 1}명
       </Text>
-    </Text>
+    ) : (
+      <></>
+    )}
   </TouchableOpacity>
 );
 
@@ -274,21 +410,25 @@ const PostCaption = ({ post }) => (
   </View>
 );
 
-const PostComments = ({ post }) => (
+const PostComments = ({ comments }) => (
   <View style={styles.commentsContainer}>
-    <Text>코멘트</Text>
-    {post.comments.map((comment) => {
+    {comments.map((comment) => {
       return (
         <TouchableOpacity
           style={{
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center",
-            marginTop: 4,
+            marginTop: 10,
           }}
         >
-          <Text style={{ fontWeight: "700" }}>{comment.username}</Text>
-          <Text style={{ marginLeft: 3 }}>{comment.comment}</Text>
+          <Image 
+          source={{ uri: comment.comment_profile_picture }} 
+                    style={{ width: 20, height: 20 }}
+                    borderRadius={50}
+                    />
+          <Text style={{ fontWeight: "700" }}>{comment.comment_nickname}</Text>
+          <Text style={{ marginLeft: 8 }}>{comment.comment}</Text>
         </TouchableOpacity>
       );
     })}
@@ -318,7 +458,7 @@ const PostTag = ({ post }) => (
               style={{
                 backgroundColor: "#c0e8e0",
                 flex: 1,
-                fontSize: 18,
+                fontSize: window.width * 0.04,
               }}
             >
               {"#"}
@@ -332,73 +472,9 @@ const PostTag = ({ post }) => (
   </View>
 );
 
-const CommentWrite = ({ post, commentHandleLike }) => {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        marginTop: 20,
-        width: window.width * 0.976,
-        justifyContent: "center",
-      }}
-    >
-      <View
-        style={{
-          width: window.width * 0.13,
-          alignItems: "flex-end",
-        }}
-      >
-        <Image
-          source={{ uri: post.profile_picture }}
-          style={{
-            width: window.width * 0.1,
-            height: window.width * 0.1,
-            borderRadius: 50,
-            padding: 5,
-          }}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginLeft: 10,
-          width: window.width * 0.82,
-          height: window.width * 0.1,
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderColor: "#c0e8e0",
-          borderWidth: 1,
-          // backgroundColor: "blue",
-        }}
-      >
-        <TextInput
-          style={{ paddingLeft: 10 }}
-          placeholder="댓글을 입력해주세요"
-        />
-        <View
-          style={{
-            width: window.width * 0.13,
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity style={styles.buttonDesign}>
-            <Text
-              style={{
-                fontSize: 10,
-              }}
-            >
-              추가
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const HeartIcon = ({ post }) => (
+const HeartIcon = ({ currentLikeStatus }) => (
   <View style={styles.box}>
-    {!post.likes_by_users.includes(firebase.auth().currentUser.email) ? (
+    {currentLikeStatus ? (
       <AntDesign name={"hearto"} size={20} />
     ) : (
       <AntDesign name={"heart"} size={20} color="red" />
@@ -410,9 +486,9 @@ const HeartIcon = ({ post }) => (
   </View>
 );
 
-const BookmarkIcon = ({ post }) => (
+const BookmarkIcon = ({ currentBookmarksStatus }) => (
   <View style={styles.box}>
-    {!post.bookmarks_by_users.includes(firebase.auth().currentUser.email) ? (
+    {currentBookmarksStatus ? (
       <FontAwesome name="bookmark-o" size={20} color="black" />
     ) : (
       <FontAwesome name="bookmark" size={20} color="yellow" />
@@ -462,6 +538,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginLeft: 15,
     marginTop: 4,
+    marginBottom: 30,
   },
   buttonDesign: {
     borderRadius: 20,

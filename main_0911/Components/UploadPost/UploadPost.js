@@ -358,7 +358,7 @@ const UploadPost = ({ navigation, route }) => {
                       fontWeight: "500",
                       color: "white",
                       margin: 23,
-                      marginTop: 20,
+                      marginTop: window.width*0.055,
                     }}
                   >
                     작성 완료
@@ -442,6 +442,7 @@ const styles = StyleSheet.create({
   tags: {},
   loading: {
     position: "absolute",
+    height:window.height,
     left: 0,
     right: 0,
     top: 5,
