@@ -6,6 +6,7 @@ import SignupScreen from "./Screens/SignupScreen";
 import BottomTabs from "./Screens/BottomTabs";
 import KakaoLogin from "./Components/Login/KakaoLogin";
 import SetProfileScreen from "./Screens/SetProfileScreen";
+import FindPasswordScreen from "./Screens/FindPasswordScreen";
 import { Entypo } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
@@ -45,16 +46,29 @@ export const SignedOutStack = () => {
         initialRouteName="LoginScreen"
         screenOptions={({ route }) => {
           if (route.name === "LoginScreen") {
-            return screenOptions
+            return screenOptions;
           } else {
             return screenOptions2;
           }
         }}
       >
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen
+          name="FindPasswordScreen"
+          component={FindPasswordScreen}
+          options={{ headerTitle: "비밀번호 찾기" }}
+        />
         {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} /> */}
-        <Stack.Screen name="SignupScreen" component={SignupScreen} options={{headerTitle:'회원가입'}} />
-        <Stack.Screen name="SetProfileScreen" component={SetProfileScreen} options={{headerTitle:'프로필 설정'}} />
+        <Stack.Screen
+          name="SignupScreen"
+          component={SignupScreen}
+          options={{ headerTitle: "회원가입" }}
+        />
+        <Stack.Screen
+          name="SetProfileScreen"
+          component={SetProfileScreen}
+          options={{ headerTitle: "프로필 설정" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

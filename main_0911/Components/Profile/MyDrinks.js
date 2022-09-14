@@ -10,9 +10,9 @@ const db = firebase.firestore();
 
 const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
   const [drinks, setDrinks] = useState([]);
-  // console.log("아나시발", userInfo);
-  // console.log("내 드링크", userInfo[0]);
-  // console.log("슈밟슐발", drinks);
+  console.log("아나시발", userInfo);
+  console.log("내 드링크", userInfo[0]);
+  console.log("슈밟슐발", drinks);
 
   useEffect(() => {
     const data = [];

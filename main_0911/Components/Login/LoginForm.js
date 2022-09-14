@@ -104,9 +104,11 @@ function LoginForm({ navigation }) {
               />
             </View>
             <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
-              <Text style={{ color: "#191919" }}>
-                비밀번호를 잃어버리셨나요?
-              </Text>
+              <Pressable onPress={() => navigation.push('FindPasswordScreen')}>
+                <Text style={{ color: "#6bb0f5" }}>
+                  비밀번호를 잃어버리셨나요?
+                </Text>
+              </Pressable>
             </View>
             <Pressable
               titleSize={20}

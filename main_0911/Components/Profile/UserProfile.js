@@ -135,7 +135,7 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
               >
                 <Text style={styles.listtext}>찜한 전통주</Text>
                 <Text style={styles.listtext}>
-                  {UserInfo.myBookmarksDrinks.length}
+                  {/* {UserInfo.myBookmarksDrinks.length} */} 0
                 </Text>
               </View>
             </View>
