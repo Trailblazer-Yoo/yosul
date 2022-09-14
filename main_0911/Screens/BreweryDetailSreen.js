@@ -285,7 +285,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             <FlatList
               horizontal={true}
               pagingEnabled={true}
-              data={attraction.slice(0, 5)}
+              data={attraction.slice(1, 5)}
               renderItem={renderListItemForAttraction}
               showsHorizontalScrollIndicator={false}
             />
@@ -303,7 +303,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
             <FlatList
               pagingEnabled={true}
               horizontal={true}
-              data={event.slice(0, 5)}
+              data={event.slice(1, 5)}
               renderItem={renderListItemForEvent}
               showsHorizontalScrollIndicator={false}
             />
