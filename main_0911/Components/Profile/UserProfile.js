@@ -16,6 +16,7 @@ import {
 } from "@expo/vector-icons";
 
 const window = Dimensions.get("window");
+
 const handleSignOut = async () => {
   Alert.alert("로그아웃", "정말 로그아웃 하시겠습니까?", [
     // 버튼 배열
@@ -119,7 +120,7 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
                   내가 쓴 글
                 </Text>
                 <Text style={{ fontSize: 13 }}>{mypostslen}</Text>
@@ -131,7 +132,7 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
                   저장한 글
                 </Text>
                 <Text style={{ fontSize: 13 }}>
@@ -145,7 +146,7 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
                   저장한 전통주
                 </Text>
                 <Text style={{ fontSize: 13 }}>
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
     height: window.width / 1.5,
     justifyContent: "center",
     backgroundColor: "white",
+    
   },
   backgroundimg: {
     width: window.width,
@@ -176,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(250,250,250,0.8)",
     alignItems: "center",
     justifyContent: "center",
+    alignContent: "center",
   },
   headerText: {
     fontSize: 15,
@@ -185,15 +188,13 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   profileimg: {
-    width: 110,
-    height: 110,
+    width: window.width*0.23,
+    height: window.height/9,
     borderRadius: 100,
     borderWidth: 1.5,
     justifyContent: "center",
     borderColor: "#C0E8E0",
-    marginLeft: 150,
-    marginTop: 10,
-    marginBottom: 5,
+    marginLeft: window.width/2.5,
   },
   textbox: {
     width: window.width - 170,
@@ -203,7 +204,10 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 10,
   },
-  logout: { alignItems: "flex-end", marginRight: 15 },
+  logout: { 
+    alignItems: "flex-end", 
+    marginRight: 15,
+    height : window.height/37 },
   profiletag: {
     borderRadius: 20,
     justifyContent: "center",

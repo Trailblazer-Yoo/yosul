@@ -11,6 +11,7 @@ import BookmarkIcon from "../Components/Dictionary/BookmarkIcon";
 import HeartIcon from "../Components/Dictionary/HeartIcon";
 import SoolListCom from "../Components/Dictionary/SoolListCom";
 
+
 export default function DictionaryScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [sulList, setSulList] = useState([]);

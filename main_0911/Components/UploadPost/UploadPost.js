@@ -356,8 +356,8 @@ const UploadPost = ({ navigation, route }) => {
                       fontSize: 30,
                       fontWeight: "500",
                       color: "white",
-                      margin: 25,
-                      marginTop: 21,
+                      margin: 23,
+                      marginTop: 20,
                     }}
                   >
                     작성 완료

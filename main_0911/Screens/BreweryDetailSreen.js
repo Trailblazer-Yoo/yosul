@@ -239,7 +239,7 @@ export default function BreweryDetailScreen({ navigation, route }) {
               style={styles.icon}
               source={require("../assets/charge.png")}
             />
-            <Text style={styles.infomationText}>{item.cost}</Text>
+            <Text style={styles.infomationText}>{item.cost}원</Text>
           </View>
           <View style={styles.detailText}>
             <Image

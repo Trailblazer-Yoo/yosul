@@ -186,8 +186,8 @@ const EditProfile = ({ route }) => {
                 <View>
                   <Image
                     style={{
-                      width: window.width * 0.4,
-                      height: window.width * 0.4,
+                      width: window.width * 0.5,
+                      height: window.width * 0.5,
                       borderRadius: 100,
                       resizeMode: "cover",
                       borderColor: "black",
