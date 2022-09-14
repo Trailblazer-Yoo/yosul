@@ -11,7 +11,8 @@ import {
   SafeAreaView,
 } from "react-native";
 import MyDrinks from "../Components/Profile/MyDrinks";
-import Posts from "../Components/Profile/Posts";
+import MyPosts from "../Components/Profile/MyPosts";
+import BookmarkPosts from "../Components/Profile/BookmarkPosts";
 import UserProfile from "../Components/Profile/UserProfile";
 import firebase from "../firebase";
 
@@ -101,7 +102,7 @@ const ProfileScreen = ({ navigation }) => {
   const MyPostsStack = () => {
     const renderPosts = (itemData) => {
       return (
-        <Posts
+        <MyPosts
           posts={itemData.item}
           index={itemData.id}
           navigation={navigation}
@@ -126,7 +127,7 @@ const ProfileScreen = ({ navigation }) => {
   const BookmarkPostsStack = () => {
     const renderPosts = (itemData) => {
       return (
-        <Posts
+        <BookmarkPosts
           posts={itemData.item}
           index={itemData.id}
           navigation={navigation}

@@ -10,9 +10,6 @@ const db = firebase.firestore();
 
 const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
   const [drinks, setDrinks] = useState([]);
-  console.log("아나시발", userInfo);
-  console.log("내 드링크", userInfo[0]);
-  console.log("슈밟슐발", drinks);
 
   useEffect(() => {
     const data = [];
@@ -25,18 +22,6 @@ const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
     }
   }, []);
 
-  console.log("시발시발시발", drinks);
-
-  // useEffect(() => {
-  //   const data = [];
-  //   if (userInfo !== undefined) {
-  //     const mydrinks = userInfo.myBookmarksDrinks
-  //     for (let i = 0; i < mydrinks.length; i++) {
-  //       data.push(soolList[mydrinks[i]]);
-  //     }
-  //   }
-  //   setDrinks(data);
-  // }, []);
 
   const renderListItem = ({ item, index }) => {
     return (

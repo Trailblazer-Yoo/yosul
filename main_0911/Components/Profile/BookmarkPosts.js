@@ -8,7 +8,7 @@ import {
 
 const window = Dimensions.get('screen')
 
-const Posts = ({ posts, index, navigation }) => {
+const BookmarkPosts = ({ posts, index, navigation }) => {
   return (
     <View style={{ flex: 1 / 2, marginBottom: 0 }}>
       <Pressable
@@ -36,4 +36,4 @@ const PostImage = ({ posts }) => (
   />
 );
 
-export default Posts;
+export default BookmarkPosts;
