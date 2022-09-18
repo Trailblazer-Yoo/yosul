@@ -19,13 +19,13 @@ const ITEM_WIDTH = width * 0.76;
 const ITEM_HEIGHT = height * 0.518;
 
 const images = {
-  "그린영농조합": require('../assets/brewery/greenyoungnong.png'),
-  "밝은세상영농조합": require('../assets/brewery/balguensaesang.png'),
-  "배상면주가" : require('../assets/brewery/baesangmyeon.png'),
-  "배혜정도가": require('../assets/brewery/baehyejungdoga.png'),
-  "산머루농원": require('../assets/brewery/sanmeoru.png'),
-  "술샘": require('../assets/brewery/soolsam1.png'),
-  "좋은술":require('../assets/brewery/joeunsool.png'),
+  그린영농조합: require("../assets/brewery/greenyoungnong.png"),
+  밝은세상영농조합: require("../assets/brewery/balguensaesang.png"),
+  배상면주가: require("../assets/brewery/baesangmyeon.png"),
+  배혜정도가: require("../assets/brewery/baehyejungdoga.png"),
+  산머루농원: require("../assets/brewery/sanmeoru.png"),
+  술샘: require("../assets/brewery/soolsam1.png"),
+  좋은술: require("../assets/brewery/joeunsool.png"),
 };
 
 const HomeScreen = ({ navigation }) => {
@@ -65,12 +65,12 @@ const HomeScreen = ({ navigation }) => {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     });
 
-    const data2 = []
-    for (var d of data1){
-      let key = d['name']
-        data2.push({...d, ...{image: images[d['name']]}})
-      }
-      
+    const data2 = [];
+    for (var d of data1) {
+      let key = d["name"];
+      data2.push({ ...d, ...{ image: images[d["name"]] } });
+    }
+
     setFilteredBreweryInfo(data2);
   };
 
@@ -108,16 +108,25 @@ const HomeScreen = ({ navigation }) => {
             }
           >
             <Animated.Image
-              source={ item.image }
+              source={item.image}
               style={{ ...styles.imagestyle, transform: [{ translateX }] }}
             />
           </Pressable>
         </View>
-        <View style={{ marginTop: width*0.012, marginRight: width*0.3 }}>
-          <Text style={{ fontSize: RFPercentage(0.92), color: "#444" }}>
-            출처 : 카카오맵 로드뷰 (https://map.kakao.com)
-          </Text>
-        </View>
+        {index === 5 ? (
+          <View style={{ marginTop: width * 0.012, marginRight: width * 0.6 }}>
+            <Text style={{ fontSize: RFPercentage(0.92), color: "#444" }}>
+              출처 : 술샘
+            </Text>
+          </View>
+        ) : (
+          <View style={{ marginTop: width * 0.012, marginRight: width * 0.3 }}>
+            <Text style={{ fontSize: RFPercentage(0.92), color: "#444" }}>
+              출처 : 카카오맵 로드뷰 (https://map.kakao.com)
+            </Text>
+          </View>
+        )}
+
         <View style={styles.brewery_info}>
           <Text style={styles.activityText}>{item.activityName}</Text>
           <Text style={styles.breweryName}>{item.name}</Text>
@@ -171,19 +180,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   brewery_info: {
-    marginTop: width*0.07,
+    marginTop: width * 0.07,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: width*0.06,
+    marginBottom: width * 0.06,
   },
   activityText: {
     color: "gray",
-    marginBottom: width*0.02,
-    fontSize: width*0.045,
+    marginBottom: width * 0.02,
+    fontSize: width * 0.045,
     fontWeight: "400",
   },
   breweryName: {
-    fontSize: width*0.08,
+    fontSize: width * 0.08,
     fontWeight: "bold",
   },
   imagestyle: {
@@ -196,23 +205,23 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     overflow: "hidden",
     alignItems: "center",
-    borderRadius: width*0.04,
+    borderRadius: width * 0.04,
     // backgroundColor: "black",
   },
   framestyle: {
-    borderRadius: width *0.04,
-    padding: width *0.033,
+    borderRadius: width * 0.04,
+    padding: width * 0.033,
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOpacity: 0.5,
-    shadowRadius: width*0.06,
+    shadowRadius: width * 0.06,
     shadowOffset: {
       width: 0,
       height: 0,
     },
   },
   areaText: {
-    fontSize: width*0.05,
+    fontSize: width * 0.05,
     opacity: 0.35,
     alignItems: "center",
   },

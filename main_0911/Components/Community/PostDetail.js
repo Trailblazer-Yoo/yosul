@@ -30,7 +30,7 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 const width = window.width * 0.49;
 const height = window.width * 0.49 * 1.41;
-const { StatusBarManager } = NativeModules
+const { StatusBarManager } = NativeModules;
 
 const PostDetail = ({ route }) => {
   const post = route.params.item;
@@ -166,8 +166,7 @@ const PostDetail = ({ route }) => {
       validateOnMount={true}
     >
       {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View
-        style={{ flex: 1, justifyContent: "center" }}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
           <View style={{ flex: 1 }}>
             <KeyboardAwareScrollView style={styles.postContainer}>
               <View
@@ -262,83 +261,83 @@ const PostDetail = ({ route }) => {
               {/* 좋아요 수 */}
               {/* 댓글 */}
               {/* 시간 */}
-            </KeyboardAwareScrollView>
-          </View>
-          <View
-            style={{
-              flex: 0.1,
-              backgroundColor: "white",
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 20,
-                width: window.width * 0.976,
-                justifyContent: "center",
-              }}
-            >
               <View
                 style={{
-                  width: window.width * 0.13,
-                  alignItems: "flex-end",
-                }}
-              >
-                <Image
-                  source={{ uri: post.profile_picture }}
-                  style={{
-                    width: window.width * 0.1,
-                    height: window.width * 0.1,
-                    borderRadius: 50,
-                    padding: 5,
-                  }}
-                />
-              </View>
-              <View
-                style={{
+                  flex: 0.1,
+                  backgroundColor: "white",
                   flexDirection: "row",
-                  marginLeft: 10,
-                  width: window.width * 0.82,
-                  height: window.width * 0.1,
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  borderColor: "#c0e8e0",
-                  borderWidth: 1,
-                  // backgroundColor: "blue",
                 }}
               >
-                <TextInput
-                  style={{ paddingLeft: 10 }}
-                  placeholderTextColor="#444"
-                  placeholder="댓글을 입력해주세요."
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onChangeText={handleChange("comment")}
-                  onBlur={handleBlur("comment")}
-                  value={values.comment}
-                />
                 <View
                   style={{
-                    width: window.width * 0.13,
-                    alignItems: "center",
+                    flexDirection: "row",
+                    marginTop: 20,
+                    width: window.width * 0.976,
+                    justifyContent: "center",
                   }}
                 >
-                  <TouchableOpacity
-                    style={styles.buttonDesign}
-                    onPress={handleSubmit}
+                  <View
+                    style={{
+                      width: window.width * 0.13,
+                      alignItems: "flex-end",
+                    }}
                   >
-                    <Text
+                    <Image
+                      source={{ uri: post.profile_picture }}
                       style={{
-                        fontSize: 10,
+                        width: window.width * 0.1,
+                        height: window.width * 0.1,
+                        borderRadius: 50,
+                        padding: 5,
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 10,
+                      width: window.width * 0.82,
+                      height: window.width * 0.1,
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderColor: "#c0e8e0",
+                      borderWidth: 1,
+                      // backgroundColor: "blue",
+                    }}
+                  >
+                    <TextInput
+                      style={{ paddingLeft: 10 }}
+                      placeholderTextColor="#444"
+                      placeholder="댓글을 입력해주세요."
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      onChangeText={handleChange("comment")}
+                      onBlur={handleBlur("comment")}
+                      value={values.comment}
+                    />
+                    <View
+                      style={{
+                        width: window.width * 0.13,
+                        alignItems: "center",
                       }}
                     >
-                      추가
-                    </Text>
-                  </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.buttonDesign}
+                        onPress={handleSubmit}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 10,
+                          }}
+                        >
+                          추가
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
+            </KeyboardAwareScrollView>
           </View>
         </View>
       )}

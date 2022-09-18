@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   iconcontainer: {
-    marginTop: 3,
+    // marginTop: 3,
     alignItems: "center",
   },
 });

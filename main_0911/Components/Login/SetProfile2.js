@@ -655,10 +655,10 @@ function SetProfile2({ navigation }) {
                     >
                       <Text
                         style={{
-                          fontSize: 30,
+                          fontSize: 25,
                           fontWeight: "500",
                           color: "white",
-                          margin: 25,
+                          margin: 20,
                         }}
                       >
                         설정 완료

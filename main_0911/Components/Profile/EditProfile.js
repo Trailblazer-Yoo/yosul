@@ -17,6 +17,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../../firebase";
 import * as ImagePicker from "expo-image-picker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const db = firebase.firestore();
 const window = Dimensions.get("screen");
@@ -126,16 +127,20 @@ const EditProfile = ({ route, navigation }) => {
     image
   ) => {
     setLoading(true);
-    await db.collection("users").doc(firebase.auth().currentUser.email).update({
-      profile_picture: image,
-      nickname: nickname,
-      amount: amount,
-      drink: drink,
-      minContent: minContent,
-      maxContent: maxContent,
-    });
+    await db
+      .collection("users")
+      .doc(firebase.auth().currentUser.email)
+      .update({
+        profile_picture: image,
+        nickname: nickname,
+        amount: amount,
+        drink: drink,
+        minContent: minContent,
+        maxContent: maxContent,
+      })
+      .then(() => navigation.goBack());
     console.log(editUserProfile);
-    setLoading(false).then(() => navigation.navigate("CommunityStack"));
+    setLoading(false);
   };
 
   return (
@@ -179,7 +184,7 @@ const EditProfile = ({ route, navigation }) => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
-            <ScrollView>
+            <KeyboardAwareScrollView>
               <TouchableOpacity
                 style={styles.profileContainer}
                 onPress={pickImage}
@@ -487,18 +492,20 @@ const EditProfile = ({ route, navigation }) => {
                 >
                   <Text
                     style={{
-                      fontSize: 30,
+                      fontSize: 25,
                       fontWeight: "500",
                       color: "white",
-                      margin: 25,
+                      margin: 20,
                     }}
                   >
                     설정 완료
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: window.width * 0.7, backgroundColor:'white' }}></View>
-            </ScrollView>
+              <View
+                style={{ height: window.width * 0.7, backgroundColor: "white" }}
+              ></View>
+            </KeyboardAwareScrollView>
           </>
         )}
       </Formik>
