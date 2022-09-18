@@ -596,12 +596,12 @@ function SetProfile2({ navigation }) {
                       style={{
                         flexDirection: "row",
                         justifyContent: "space-around",
-                        marginHorizontal: -20,
+                        marginHorizontal: -15,
                         marginRight: 10,
                       }}
                     >
                       <CheckBox
-                        title={"서비스 이용약관 (필수)"}
+                        title={"서비스 이용약관 동의 (필수)"}
                         checked={checked2}
                         checkedIcon="check"
                         checkedColor="#C0E8E0"
@@ -616,6 +616,7 @@ function SetProfile2({ navigation }) {
                           marginTop: window.width * 0.05,
                           marginLeft: 15,
                         }}
+                        onPress={() => navigation.push("TermsOfServiceScreen")}
                       >
                         <Text>보기</Text>
                       </TouchableOpacity>
@@ -629,7 +630,7 @@ function SetProfile2({ navigation }) {
                       }}
                     >
                       <CheckBox
-                        title={"개인정보 처리방침 (필수)"}
+                        title={"개인정보 처리방침 동의 (필수)"}
                         checked={checked}
                         checkedIcon="check"
                         checkedColor="#C0E8E0"

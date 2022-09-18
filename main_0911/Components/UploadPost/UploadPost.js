@@ -20,6 +20,7 @@ import { Formik } from "formik";
 import validUrl from "valid-url";
 import firebase from "../../firebase";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const db = firebase.firestore();
 const window = Dimensions.get("window");
@@ -160,7 +161,7 @@ const UploadPost = ({ navigation, route }) => {
         const remoteurl = await ref.getDownloadURL();
         await remoteImageArray.push(remoteurl);
       }
-      setLoading(false)
+      setLoading(false);
       const unsubscribe = await db
         .collection("users")
         .doc(firebase.auth().currentUser.email)
@@ -210,7 +211,9 @@ const UploadPost = ({ navigation, route }) => {
                   {
                     text: "삭제",
                     onPress: () => {
-                      setImageArray(imageArray.filter((array) => array !== item));
+                      setImageArray(
+                        imageArray.filter((array) => array !== item)
+                      );
                     },
                   },
                   {
@@ -250,7 +253,7 @@ const UploadPost = ({ navigation, route }) => {
         isValid,
       }) => (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-          <ScrollView>
+          <KeyboardAwareScrollView>
             <View style={styles.container}>
               <TouchableOpacity // 이미지
                 onPress={uploadThumbnailImage}
@@ -322,7 +325,10 @@ const UploadPost = ({ navigation, route }) => {
                   {errors.tags}
                 </Text>
               )}
-              <Text style={{ marginTop: 15, fontSize: RFPercentage(1.73) }}> 본문 작성 </Text>
+              <Text style={{ marginTop: 15, fontSize: RFPercentage(1.73) }}>
+                {" "}
+                본문 작성{" "}
+              </Text>
               <View
                 style={{
                   borderWidth: 3,
@@ -358,7 +364,7 @@ const UploadPost = ({ navigation, route }) => {
                       fontWeight: "500",
                       color: "white",
                       margin: 23,
-                      marginTop: window.width*0.055,
+                      marginTop: window.width * 0.055,
                     }}
                   >
                     작성 완료
@@ -367,7 +373,7 @@ const UploadPost = ({ navigation, route }) => {
               </View>
               <View style={{ height: 300 }}></View>
             </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
           {loading === true ? (
             <View style={styles.loading}>
               <ActivityIndicator
@@ -442,7 +448,7 @@ const styles = StyleSheet.create({
   tags: {},
   loading: {
     position: "absolute",
-    height:window.height,
+    height: window.height,
     left: 0,
     right: 0,
     top: 5,

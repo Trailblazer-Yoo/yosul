@@ -1,15 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { WebView } from "react-native-webview";
+import PrivacyPolicy from "../Components/Login/PrivacyPolicy";
 
 const PrivacyPolicyScreen = ({ navigation }) => {
   return (
-    <View>
-      <WebView
-        source={{ uri: "file:///Users/parkjubro/yosul/main_0911/privacy_policy.html" }}
-        allowFileAccess={true}
-        navigation={navigation}
-      />
+    <View style={{ flex: 1 }}>
+      <PrivacyPolicy navigation={navigation} />
     </View>
   );
 };

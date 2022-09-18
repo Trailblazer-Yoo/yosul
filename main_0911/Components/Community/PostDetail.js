@@ -24,6 +24,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase from "../../firebase";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const db = firebase.firestore();
 const window = Dimensions.get("window");
@@ -168,7 +169,7 @@ const PostDetail = ({ route }) => {
         <View
         style={{ flex: 1, justifyContent: "center" }}>
           <View style={{ flex: 1 }}>
-            <ScrollView style={styles.postContainer}>
+            <KeyboardAwareScrollView style={styles.postContainer}>
               <View
                 style={{
                   backgroundColor: "white",
@@ -208,13 +209,13 @@ const PostDetail = ({ route }) => {
                   marginLeft: window.width * 0.03,
                 }}
               >
-                <ScrollView
+                <KeyboardAwareScrollView
                   horizontal={true}
                   pagingEnabled={false}
                   showsHorizontalScrollIndicator={false}
                 >
                   <PostTag post={post} />
-                </ScrollView>
+                </KeyboardAwareScrollView>
               </View>
               <View
                 style={{
@@ -261,7 +262,7 @@ const PostDetail = ({ route }) => {
               {/* 좋아요 수 */}
               {/* 댓글 */}
               {/* 시간 */}
-            </ScrollView>
+            </KeyboardAwareScrollView>
           </View>
           <View
             style={{
