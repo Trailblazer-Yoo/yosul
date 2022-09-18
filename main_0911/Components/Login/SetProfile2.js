@@ -604,7 +604,7 @@ function SetProfile2({ navigation }) {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={{height: window.width * 0.7}}>
+                  <View style={{height: window.width * 0.7, backgroundColor:'white'}}>
                   </View>
                 </ScrollView>
               </View>

@@ -24,6 +24,7 @@ const CommunityScreen = ({navigation}) => {
       <FlatList
           data={posts}
           renderItem={renderPosts}
+          showsVerticalScrollIndicator={falss}
           keyExtractor={(item) => item.id}
           numColumns={2}
           style={{ margin: 3 , backgroundColor:'#fff' }}

@@ -480,7 +480,6 @@ const EditProfile = ({ route, navigation }) => {
                 <Text style={{ marginRight: 40 }}>최소 도수</Text>
                 <Text>최대 도수</Text>
               </View>
-              <View style={{ height: window.width * 0.7 }}></View>
               <View style={styles.buttonContainer(isValid)}>
                 <TouchableOpacity
                   style={styles.buttonDesign}
@@ -498,6 +497,7 @@ const EditProfile = ({ route, navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
+              <View style={{ height: window.width * 0.7, backgroundColor:'white' }}></View>
             </ScrollView>
           </>
         )}

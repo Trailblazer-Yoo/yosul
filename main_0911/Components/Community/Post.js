@@ -22,7 +22,7 @@ const window = Dimensions.get("window");
 const width = window.width * 0.49;
 const height = window.width * 0.49 * 1.41;
 
-// 사진 갯수 : post.imageArray.length
+// 사진 갯수 : posts.imageArray.length
 const Post = ({ posts, navigation }) => {
   const likesHandleLike = async (posts) => {
     const currentUserEmail = firebase.auth().currentUser.email;
@@ -172,7 +172,9 @@ const PostImage = ({ posts }) => {
   );
 };
 
-const PostHeader = ({ posts }) => (
+const PostHeader = ({ posts }) => {
+  const date = new Date(posts.createdAt.seconds * 1000)
+  return(
   <View
     style={{
       flexDirection: "row",
@@ -194,8 +196,19 @@ const PostHeader = ({ posts }) => (
         {posts.nickname}
       </Text>
     </View>
+    <Text
+      style={{
+        fontSize: width * 0.07,
+        color: "#777",
+        marginLeft: 15,
+        marginTop: 5,
+        marginRight: 10,
+      }}
+    >
+      {date.getMonth()}.{date.getDate()}
+    </Text>
   </View>
-);
+)}
 
 const Tag = ({ posts }) => (
   <View
@@ -204,6 +217,7 @@ const Tag = ({ posts }) => (
       marginTop: 2,
       width: window.width * 0.49,
       flexWrap: "wrap",
+      height: window.width * 0.1
     }}
   >
     {posts.tags.map((tag, index) => (

@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Text,
   Pressable,
+  KeyboardAvoidingView,
   TextInput,
   View,
   Image,
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  NativeModules,
   FlatList,
 } from "react-native";
 import {
@@ -27,9 +29,11 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 const width = window.width * 0.49;
 const height = window.width * 0.49 * 1.41;
+const { StatusBarManager } = NativeModules
 
 const PostDetail = ({ route }) => {
   const post = route.params.item;
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
   const [currentLikeStatus, setLikesStatus] = useState(
     !post.likes_by_users.includes(firebase.auth().currentUser.email)
   );
@@ -39,6 +43,13 @@ const PostDetail = ({ route }) => {
   const [comments, setcomments] = useState([
     { comment_nickname: "", comment_profile_picture: "", comment: "" },
   ]);
+  useEffect(() => {
+    Platform.OS == "ios"
+      ? StatusBarManager.getHeight((statusBarFrameData) => {
+          setStatusBarHeight(statusBarFrameData.height);
+        })
+      : null;
+  }, []);
   useEffect(() => {
     setcomments(post.comments);
   }, []);
@@ -86,7 +97,7 @@ const PostDetail = ({ route }) => {
     const myBookmarkPost = {};
     myBookmarkPost[post.owner_email] = post.id;
 
-    if (currentUserEmail===post.owner_email){
+    if (currentUserEmail === post.owner_email) {
       Alert.alert("오류", "내 글은 저장할 수 없습니다.");
       return;
     }
@@ -154,7 +165,8 @@ const PostDetail = ({ route }) => {
       validateOnMount={true}
     >
       {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View style={{ flex: 1, justifyContent: "center" }}>
+        <View
+        style={{ flex: 1, justifyContent: "center" }}>
           <View style={{ flex: 1 }}>
             <ScrollView style={styles.postContainer}>
               <View
@@ -170,20 +182,28 @@ const PostDetail = ({ route }) => {
                 <PostHeader post={post} />
                 <PostDate post={post} />
               </View>
-              <Image
-                style={{
-                  alignItems:'center',
-                  width: window.width * 0.87,
-                  height: window.width * 0.87 * 1.41,
-                  resizeMode: "contain",
-                }}
-                source={{ uri: post.imageArray[0] }}
-              />
-
-              {/* <PostImage post={post} /> */}
               <View
                 style={{
-                  marginTop:width*0.05,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#c0e8e0",
+                }}
+              >
+                <Image
+                  style={{
+                    alignItems: "center",
+                    width: window.width * 0.87,
+                    height: window.width * 0.87 * 1.41,
+                    resizeMode: "contain",
+                  }}
+                  source={{ uri: post.imageArray[0] }}
+                />
+              </View>
+
+              {/* <PostImage post={post} /> */}
+              <View //
+                style={{
+                  marginTop: width * 0.05,
                   height: window.width * 0.1,
                   marginLeft: window.width * 0.03,
                 }}
@@ -196,12 +216,18 @@ const PostDetail = ({ route }) => {
                   <PostTag post={post} />
                 </ScrollView>
               </View>
-              <View style={{ marginLeft: window.width * 0.005, marginTop:width*0.015 }}>
-                <View style={{ marginBottom: width*0.1 }}>
+              <View
+                style={{
+                  marginLeft: window.width * 0.005,
+                  marginTop: width * 0.015,
+                }}
+              >
+                <View style={{ marginBottom: width * 0.1 }}>
                   <LikesOthers post={post} />
 
                   <PostCaption post={post} />
                 </View>
+
                 <PostComments comments={comments} />
               </View>
 
@@ -231,14 +257,12 @@ const PostDetail = ({ route }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{marginTop:width*0.1}}>
-              </View>
+              <View style={{ marginTop: width * 0.1 }}></View>
               {/* 좋아요 수 */}
               {/* 댓글 */}
               {/* 시간 */}
             </ScrollView>
           </View>
-          {/* 댓글 작성 */}
           <View
             style={{
               flex: 0.1,
@@ -349,12 +373,12 @@ const PostDate = ({ post }) => {
   return (
     <Text
       style={{
-        fontSize: width*0.07,
+        fontSize: width * 0.07,
         color: "#777",
         fontWeight: "500",
         marginLeft: 15,
         marginTop: 5,
-        marginRight:10,
+        marginRight: 10,
       }}
     >
       {date.getMonth()}.{date.getDate()}
@@ -430,11 +454,11 @@ const PostComments = ({ comments }) => (
             marginTop: 10,
           }}
         >
-          <Image 
-          source={{ uri: comment.comment_profile_picture }} 
-                    style={{ width: 20, height: 20, marginRight:11 }}
-                    borderRadius={50}
-                    />
+          <Image
+            source={{ uri: comment.comment_profile_picture }}
+            style={{ width: 20, height: 20, marginRight: 11 }}
+            borderRadius={50}
+          />
           <Text style={{ fontWeight: "700" }}>{comment.comment_nickname}</Text>
           <Text style={{ marginLeft: 8 }}>{comment.comment}</Text>
         </TouchableOpacity>
