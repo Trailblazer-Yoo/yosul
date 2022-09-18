@@ -28,8 +28,8 @@ const MyDrinks = ({ userInfo, soolList, currentUserEmail, navigation }) => {
       <View style={styles.flatlistcontainer}>
         <SoolListCom item={item} index={index} navigation={navigation} />
         <View style={styles.iconcontainer}>
-          <HeartIcon item={item} currentUserEmail={currentUserEmail} />
-          <BookmarkIcon item={item} currentUserEmail={currentUserEmail} />
+          <HeartIcon item={item} currentUserEmail={currentUserEmail} screenState={false} />
+          <BookmarkIcon item={item} currentUserEmail={currentUserEmail} screenState={false} />
         </View>
       </View>
     );

@@ -6,6 +6,7 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const db = firebase.firestore();
 
+// screenState : 사전 탭과 디테일 탭 구분을 위해 설정(false일 경우 딕셔너리, true일 경우 디데일)
 const HeartIcon = ({ item, currentUserEmail, screenState }) => {
   const [currentLikesStatus, setcurrentLikesStatus] = useState(
     !item.likesByUsers.includes(currentUserEmail)

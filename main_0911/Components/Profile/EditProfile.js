@@ -10,7 +10,7 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { Accessory } from "react-native-elements";
 import { Formik } from "formik";
@@ -21,7 +21,7 @@ import * as ImagePicker from "expo-image-picker";
 const db = firebase.firestore();
 const window = Dimensions.get("screen");
 
-const EditProfile = ({ route }) => {
+const EditProfile = ({ route, navigation }) => {
   const EditProfileSchema = Yup.object().shape({
     nickname: Yup.string().min(4, "닉네임은 4글자 이상이어야 합니다"),
     amount: Yup.number().required(),
@@ -85,7 +85,7 @@ const EditProfile = ({ route }) => {
       quality: 1,
     });
     if (ImageData.cancelled) {
-      setLoading(false)
+      setLoading(false);
       return null;
     }
     const image = ImageData.uri;
@@ -135,7 +135,7 @@ const EditProfile = ({ route }) => {
       maxContent: maxContent,
     });
     console.log(editUserProfile);
-    setLoading(false);
+    setLoading(false).then(() => navigation.navigate("CommunityStack"));
   };
 
   return (
@@ -480,6 +480,7 @@ const EditProfile = ({ route }) => {
                 <Text style={{ marginRight: 40 }}>최소 도수</Text>
                 <Text>최대 도수</Text>
               </View>
+              <View style={{ height: window.width * 0.7 }}></View>
               <View style={styles.buttonContainer(isValid)}>
                 <TouchableOpacity
                   style={styles.buttonDesign}

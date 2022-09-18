@@ -164,7 +164,7 @@ const PostDetail = ({ route }) => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   paddingHorizontal: 5,
-                  height: window.width * 0.1,
+                  height: window.width * 0.12,
                 }}
               >
                 <PostHeader post={post} />
@@ -172,6 +172,7 @@ const PostDetail = ({ route }) => {
               </View>
               <Image
                 style={{
+                  alignItems:'center',
                   width: window.width * 0.87,
                   height: window.width * 0.87 * 1.41,
                   resizeMode: "contain",
@@ -182,6 +183,7 @@ const PostDetail = ({ route }) => {
               {/* <PostImage post={post} /> */}
               <View
                 style={{
+                  marginTop:width*0.05,
                   height: window.width * 0.1,
                   marginLeft: window.width * 0.03,
                 }}
@@ -194,8 +196,8 @@ const PostDetail = ({ route }) => {
                   <PostTag post={post} />
                 </ScrollView>
               </View>
-              <View style={{ marginLeft: window.width * 0.005 }}>
-                <View style={{ marginBottom: 10 }}>
+              <View style={{ marginLeft: window.width * 0.005, marginTop:width*0.015 }}>
+                <View style={{ marginBottom: width*0.1 }}>
                   <LikesOthers post={post} />
 
                   <PostCaption post={post} />
@@ -228,6 +230,8 @@ const PostDetail = ({ route }) => {
                     />
                   </TouchableOpacity>
                 </View>
+              </View>
+              <View style={{marginTop:width*0.1}}>
               </View>
               {/* 좋아요 수 */}
               {/* 댓글 */}
@@ -345,7 +349,7 @@ const PostDate = ({ post }) => {
   return (
     <Text
       style={{
-        fontSize: 12,
+        fontSize: width*0.07,
         color: "#777",
         fontWeight: "500",
         marginLeft: 15,
@@ -522,7 +526,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: width * 0.2,
     marginHorizontal: 10,
-    backgroundColor: "#fff",
   },
   likesViewContainer: {
     flexDirection: "row",
