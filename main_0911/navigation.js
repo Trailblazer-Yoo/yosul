@@ -8,6 +8,7 @@ import KakaoLogin from "./Components/Login/KakaoLogin";
 import SetProfileScreen from "./Screens/SetProfileScreen";
 import FindPasswordScreen from "./Screens/FindPasswordScreen";
 import { Entypo } from "@expo/vector-icons";
+import PrivacyPolicyScreen from "./Screens/PrivacyPolicyScreen";
 
 const Stack = createStackNavigator();
 
@@ -45,7 +46,7 @@ export const SignedOutStack = () => {
       <Stack.Navigator
         initialRouteName="LoginScreen"
         screenOptions={({ route }) => {
-          if (route.name === "LoginScreen") {
+          if (route.name === "LoginScreen" || "KaKaoLogin") {
             return screenOptions;
           } else {
             return screenOptions2;
@@ -58,7 +59,7 @@ export const SignedOutStack = () => {
           component={FindPasswordScreen}
           options={{ headerTitle: "비밀번호 찾기" }}
         />
-        {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} /> */}
+        <Stack.Screen name="KakaoLogin" component={KakaoLogin} />
         <Stack.Screen
           name="SignupScreen"
           component={SignupScreen}
@@ -68,6 +69,11 @@ export const SignedOutStack = () => {
           name="SetProfileScreen"
           component={SetProfileScreen}
           options={{ headerTitle: "프로필 설정" }}
+        />
+        <Stack.Screen
+          name="PrivacyPolicyScreen"
+          component={PrivacyPolicyScreen}
+          options={{ headerTitle: "개인정보 처리방침" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

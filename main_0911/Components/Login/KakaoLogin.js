@@ -9,11 +9,11 @@ function KakaoLogin({navigation, route}) {
   const REDIRECT_URI = "http://localhost:19000";
 
   const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
-  const getCode = () => {
+  const getCode = (event) => {
     const exp = "code=";
-    const condition = target.indexOf(exp);
+    const condition = event.indexOf(exp);
     if (condition !== -1) {
-      const requestCode = target.substring(condition + exp.length);
+      const requestCode = event.substring(condition + exp.length);
       requestToken(requestCode);
     }
   };

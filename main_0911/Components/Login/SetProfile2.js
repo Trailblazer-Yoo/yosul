@@ -13,7 +13,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
-import { Avatar, Accessory, Divider } from "react-native-elements";
+import { Avatar, Accessory, Divider, CheckBox } from "react-native-elements";
 import { Formik } from "formik";
 import { ProgressBar } from "react-native-paper";
 import * as Yup from "yup";
@@ -172,6 +172,10 @@ function SetProfile2({ navigation }) {
       console.log(error.message);
     }
   };
+
+  const [checked, setChecked] = useState(false);
+  const [checked2, setChecked2] = useState(false);
+
   return (
     <SafeAreaView style={{ backgroundColor: "#fafafa" }}>
       <Formik
@@ -587,6 +591,62 @@ function SetProfile2({ navigation }) {
                     <Text style={{ marginRight: 40 }}>최소 도수</Text>
                     <Text>최대 도수</Text>
                   </View>
+                  <View style={{ marginTop: window.width * 0.1 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        marginHorizontal: -20,
+                        marginRight: 10,
+                      }}
+                    >
+                      <CheckBox
+                        title={"서비스 이용약관 (필수)"}
+                        checked={checked2}
+                        checkedIcon="check"
+                        checkedColor="#C0E8E0"
+                        uncheckedIcon="check"
+                        uncheckedColor="#ccc"
+                        onPress={() => setChecked2(!checked2)}
+                        activeOpacity={0.8}
+                        containerStyle={{ borderColor: "#fafafa" }}
+                      />
+                      <TouchableOpacity
+                        style={{
+                          marginTop: window.width * 0.05,
+                          marginLeft: 15,
+                        }}
+                      >
+                        <Text>보기</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        marginHorizontal: -15,
+                        marginRight: 10,
+                      }}
+                    >
+                      <CheckBox
+                        title={"개인정보 처리방침 (필수)"}
+                        checked={checked}
+                        checkedIcon="check"
+                        checkedColor="#C0E8E0"
+                        uncheckedIcon="check"
+                        uncheckedColor="#ccc"
+                        onPress={() => setChecked(!checked)}
+                        activeOpacity={0.8}
+                        containerStyle={{ borderColor: "#fafafa" }}
+                      />
+                      <TouchableOpacity
+                        style={{ marginTop: window.width * 0.05 }}
+                        onPress={() => navigation.push("PrivacyPolicyScreen")}
+                      >
+                        <Text>보기</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.buttonContainer(isValid)}>
                     <TouchableOpacity
                       style={styles.buttonDesign}
@@ -604,8 +664,12 @@ function SetProfile2({ navigation }) {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <View style={{height: window.width * 0.7, backgroundColor:'white'}}>
-                  </View>
+                  <View
+                    style={{
+                      height: window.width * 0.7,
+                      backgroundColor: "white",
+                    }}
+                  ></View>
                 </ScrollView>
               </View>
             </View>

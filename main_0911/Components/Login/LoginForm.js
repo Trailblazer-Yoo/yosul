@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
   Alert,
+  Image,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Formik } from "formik";
@@ -104,7 +105,7 @@ function LoginForm({ navigation }) {
               />
             </View>
             <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
-              <Pressable onPress={() => navigation.push('FindPasswordScreen')}>
+              <Pressable onPress={() => navigation.push("FindPasswordScreen")}>
                 <Text style={{ color: "#6bb0f5" }}>
                   비밀번호를 잃어버리셨나요?
                 </Text>
@@ -118,7 +119,7 @@ function LoginForm({ navigation }) {
             >
               <Text style={styles.buttonText}>로그인</Text>
             </Pressable>
-            {/* <Pressable
+            <Pressable
               titleSize={20}
               style={styles.kakaoButton}
               onPress={() => navigation.push("KakaoLogin")}
@@ -130,7 +131,7 @@ function LoginForm({ navigation }) {
                 />
                 <Text>카카오로 시작하기</Text>
               </View>
-            </Pressable> */}
+            </Pressable>
 
             <View style={styles.signupContainer}>
               <Text>계정이 없으신가요? </Text>
