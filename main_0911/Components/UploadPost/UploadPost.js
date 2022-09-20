@@ -237,7 +237,8 @@ const UploadPost = ({ navigation, route }) => {
         caption: "",
       }}
       onSubmit={async (values) => {
-        const tmpArray = await [thumbnailUrl, ...imageArray.slice(0, -1)];
+        // const tmpArray = await [thumbnailUrl, ...imageArray.slice(0, -1)];
+        const tmpArray = [thumbnailUrl]
         uploadPost2Firebase(tmpArray, values.caption, tagList);
         console.log("성공적으로 업로드 되었습니다!");
       }}
@@ -268,7 +269,7 @@ const UploadPost = ({ navigation, route }) => {
                   style={styles.uploadphotowrapper}
                 />
               </TouchableOpacity>
-              <FlatList
+              {/* <FlatList
                 style={{ padding: 5 }}
                 data={imageArray}
                 extraData={imageArray}
@@ -276,7 +277,7 @@ const UploadPost = ({ navigation, route }) => {
                 renderItem={ImageView}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-              />
+              /> */}
               {!!!route.params ? (
                 <></>
               ) : (

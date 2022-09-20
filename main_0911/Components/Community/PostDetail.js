@@ -392,7 +392,7 @@ const PostDate = ({ post }) => {
         marginRight: 10,
       }}
     >
-      {date.getMonth()}.{date.getDate()}
+      {date.getMonth()+1}.{date.getDate()}
     </Text>
   );
 };

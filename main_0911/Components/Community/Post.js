@@ -173,8 +173,11 @@ const PostImage = ({ posts }) => {
 };
 
 const PostHeader = ({ posts }) => {
-  const time = posts.createdAt
-  const date = new Date(time.seconds * 1000)
+  const [date, setDate] = useState('')
+  useEffect(() => {
+    if (posts.createdAt.seconds !== 'null'){
+    const d = new Date( posts.createdAt.seconds * 1000)
+    setDate(d)}},[])
   return(
   <View
     style={{
@@ -197,6 +200,8 @@ const PostHeader = ({ posts }) => {
         {posts.nickname}
       </Text>
     </View>
+    {date === ''?
+    <></>:
     <Text
       style={{
         fontSize: width * 0.07,
@@ -206,8 +211,8 @@ const PostHeader = ({ posts }) => {
         marginRight: 10,
       }}
     >
-      {date.getMonth()}.{date.getDate()}
-    </Text>
+      {date.getMonth()+1}.{date.getDate()}
+    </Text>}
   </View>
 )}
 

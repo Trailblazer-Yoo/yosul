@@ -14,6 +14,7 @@ const CommunityScreen = ({navigation}) => {
       setPosts(snapshot.docs.map((post) => ({ id: post.id, ...post.data() })));
     });
   }, [])
+  console.log(posts)
 
   const renderPosts = (itemData) => {
     return <Post posts ={itemData.item} navigation={navigation}/>;
