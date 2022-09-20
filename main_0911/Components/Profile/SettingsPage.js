@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: '2%',
     paddingHorizontal: '3%',
-    height: window.height *0.75,
+    height: window.height *0.65,
     borderColor: "#C0E8E0",
   },
   buttonContainer: {
