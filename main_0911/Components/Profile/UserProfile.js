@@ -14,6 +14,7 @@ import firebase from "../../firebase";
 import { SimpleLineIcons, Ionicons } from "@expo/vector-icons";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
+
 const window = Dimensions.get("window");
 
 const handleSignOut = async () => {
@@ -55,12 +56,15 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
     <View style={styles.rootContainer} pointerEvents="box-none">
       <View>
         <View style={styles.logout}>
-          <Ionicons
-            onPress={handleSignOut}
-            name="ios-settings-outline"
-            size={24}
-            color="black"
-          />
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("SettingsPage")}>
+            <Ionicons
+              name="ios-settings-outline"
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.profileimgback}>
@@ -89,7 +93,8 @@ function UserProfile({ userInfo, navigation, mypostslen }) {
                 <Text style={styles.headerText}>
                   닉네임 : {UserInfo.nickname}
                 </Text>
-                <SimpleLineIcons name="pencil" size={17} color="grey" />
+                <SimpleLineIcons 
+                name="pencil" size={17} color="grey" />
               </TouchableOpacity>
             </View>
             <View

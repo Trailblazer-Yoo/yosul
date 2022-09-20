@@ -24,3 +24,4 @@ npm install --save @react-native-clipboard/clipboard
 npm install react-native-paper@5.0.0-rc.5
 npm install react-native-wrapped-text
 # npm install react-native-image-picker
+npm i react-native-expandable-listview

@@ -31,6 +31,7 @@ import PostDetail from "../Components/Community/PostDetail";
 import EditProfile from "../Components/Profile/EditProfile";
 import NotificationScreen from "./NotificationScreen";
 import BreweryDetailScreen from "./BreweryDetailSreen";
+import SettingsPage from "../Components/Profile/SettingsPage";
 import firebase from "../firebase";
 
 const Tab = createBottomTabNavigator();
@@ -173,7 +174,12 @@ const ProfileScreenStack = () => {
       <Stack.Screen
         name="EditProfile"
         component={EditProfile}
-        options={{ headerTitle: "태그 설정" }}
+        options={{ headerTitle: "프로필 수정" }}
+      />
+      <Stack.Screen
+        name="SettingsPage"
+        component={SettingsPage}
+        options={{ headerTitle: "설정" }}
       />
       <Stack.Screen
         name="DictionaryDetailScreen"
