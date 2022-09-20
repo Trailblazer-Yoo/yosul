@@ -99,5 +99,6 @@ const styles = StyleSheet.create({
   iconcontainer: {
     // marginTop: 3,
     alignItems: "center",
+    marginBottom: 1.5,
   },
 });

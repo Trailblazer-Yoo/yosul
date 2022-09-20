@@ -50,8 +50,6 @@ export default function DictionaryDetailScreen({ route }) {
                     )
                   )}
             </Text>
-            <Text style={styles.listtext}>도수 :{item.soolAlcohol}</Text>
-            <Text style={styles.listtext}>분류 : {item.soolType}</Text>
             <View style={styles.iconwrapper}>
               <HeartIcon
                 item={item}
