@@ -173,7 +173,8 @@ const PostImage = ({ posts }) => {
 };
 
 const PostHeader = ({ posts }) => {
-  const date = new Date(posts.createdAt.seconds * 1000)
+  const time = posts.createdAt
+  const date = new Date(time.seconds * 1000)
   return(
   <View
     style={{

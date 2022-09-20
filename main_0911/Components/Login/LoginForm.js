@@ -119,7 +119,7 @@ function LoginForm({ navigation }) {
             >
               <Text style={styles.buttonText}>로그인</Text>
             </Pressable>
-            <Pressable
+            {/* <Pressable
               titleSize={20}
               style={styles.kakaoButton}
               onPress={() => navigation.push("KakaoLogin")}
@@ -131,7 +131,7 @@ function LoginForm({ navigation }) {
                 />
                 <Text>카카오로 시작하기</Text>
               </View>
-            </Pressable>
+            </Pressable> */}
 
             <View style={styles.signupContainer}>
               <Text>계정이 없으신가요? </Text>

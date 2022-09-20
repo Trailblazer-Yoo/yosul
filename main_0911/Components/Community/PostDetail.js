@@ -30,27 +30,23 @@ const db = firebase.firestore();
 const window = Dimensions.get("window");
 const width = window.width * 0.49;
 const height = window.width * 0.49 * 1.41;
-const { StatusBarManager } = NativeModules;
 
-const PostDetail = ({ route }) => {
+const PostDetail = ({ route, navigation }) => {
   const post = route.params.item;
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
+  const currentUserEmail = firebase.auth().currentUser.email;
+  const [deleteStatus, setDeleteStatus] = useState(
+    post.owner_email === currentUserEmail
+  );
   const [currentLikeStatus, setLikesStatus] = useState(
-    !post.likes_by_users.includes(firebase.auth().currentUser.email)
+    !post.likes_by_users.includes(currentUserEmail)
   );
   const [currentBookmarksStatus, setBookmarkStatus] = useState(
-    !post.bookmarks_by_users.includes(firebase.auth().currentUser.email)
+    !post.bookmarks_by_users.includes(currentUserEmail)
   );
   const [comments, setcomments] = useState([
     { comment_nickname: "", comment_profile_picture: "", comment: "" },
   ]);
-  useEffect(() => {
-    Platform.OS == "ios"
-      ? StatusBarManager.getHeight((statusBarFrameData) => {
-          setStatusBarHeight(statusBarFrameData.height);
-        })
-      : null;
-  }, []);
+
   useEffect(() => {
     setcomments(post.comments);
   }, []);
@@ -61,8 +57,7 @@ const PostDetail = ({ route }) => {
     comment: Yup.string().required("댓글을 입력해주세요"),
   });
 
-  const likesHandleLike = async (post, currentLikeStatus) => {
-    const currentUserEmail = firebase.auth().currentUser.email;
+  const likesHandleLike = async (post, currentLikeStatus, currentUserEmail) => {
     const myLikePost = {};
     myLikePost[post.owner_email] = post.id;
 
@@ -83,7 +78,7 @@ const PostDetail = ({ route }) => {
       .collection("users")
       .doc(currentUserEmail)
       .update({
-        myLikesPost: currentLikeStatus
+        myLikesPosts: currentLikeStatus
           ? firebase.firestore.FieldValue.arrayUnion(myLikePost)
           : firebase.firestore.FieldValue.arrayRemove(myLikePost),
         notification: currentLikeStatus
@@ -93,8 +88,11 @@ const PostDetail = ({ route }) => {
     setLikesStatus(!currentLikeStatus);
   };
 
-  const bookmarkHandleLike = async (post, currentBookmarksStatus) => {
-    const currentUserEmail = firebase.auth().currentUser.email;
+  const bookmarkHandleLike = async (
+    post,
+    currentBookmarksStatus,
+    currentUserEmail
+  ) => {
     const myBookmarkPost = {};
     myBookmarkPost[post.owner_email] = post.id;
 
@@ -119,17 +117,17 @@ const PostDetail = ({ route }) => {
       .collection("users")
       .doc(currentUserEmail)
       .update({
-        myBookmarksPost: currentBookmarksStatus
+        myBookmarksPosts: currentBookmarksStatus
           ? firebase.firestore.FieldValue.arrayUnion(myBookmarkPost)
           : firebase.firestore.FieldValue.arrayRemove(myBookmarkPost),
       });
     setBookmarkStatus(!currentBookmarksStatus);
   };
 
-  const uploadComment = async (post, comment, comments) => {
+  const uploadComment = async (post, comment, comments, currentUserEmail) => {
     console.log("왜안되");
     const user = (
-      await db.collection("users").doc(firebase.auth().currentUser.email).get()
+      await db.collection("users").doc(currentUserEmail).get()
     ).data();
     const update = {
       comment_nickname: user.nickname,
@@ -159,7 +157,7 @@ const PostDetail = ({ route }) => {
       }}
       onSubmit={(values) => {
         console.log(values.comment);
-        uploadComment(post, values.comment, comments);
+        uploadComment(post, values.comment, comments, currentUserEmail);
         console.log("들어갔다", values);
       }}
       validationSchema={SetCommentSchema}
@@ -180,7 +178,14 @@ const PostDetail = ({ route }) => {
                 }}
               >
                 <PostHeader post={post} />
-                <PostDate post={post} />
+                <View style={{ flexDirection: "row" }}>
+                  <PostDate post={post} />
+                  {deleteStatus ? (
+                    <PostDelete post={post} navigation={navigation} />
+                  ) : (
+                    <></>
+                  )}
+                </View>
               </View>
               <View
                 style={{
@@ -194,7 +199,7 @@ const PostDetail = ({ route }) => {
                     alignItems: "center",
                     width: window.width * 0.87,
                     height: window.width * 0.87 * 1.41,
-                    resizeMode: "contain",
+                    resizeMode: "cover",
                   }}
                   source={{ uri: post.imageArray[0] }}
                 />
@@ -242,13 +247,19 @@ const PostDetail = ({ route }) => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => likesHandleLike(post, currentLikeStatus)}
+                    onPress={() =>
+                      likesHandleLike(post, currentLikeStatus, currentUserEmail)
+                    }
                   >
                     <HeartIcon currentLikeStatus={currentLikeStatus} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() =>
-                      bookmarkHandleLike(post, currentBookmarksStatus)
+                      bookmarkHandleLike(
+                        post,
+                        currentBookmarksStatus,
+                        currentUserEmail
+                      )
                     }
                   >
                     <BookmarkIcon
@@ -383,6 +394,49 @@ const PostDate = ({ post }) => {
     >
       {date.getMonth()}.{date.getDate()}
     </Text>
+  );
+};
+
+const PostDelete = ({ post, navigation }) => {
+  const deletePost = {};
+  deletePost[post.owner_email] = post.id;
+  const postId = post.id
+  const postEamil = post.owner_email
+  return (
+    <Pressable
+      style={{ marginRight: 5 }}
+      onPress={() => {
+        Alert.alert("삭제", "정말 이 게시물을 삭제하시겠습니까?", [
+          // 버튼 배열
+          {
+            text: "아니요",
+            style: "cancel",
+          },
+          {
+            text: "네",
+            onPress: async () => {
+              db.collection("users")
+              .onSnapshot((snapshot) => {
+                snapshot.docs.map((userInfo) =>
+                userInfo.data().myBookmarksPosts.includes({ deletePost })
+                ? userInfo
+                .update(
+                  firebase.firestore.FieldValue.arrayRemove(
+                    deletePost
+                    )
+                    )
+                    
+                    : console.log(deletePost)
+                    );
+                  });
+              await db.collection('users').doc(postEamil).collection('posts').doc(postId).delete().then(() => navigation.goBack());
+            },
+          },
+        ]);
+      }}
+    >
+      <Text>...</Text>
+    </Pressable>
   );
 };
 

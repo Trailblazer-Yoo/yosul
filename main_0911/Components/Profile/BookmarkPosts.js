@@ -9,18 +9,26 @@ import {
 const window = Dimensions.get('screen')
 
 const BookmarkPosts = ({ posts, index, navigation }) => {
-  return (
-    <View style={{ flex: 1 / 2, marginBottom: 0 }}>
-      <Pressable
-        style={{ flex: 1, width: window.width * 0.49, height: window.width * 0.49 * 1.41, marginTop: 3 }}
-        onPress={() =>
-          navigation.push("PostDetail", { id: index, item: posts })
-        }
-      >
-        <PostImage posts={posts} />
-      </Pressable>
-    </View>
-  );
+  console.log('왜또 앙탈을 부려',posts)
+  if (
+    posts === [] 
+  ) {
+    return <></>;
+  } else {
+    return (
+      <View style={{ flex: 1 / 2, marginBottom: 0 }}>
+        <Pressable
+          style={{ flex: 1, width: window.width * 0.49, height: window.width * 0.49 * 1.41, marginTop: 3 }}
+          onPress={() =>
+            navigation.push("PostDetail", { id: index, item: posts })
+          }
+        >
+          <PostImage posts={posts} />
+        </Pressable>
+      </View>
+    );
+  }
+
 };
 
 const PostImage = ({ posts }) => (

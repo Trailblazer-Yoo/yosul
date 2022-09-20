@@ -61,7 +61,7 @@ const SettingsPage = ({ navigation }) => {
         <AccordionList
           data={data}
           customTitle={item => 
-          <Text style={{fontSize: RFPercentage(2)}}>
+          <Text style={{fontSize: RFPercentage(2), marginLeft:10}}>
             {item.title}</Text>}
             customBody={item => 
           <Text style={{fontSize: RFPercentage(1.8)}}>{item.body}</Text>}

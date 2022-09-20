@@ -21,7 +21,7 @@ const db = firebase.firestore();
 
 const ProfileScreen = ({ navigation }) => {
   const [loading2, setLoading2] = useState(true);
-  const [bookmarkPosts, setBookmarkPosts] = useState([]);
+  const [bookmarkPosts, setBookmarkPosts] = useState({imageArray:['']});
   // const [posts, setPosts] = useState([]);
   const [soolList, setSoolList] = useState([]);
 
@@ -96,6 +96,7 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     getBookmarksPosts();
     setLoading2(false);
+    console.log(bookmarkPosts)
   }, []);
 
   // 내가 쓴 글에 들어갈 컴포넌트

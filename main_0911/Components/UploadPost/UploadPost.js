@@ -53,8 +53,8 @@ const UploadPost = ({ navigation, route }) => {
       .onSnapshot((snapshot) =>
         snapshot.docs.map((doc) => {
           setCurrentLoggedInUser({
-            username: doc.data().nickname,
-            profilePicture: doc.data().profile_picture,
+            nickname: doc.data().nickname,
+            profile_picture: doc.data().profile_picture,
           });
         })
       );
@@ -168,8 +168,8 @@ const UploadPost = ({ navigation, route }) => {
         .collection("posts")
         .add({
           imageArray: remoteImageArray,
-          nickname: currentLoggedInUser.username,
-          profile_picture: currentLoggedInUser.profilePicture,
+          nickname: currentLoggedInUser.nickname,
+          profile_picture: currentLoggedInUser.profile_picture,
           owner_uid: firebase.auth().currentUser.uid,
           owner_email: firebase.auth().currentUser.email,
           caption: caption,
@@ -371,7 +371,6 @@ const UploadPost = ({ navigation, route }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: 300 }}></View>
             </View>
           </KeyboardAwareScrollView>
           {loading === true ? (

@@ -20,6 +20,7 @@ npm install react-native-fast-image
 npm i @react-native-async-storage/async-storage
 npm i react-native-responsive-fontsize
 npm i react-native-custom-picker
+npm i react-native-keyboard-aware-scroll-view
 npm install --save @react-native-clipboard/clipboard
 npm install react-native-paper@5.0.0-rc.5
 npm install react-native-wrapped-text

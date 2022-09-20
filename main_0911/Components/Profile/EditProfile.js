@@ -502,9 +502,6 @@ const EditProfile = ({ route, navigation }) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View
-                style={{ height: window.width * 0.7, backgroundColor: "white" }}
-              ></View>
             </KeyboardAwareScrollView>
           </>
         )}

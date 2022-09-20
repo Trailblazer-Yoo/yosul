@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "main_0911",
-    "slug": "main_0911",
+    "name": "yosul",
+    "slug": "yosul",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,10 +22,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.seonjong.tmp",
+      "package": "com.yosul.yosul",
       "versionCode": 1
     },
     "web": {
