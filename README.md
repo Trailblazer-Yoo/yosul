@@ -1,10 +1,20 @@
-# yosul
-2022 관광공사 x 카카오 공모전 
+# 2022 관광데이터 활용 공모전
+> 기간 : 2022-04-12 : 2022-10-06
 
-디렉터리 생성 후,
+> 주관 : 한국관광공사, kakao
 
-git init
+> 주제 : __전통주 관광 정보 제공 서비스__
+---
 
-git remote add origin https://github.com/jjh0987/yosul.git
+&nbsp;
 
-git pull origin master
+<img src='https://user-images.githubusercontent.com/46211063/193464282-9b48452e-324b-486c-b5de-83051f18781e.png'>
+
+&nbsp;
+
+- 주요 서비스 : 회원제 어플리케이션, 양조장 관광체험정보 제공, 글공유 커뮤니티, 전통주사전 
+- 서비스 상세내용및 인터페이스는 __최종자료.pdf__ 를 참고해주세요.
+
+---
+ 
+> Application : *https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=0000765025*
